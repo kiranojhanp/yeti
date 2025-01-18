@@ -1,5 +1,5 @@
 {
-  "name": "@repo/parse",
+  "name": "@yeti/parse",
   "type": "module",
   "scripts": {
     "dev": "tsc --watch",
@@ -16,7 +16,7 @@
     }
   },
   "devDependencies": {
-    "@repo/typescript-config": "*",
+    "@yeti/typescript-config": "*",
     "@types/bun": "latest"
   },
   "peerDependencies": {
