@@ -1,10 +1,6 @@
 {
   "name": "@yeti/parse",
   "type": "module",
-  "scripts": {
-    "dev": "tsc --watch",
-    "build": "tsc"
-  },
   "exports": {
     "./add": {
       "types": "./src/add.ts",
@@ -15,9 +11,13 @@
       "default": "./dist/subtract.js"
     }
   },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch"
+  },
   "devDependencies": {
-    "@yeti/typescript-config": "*",
-    "@types/bun": "latest"
+    "@types/bun": "latest",
+    "@yeti/typescript-config": "*"
   },
   "peerDependencies": {
     "typescript": "^5.0.0"
