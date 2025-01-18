@@ -1,5 +1,5 @@
 {
-  "extends": "yetitypescript-config/nextjs.json",
+  "extends": "@yeti/typescript-config/nextjs.json",
   "compilerOptions": {
     "plugins": [
       {
