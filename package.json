@@ -9,7 +9,7 @@
   "scripts": {
     "build": "turbo build",
     "dev": "turbo dev",
-    "format": "prettier --write \"**/*.{ts,tsx,md}\" && sort-package-json \"**/package.json\"",
+    "format": "prettier --write \"**/*.{ts,tsx,md}\" && npx sort-package-json \"**/package.json\"",
     "lint": "turbo lint"
   },
   "devDependencies": {
