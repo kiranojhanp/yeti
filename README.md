@@ -1,84 +1,70 @@
-# Turborepo starter
+# Yeti
 
-This Turborepo starter is maintained by the Turborepo core team.
+> [!WARNING]
+> This project is under active development and is currently in its initial stages.
+>
+> - **Expect frequent changes:** The API, features, and overall structure may undergo significant modifications.
+> - **Potential for bugs:** There may be unexpected bugs or stability issues.
+> - **Limited documentation:** Documentation may be incomplete or outdated.
+>
+> We appreciate your understanding and welcome your feedback as we continue to improve this project.
 
-## Using this example
+---
 
-Run the following command:
+**Yeti** is a lightweight and expressive database markup language designed for intuitive schema and relationship design. Yeti makes it easy to define entities, fields, relationships, and constraints in a concise format.
 
-```sh
-npx create-turbo@latest
+---
+
+## Features
+
+- **Human-Readable Syntax**: Define schemas in a way that is easy to write and understand.
+- **Built-In Constraints**: Specify data types, defaults, constraints, and relationships directly in the schema.
+- **Expressive Relationships**: Handle one-to-one, one-to-many, and many-to-many relationships effortlessly.
+- **Index Support**: Define indexes on fields to optimize database performance.
+
+---
+
+## Background
+
+See [Background: Why I am Creating Yeti](docs/why-i-am-creating-yeti.md) for more details.
+
+---
+
+## Example Schema
+
+```yeti
+namespace todo_app:
+
+  # Users Table (for managing users)
+  entity users:
+    id: serial @pk
+    username: varchar
+    email: varchar @unique
+    created_at: timestamp @default(now())
+
+  # Tasks Table (for storing tasks)
+  entity tasks:
+    id: serial @pk
+    user_id: integer @fk(> users.id)  # Relating tasks to users
+    title: varchar
+    description: text
+    status: task_status  # Enum for task status
+    created_at: timestamp @default(now())
+    due_date: timestamp
+
+  # Enum for task status
+  enum task_status:
+    pending
+    in_progress
+    completed
 ```
 
-## What's inside?
+## Contributing
 
-This Turborepo includes the following packages/apps:
+Contributions are welcome! Feel free to submit issues or pull requests to help improve Yeti.
 
-### Apps and Packages
+---
 
-- `docs`: a [Next.js](https://nextjs.org/) app
-- `web`: another [Next.js](https://nextjs.org/) app
-- `@repo/ui`: a stub React component library shared by both `web` and `docs` applications
-- `@repo/eslint-config`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
-- `@repo/typescript-config`: `tsconfig.json`s used throughout the monorepo
+## License
 
-Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
-
-### Utilities
-
-This Turborepo has some additional tools already setup for you:
-
-- [TypeScript](https://www.typescriptlang.org/) for static type checking
-- [ESLint](https://eslint.org/) for code linting
-- [Prettier](https://prettier.io) for code formatting
-
-### Build
-
-To build all apps and packages, run the following command:
-
-```
-cd my-turborepo
-pnpm build
-```
-
-### Develop
-
-To develop all apps and packages, run the following command:
-
-```
-cd my-turborepo
-pnpm dev
-```
-
-### Remote Caching
-
-> [!TIP]
-> Vercel Remote Cache is free for all plans. Get started today at [vercel.com](https://vercel.com/signup?/signup?utm_source=remote-cache-sdk&utm_campaign=free_remote_cache).
-
-Turborepo can use a technique known as [Remote Caching](https://turbo.build/repo/docs/core-concepts/remote-caching) to share cache artifacts across machines, enabling you to share build caches with your team and CI/CD pipelines.
-
-By default, Turborepo will cache locally. To enable Remote Caching you will need an account with Vercel. If you don't have an account you can [create one](https://vercel.com/signup?utm_source=turborepo-examples), then enter the following commands:
-
-```
-cd my-turborepo
-npx turbo login
-```
-
-This will authenticate the Turborepo CLI with your [Vercel account](https://vercel.com/docs/concepts/personal-accounts/overview).
-
-Next, you can link your Turborepo to your Remote Cache by running the following command from the root of your Turborepo:
-
-```
-npx turbo link
-```
-
-## Useful Links
-
-Learn more about the power of Turborepo:
-
-- [Tasks](https://turbo.build/repo/docs/core-concepts/monorepos/running-tasks)
-- [Caching](https://turbo.build/repo/docs/core-concepts/caching)
-- [Remote Caching](https://turbo.build/repo/docs/core-concepts/remote-caching)
-- [Filtering](https://turbo.build/repo/docs/core-concepts/monorepos/filtering)
-- [Configuration Options](https://turbo.build/repo/docs/reference/configuration)
-- [CLI Usage](https://turbo.build/repo/docs/reference/command-line-reference)
+Yeti is open-source software licensed under the MIT License.
