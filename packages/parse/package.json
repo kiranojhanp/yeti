@@ -12,12 +12,13 @@
     }
   },
   "scripts": {
-    "build": "tsc",
-    "dev": "tsc --watch"
+    "build": "tsup",
+    "dev": "tsup --watch"
   },
   "devDependencies": {
     "@types/bun": "latest",
-    "@yeti/typescript-config": "*"
+    "@yeti/typescript-config": "*",
+    "tsup": "^8.3.5"
   },
   "peerDependencies": {
     "typescript": "^5.0.0"
