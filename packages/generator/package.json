@@ -1,5 +1,5 @@
 {
-  "name": "@yeti/parse",
+  "name": "@yeti/generator",
   "type": "module",
   "exports": {
     ".": {
@@ -13,6 +13,7 @@
   },
   "devDependencies": {
     "@types/bun": "latest",
+    "@yeti/parse": "*",
     "@yeti/typescript-config": "*",
     "tsup": "^8.3.5"
   },
