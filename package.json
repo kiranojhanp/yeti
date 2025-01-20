@@ -2,6 +2,7 @@
   "name": "yeti-ecosystem",
   "private": true,
   "type": "module",
+  "repository": "https://github.com/kiranojhanp/yeti.git",
   "workspaces": [
     "apps/*",
     "packages/*"

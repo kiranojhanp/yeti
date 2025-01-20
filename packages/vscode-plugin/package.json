@@ -1,6 +1,10 @@
 {
-  "name": "yeti",
+  "name": "yeti-vscode",
   "version": "0.0.1",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kiranojhanp/yeti.git"
+  },
   "categories": [
     "Programming Languages"
   ],
@@ -15,7 +19,11 @@
         "extensions": [
           ".yeti"
         ],
-        "configuration": "./language-configuration.json"
+        "configuration": "./language-configuration.json",
+        "icon": {
+          "light": "./images/logo.webp",
+          "dark": "./images/logo.webp"
+        }
       }
     ],
     "grammars": [
@@ -27,7 +35,8 @@
     ]
   },
   "description": "A lightweight and expressive database markup language",
-  "displayName": "@yeti/vscode",
+  "displayName": "Yeti",
+  "icon": "images/logo.webp",
   "engines": {
     "vscode": "^1.96.0"
   },
