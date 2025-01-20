@@ -1,0 +1,34 @@
+{
+  "name": "yeti",
+  "displayName": "@yeti/vscode",
+  "description": "A lightweight and expressive database markup language",
+  "version": "0.0.1",
+  "engines": {
+    "vscode": "^1.96.0"
+  },
+  "categories": [
+    "Programming Languages"
+  ],
+  "contributes": {
+    "languages": [
+      {
+        "id": "yeti",
+        "aliases": [
+          "Yeti",
+          "yeti"
+        ],
+        "extensions": [
+          ".yeti"
+        ],
+        "configuration": "./language-configuration.json"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "yeti",
+        "scopeName": "source.yeti",
+        "path": "./syntaxes/yeti.tmLanguage.json"
+      }
+    ]
+  }
+}

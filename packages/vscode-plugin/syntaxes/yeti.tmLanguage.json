@@ -1,0 +1,159 @@
+{
+  "name": "Yeti",
+  "scopeName": "source.yeti",
+  "patterns": [
+    {
+      "include": "#comments"
+    },
+    {
+      "include": "#namespace"
+    },
+    {
+      "include": "#entity"
+    },
+    {
+      "include": "#enum"
+    },
+    {
+      "include": "#fieldDefinition"
+    },
+    {
+      "include": "#decorators"
+    },
+    {
+      "include": "#datatypes"
+    },
+    {
+      "include": "#strings"
+    }
+  ],
+  "repository": {
+    "comments": {
+      "match": "#.*$",
+      "name": "comment.line.number-sign.yeti"
+    },
+    "namespace": {
+      "match": "\\b(namespace)\\s+([a-zA-Z_][a-zA-Z0-9_]*):",
+      "captures": {
+        "1": {
+          "name": "keyword.control.yeti"
+        },
+        "2": {
+          "name": "entity.name.namespace.yeti"
+        }
+      }
+    },
+    "entity": {
+      "match": "\\b(entity)\\s+([a-zA-Z_][a-zA-Z0-9_]*):",
+      "captures": {
+        "1": {
+          "name": "keyword.control.yeti"
+        },
+        "2": {
+          "name": "entity.name.class.yeti"
+        }
+      }
+    },
+    "enum": {
+      "match": "\\b(enum)\\s+([a-zA-Z_][a-zA-Z0-9_]*):",
+      "captures": {
+        "1": {
+          "name": "keyword.control.yeti"
+        },
+        "2": {
+          "name": "entity.name.type.enum.yeti"
+        }
+      },
+      "patterns": [
+        {
+          "match": "^(\\s*)([a-zA-Z_][a-zA-Z0-9_]*)",
+          "captures": {
+            "2": {
+              "name": "constant.language.enum.yeti"
+            }
+          }
+        }
+      ]
+    },
+    "fieldDefinition": {
+      "match": "(\\s+)([a-zA-Z_][a-zA-Z0-9_]*)\\s*:\\s*([a-zA-Z_][a-zA-Z0-9_]*)(\\s*(#.*)?)",
+      "captures": {
+        "2": {
+          "name": "entity.name.property.yeti"
+        },
+        "3": {
+          "name": "storage.type.yeti"
+        },
+        "4": {
+          "name": "comment.line.yeti"
+        }
+      }
+    },
+    "decorators": {
+      "patterns": [
+        {
+          "match": "@([a-zA-Z_][a-zA-Z0-9_]*)",
+          "name": "support.function.decorator.yeti"
+        },
+        {
+          "match": "@([a-zA-Z_][a-zA-Z0-9_]*)\\s*(\\((.*)\\))?",
+          "captures": {
+            "0": {
+              "name": "punctuation.decorator.yeti"
+            },
+            "1": {
+              "name": "support.function.decorator.yeti"
+            },
+            "2": {
+              "name": "punctuation.definition.decorator-arguments.yeti"
+            },
+            "3": {
+              "name": "variable.other.yeti"
+            }
+          }
+        },
+        {
+          "match": "\\b(true|false)\\b",
+          "name": "constant.language.boolean.yeti"
+        },
+        {
+          "include": "#decoratorArguments"
+        }
+      ]
+    },
+    "decoratorArguments": {
+      "patterns": [
+        {
+          "match": ">\\s*([a-zA-Z_][a-zA-Z0-9_]*)\\.([a-zA-Z_][a-zA-Z0-9_]*)",
+          "captures": {
+            "0": {
+              "name": "keyword.operator.yeti"
+            },
+            "1": {
+              "name": "entity.name.class.yeti"
+            },
+            "2": {
+              "name": "entity.name.property.yeti"
+            }
+          }
+        },
+        {
+          "match": "\\b(true|false)\\b",
+          "name": "constant.language.boolean.yeti"
+        },
+        {
+          "match": "\\)",
+          "name": "punctuation.definition.decorator-arguments.end.yeti"
+        }
+      ]
+    },
+    "datatypes": {
+      "match": "\\b(serial|varchar|text|integer|timestamp|boolean)\\b",
+      "name": "storage.type.primitive.yeti"
+    },
+    "strings": {
+      "match": "'((?:[^'\\\\]|\\\\.)*)'",
+      "name": "string.quoted.single.yeti"
+    }
+  }
+}
