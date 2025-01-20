@@ -13,6 +13,8 @@
 
 **Yeti** is a lightweight and expressive database markup language designed for intuitive schema and relationship design. Yeti makes it easy to define entities, fields, relationships, and constraints in a concise format.
 
+![Yeti code](./packages/vscode-plugin/images/yeti-code.png)
+
 ---
 
 ## Features
