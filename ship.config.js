@@ -12,7 +12,7 @@ const getPackageDirectories = (dir) => {
       .filter(
         (entry) =>
           entry.isDirectory() &&
-          existsSync(join(dir, entry.name, "package.json")),
+          existsSync(join(dir, entry.name, "package.json"))
       )
       .map((entry) => join(dir, entry.name));
   } catch {
@@ -25,7 +25,7 @@ function expandPackageList(patterns, baseDir = ".") {
   const ignoreSet = new Set(
     patterns
       .filter((pattern) => pattern.startsWith("!"))
-      .map((pattern) => resolve(baseDir, pattern.slice(1))),
+      .map((pattern) => resolve(baseDir, pattern.slice(1)))
   );
 
   const expandedPaths = [];
@@ -36,7 +36,7 @@ function expandPackageList(patterns, baseDir = ".") {
     // Expand directories (e.g., "packages/*")
     if (pattern.endsWith("/*")) {
       expandedPaths.push(
-        ...getPackageDirectories(resolve(baseDir, pattern.slice(0, -2))),
+        ...getPackageDirectories(resolve(baseDir, pattern.slice(0, -2)))
       );
     }
     // Handle grouped patterns (e.g., "@(a|b)")
@@ -49,7 +49,7 @@ function expandPackageList(patterns, baseDir = ".") {
           const options = part.slice(2, -1).split("|");
           for (const option of options) {
             newPatterns.push(
-              parts.map((p) => (p === part ? option : p)).join(sep),
+              parts.map((p) => (p === part ? option : p)).join(sep)
             );
           }
           break;
@@ -66,7 +66,7 @@ function expandPackageList(patterns, baseDir = ".") {
 
   // Remove ignored packages and filter for valid package.json paths
   return expandedPaths.filter(
-    (pkg) => !ignoreSet.has(pkg) && existsSync(join(pkg, "package.json")),
+    (pkg) => !ignoreSet.has(pkg) && existsSync(join(pkg, "package.json"))
   );
 }
 
@@ -79,12 +79,10 @@ module.exports = {
     packagesToBump: expandPackageList([
       "packages/*",
       "!packages/eslint-config",
-      "!packages/eslint-config",
       "!packages/ui",
     ]),
     packagesToPublish: expandPackageList([
       "packages/*",
-      "!packages/eslint-config",
       "!packages/eslint-config",
       "!packages/ui",
     ]),
