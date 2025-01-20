@@ -3,7 +3,7 @@
   "type": "module",
   "exports": {
     ".": {
-      "types": "./src/types.ts",
+      "types": "./dist/index.d.ts",
       "default": "./dist/index.esm.js"
     }
   },
