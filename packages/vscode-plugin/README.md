@@ -1,65 +1,70 @@
-# yeti README
+# Yeti
 
-This is the README for your extension "yeti". After writing up a brief description, we recommend including the following sections.
-
-## Features
-
-Describe specific features of your extension including screenshots of your extension in action. Image paths are relative to this README file.
-
-For example if there is an image subfolder under your extension project workspace:
-
-\!\[feature X\]\(images/feature-x.png\)
-
-> Tip: Many popular extensions utilize animations. This is an excellent way to show off your extension! We recommend short, focused animations that are easy to follow.
-
-## Requirements
-
-If you have any requirements or dependencies, add a section describing those and how to install and configure them.
-
-## Extension Settings
-
-Include if your extension adds any VS Code settings through the `contributes.configuration` extension point.
-
-For example:
-
-This extension contributes the following settings:
-
-* `myExtension.enable`: Enable/disable this extension.
-* `myExtension.thing`: Set to `blah` to do something.
-
-## Known Issues
-
-Calling out known issues can help limit users opening duplicate issues against your extension.
-
-## Release Notes
-
-Users appreciate release notes as you update your extension.
-
-### 1.0.0
-
-Initial release of ...
-
-### 1.0.1
-
-Fixed issue #.
-
-### 1.1.0
-
-Added features X, Y, and Z.
+> [!WARNING]
+> This project is under active development and is currently in its initial stages.
+>
+> - **Expect frequent changes:** The API, features, and overall structure may undergo significant modifications.
+> - **Potential for bugs:** There may be unexpected bugs or stability issues.
+> - **Limited documentation:** Documentation may be incomplete or outdated.
+>
+> We appreciate your understanding and welcome your feedback as we continue to improve this project.
 
 ---
 
-## Working with Markdown
+**Yeti** is a lightweight and expressive database markup language designed for intuitive schema and relationship design. Yeti makes it easy to define entities, fields, relationships, and constraints in a concise format.
 
-You can author your README using Visual Studio Code. Here are some useful editor keyboard shortcuts:
+---
 
-* Split the editor (`Cmd+\` on macOS or `Ctrl+\` on Windows and Linux).
-* Toggle preview (`Shift+Cmd+V` on macOS or `Shift+Ctrl+V` on Windows and Linux).
-* Press `Ctrl+Space` (Windows, Linux, macOS) to see a list of Markdown snippets.
+## Features
 
-## For more information
+- **Human-Readable Syntax**: Define schemas in a way that is easy to write and understand.
+- **Built-In Constraints**: Specify data types, defaults, constraints, and relationships directly in the schema.
+- **Expressive Relationships**: Handle one-to-one, one-to-many, and many-to-many relationships effortlessly.
+- **Index Support**: Define indexes on fields to optimize database performance.
 
-* [Visual Studio Code's Markdown Support](http://code.visualstudio.com/docs/languages/markdown)
-* [Markdown Syntax Reference](https://help.github.com/articles/markdown-basics/)
+---
 
-**Enjoy!**
+## Background
+
+See [Background: Why I am Creating Yeti](docs/why-i-am-creating-yeti.md) for more details.
+
+---
+
+## Example Schema
+
+```yeti
+namespace todo_app:
+
+  # Users Table (for managing users)
+  entity users:
+    id: serial @pk
+    username: varchar
+    email: varchar @unique
+    created_at: timestamp @default(now())
+
+  # Tasks Table (for storing tasks)
+  entity tasks:
+    id: serial @pk
+    user_id: integer @fk(> users.id)  # Relating tasks to users
+    title: varchar
+    description: text
+    status: task_status  # Enum for task status
+    created_at: timestamp @default(now())
+    due_date: timestamp
+
+  # Enum for task status
+  enum task_status:
+    pending
+    in_progress
+    completed
+```
+
+## Contributing
+
+Contributions are welcome! Feel free to submit issues or pull requests to help improve Yeti.
+
+---
+
+## License
+
+Yeti is open-source software licensed under the MIT License.
