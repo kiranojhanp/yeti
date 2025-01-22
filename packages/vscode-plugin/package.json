@@ -1,14 +1,26 @@
 {
   "name": "yeti-vscode",
+  "displayName": "Yeti",
   "version": "0.0.1-beta.1",
+  "description": "A lightweight and expressive database markup language",
+  "categories": [
+    "Programming Languages"
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/kiranojhanp/yeti.git"
   },
-  "categories": [
-    "Programming Languages"
-  ],
+  "scripts": {
+    "package": "vsce package"
+  },
   "contributes": {
+    "grammars": [
+      {
+        "language": "yeti",
+        "scopeName": "source.yeti",
+        "path": "./syntaxes/yeti.tmLanguage.json"
+      }
+    ],
     "languages": [
       {
         "id": "yeti",
@@ -25,24 +37,12 @@
           "dark": "./images/logo.webp"
         }
       }
-    ],
-    "grammars": [
-      {
-        "language": "yeti",
-        "scopeName": "source.yeti",
-        "path": "./syntaxes/yeti.tmLanguage.json"
-      }
     ]
   },
-  "description": "A lightweight and expressive database markup language",
-  "displayName": "Yeti",
-  "icon": "images/logo.webp",
   "engines": {
     "vscode": "^1.96.0"
   },
-  "scripts": {
-    "package": "vsce package"
-  },
+  "icon": "images/logo.webp",
   "vsce": {
     "dependencies": false
   }

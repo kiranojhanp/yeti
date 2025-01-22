@@ -10,11 +10,3 @@ build:
 install:
 	@echo "$(GREEN)>>> Installing dependencies$(RESET)"
 	bun install
-
-publish:
-	@echo "$(GREEN)>>> Publish packages$(RESET)"
-	npx shipjs trigger
-
-release:
-	@echo "$(GREEN)>>> Prepare packages for release$(RESET)"
-	npx shipjs prepare

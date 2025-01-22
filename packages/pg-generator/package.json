@@ -1,6 +1,6 @@
 {
   "name": "@yeti/pg-generator",
-  "module": "src/index.ts",
+  "version": "0.0.1-beta.1",
   "type": "module",
   "exports": {
     ".": {
@@ -8,6 +8,7 @@
       "default": "./dist/index.esm.js"
     }
   },
+  "module": "src/index.ts",
   "scripts": {
     "build": "tsup",
     "dev": "tsup --watch"

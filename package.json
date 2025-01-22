@@ -1,8 +1,9 @@
 {
   "name": "yeti-ecosystem",
+  "version": "0.0.1-beta.1",
   "private": true,
-  "type": "module",
   "repository": "https://github.com/kiranojhanp/yeti.git",
+  "type": "module",
   "workspaces": [
     "apps/*",
     "packages/*"
@@ -11,7 +12,8 @@
     "build": "turbo build",
     "dev": "turbo dev",
     "format": "prettier --write \"**/*.{ts,tsx,md}\" && npx sort-package-json \"**/package.json\"",
-    "lint": "turbo lint"
+    "lint": "turbo lint",
+    "release": "npx bumpp --commit --push --tag --recursive"
   },
   "devDependencies": {
     "prettier": "^3.2.5",
