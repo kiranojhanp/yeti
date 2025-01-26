@@ -1,0 +1,26 @@
+{
+  "name": "@yeti/migration-core",
+  "module": "src/index.ts",
+  "version": "0.0.1-beta.1",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.esm.js"
+    }
+  },
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch"
+  },
+  "devDependencies": {
+    "@yeti/typescript-config": "*",
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "commander": "13.1.0"
+  }
+}
