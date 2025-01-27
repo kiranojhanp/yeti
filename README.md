@@ -26,12 +26,6 @@
 
 ---
 
-## Background
-
-See [Background: Why I am Creating Yeti](docs/why-i-am-creating-yeti.md) for more details.
-
----
-
 ## Example Schema
 
 ```yeti
