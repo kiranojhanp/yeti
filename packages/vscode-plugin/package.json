@@ -1,7 +1,7 @@
 {
   "name": "yeti-vscode",
   "displayName": "Yeti",
-  "version": "0.0.1-beta.1",
+  "version": "0.0.1-beta.2",
   "description": "A lightweight and expressive database markup language",
   "categories": [
     "Programming Languages"
