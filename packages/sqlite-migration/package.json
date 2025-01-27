@@ -1,0 +1,30 @@
+{
+  "name": "@yeti/sqlite-migration",
+  "module": "src/index.ts",
+  "version": "0.0.1-beta.1",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.esm.js"
+    }
+  },
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch"
+  },
+  "devDependencies": {
+    "@types/better-sqlite3": "7.6.12",
+    "@types/bun": "latest",
+    "@yeti/migration-core": "*",
+    "@yeti/typescript-config": "*",
+    "tsup": "8.3.6"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "better-lock": "3.2.0",
+    "better-sqlite3": "11.8.1"
+  }
+}
