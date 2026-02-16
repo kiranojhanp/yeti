@@ -1,6 +1,6 @@
 import Database from "better-sqlite3";
 import betterLock from "better-lock";
-import { MigrationAdapter, Migration } from "@yeti/migration-core";
+import type { MigrationAdapter, Migration } from "@yeti/migration-core";
 
 export interface SQLiteConfig {
   path: string;
@@ -13,6 +13,11 @@ export default function createSQLiteAdapter(
   let db: Database.Database | null = null;
   const lock = new betterLock();
 
+  function getDb(): Database.Database {
+    if (!db) throw new Error("Database not connected. Call connect() first.");
+    return db;
+  }
+
   return {
     async connect() {
       db = new Database(config.path);
@@ -24,7 +29,7 @@ export default function createSQLiteAdapter(
     },
 
     async ensureMigrationsTable() {
-      db?.exec(`
+      getDb().exec(`
         CREATE TABLE IF NOT EXISTS migrations (
           id INTEGER PRIMARY KEY,
           name TEXT NOT NULL,
@@ -35,24 +40,24 @@ export default function createSQLiteAdapter(
     },
 
     async getAppliedMigrations() {
-      const rows =
-        db
-          ?.prepare(
-            `
+      const rows = getDb()
+        .prepare(
+          `
             SELECT id, name, hash, '' as content, '' as file
             FROM migrations
             ORDER BY id ASC
             `
-          )
-          .all() || [];
+        )
+        .all();
 
       return rows as Migration[];
     },
 
     async applyMigration(migration: Migration & { sql: string }) {
-      const tx = db!.transaction(() => {
-        db!.exec(migration.sql);
-        db!
+      const database = getDb();
+      const tx = database.transaction(() => {
+        database.exec(migration.sql);
+        database
           .prepare(
             `
           INSERT INTO migrations (id, name, hash) 
