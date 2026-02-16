@@ -1,6 +1,6 @@
 {
   "name": "yeti-ecosystem",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "private": true,
   "repository": "https://github.com/kiranojhanp/yeti.git",
   "type": "module",
