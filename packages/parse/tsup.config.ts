@@ -5,13 +5,14 @@ export default defineConfig((options) => ({
   entry: ["src/index.ts"],
   dts: true,
   outDir: "dist",
-  format: ["esm"],
+  format: ["esm", "cjs"],
   name: "@yeti/parse",
   outExtension({ format }) {
     return {
-      js: `.${format}.js`,
+      js: format === "esm" ? ".mjs" : ".cjs",
     };
   },
+  noExternal: ["chevrotain"],
   sourcemap: false,
   clean: true,
   target: tsconfig.compilerOptions.target as "ES2016",

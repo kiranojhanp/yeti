@@ -10,8 +10,15 @@
     "type": "git",
     "url": "https://github.com/kiranojhanp/yeti.git"
   },
+  "main": "./dist/extension.js",
+  "activationEvents": [
+    "onLanguage:yeti"
+  ],
   "scripts": {
-    "package": "vsce package"
+    "vscode:prepublish": "npm run package",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "package": "tsc -p ./"
   },
   "contributes": {
     "grammars": [
@@ -43,6 +50,14 @@
     "vscode": "^1.96.0"
   },
   "icon": "images/logo.webp",
+  "dependencies": {
+    "@yeti/parse": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "@types/vscode": "^1.96.0",
+    "typescript": "^5.5.4"
+  },
   "vsce": {
     "dependencies": false
   }

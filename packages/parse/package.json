@@ -1,24 +1,29 @@
 {
   "name": "@yeti/parse",
-  "version": "0.0.1-beta.2",
-  "type": "module",
+  "version": "0.1.1",
+  "type": "commonjs",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
-      "default": "./dist/index.esm.js"
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.cjs",
+      "default": "./dist/index.cjs"
     }
   },
+  "main": "./dist/index.cjs",
+  "types": "./dist/index.d.ts",
   "scripts": {
     "build": "tsup",
-    "dev": "tsup --watch",
-    "test": "vitest run"
+    "test": "vitest"
+  },
+  "dependencies": {
+    "chevrotain": "^11.1.1"
   },
   "devDependencies": {
     "@types/bun": "latest",
-    "@yeti/typescript-config": "*",
-    "tsup": "^8.3.5"
-  },
-  "peerDependencies": {
-    "typescript": "^5.0.0"
+    "@yeti/typescript-config": "workspace:*",
+    "tsup": "^8.3.6",
+    "typescript": "^5.5.4",
+    "vitest": "^3.0.4"
   }
 }
