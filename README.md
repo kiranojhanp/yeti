@@ -23,6 +23,8 @@
 - **Built-In Constraints**: Specify data types, defaults, constraints, and relationships directly in the schema.
 - **Expressive Relationships**: Handle one-to-one, one-to-many, and many-to-many relationships effortlessly.
 - **Index Support**: Define indexes on fields to optimize database performance.
+- **Database Migrations**: A dedicated system for managing and applying database schema changes.
+- **VS Code Support**: Syntax highlighting for `.yeti` files.
 
 ---
 
@@ -57,17 +59,31 @@ namespace todo_app:
 
 ## Architecture & Workflow
 
-Yeti transforms your schema definitions into production-ready SQL through a multi-step process involving lexical analysis, parsing, and dialect-specific code generation.
+Yeti transforms your schema definitions into production-ready SQL through a multi-step process involving lexical analysis, parsing, dialect-specific code generation, and migration management.
 
 ```mermaid
 graph TD
-    Input[Yeti Schema .yeti] -->|Input String| Parser(YetiParser)
-    Parser -->|Parse| AST{AST Construction}
-    AST -->|Namespace| Generator[Generator Strategy]
-    Generator -->|Use Dialect| PG[PostgresGenerator]
-    Generator -->|Use Dialect| SQLite[SQLiteGenerator]
-    PG -->|Generate| SQL_PG[Postgres SQL]
-    SQLite -->|Generate| SQL_SQLITE[SQLite SQL]
+    subgraph Input
+        Schema[Yeti Schema .yeti]
+    end
+
+    subgraph Core Processing
+        Parser(YetiParser) -->|Parse| AST{AST Construction}
+        AST -->|Transform| Generator[Code Generator]
+    end
+
+    subgraph Generation
+        Generator -->|Postgres| PG[Postgres SQL]
+        Generator -->|SQLite| SQLite[SQLite SQL]
+    end
+
+    subgraph Deployment
+        PG -->|Apply| Migration[Migration System]
+        SQLite -->|Apply| Migration
+        Migration -->|Update| DB[(Database)]
+    end
+
+    Schema --> Parser
 ```
 
 ### 1. Parsing Phase (`@yeti/parse`)
@@ -89,6 +105,15 @@ The generation phase transforms the AST into database-specific SQL.
 - **Generator Strategy**: The `BaseSQLGenerator` abstract class defines the core logic for traversing the AST.
 - **Dialect & Templates**: Implementations like `PostgresGenerator` provide specific `SQLDialect` and `TemplateProvider` strategies to handle database-specific syntax (e.g., data types, quoting rules).
 - **Output**: The generator iterates through namespaces, entities, and enums to produce the final DDL (Data Definition Language) SQL strings, including tables, foreign keys, and indexes.
+
+### 3. Database Migration (`@yeti/migration-core`)
+
+The migration system takes the generated SQL and applies it to your database in a controlled, safe manner.
+
+- **Migration System**: The `MigrationSystem` manages the lifecycle of database changes, ensuring migrations are applied in the correct order.
+- **Adapters**: Database-specific adapters (like `@yeti/sqlite-migration`) handle the connection and execution of SQL commands.
+- **Validation**: The system validates migration files against the applied history to prevent inconsistencies.
+- **Locking**: Ensures safe concurrent migration execution using `better-lock` or similar mechanisms.
 
 ---
 
