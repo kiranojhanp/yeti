@@ -55,6 +55,43 @@ namespace todo_app:
     completed
 ```
 
+## Architecture & Workflow
+
+Yeti transforms your schema definitions into production-ready SQL through a multi-step process involving lexical analysis, parsing, and dialect-specific code generation.
+
+```mermaid
+graph TD
+    Input[Yeti Schema .yeti] -->|Input String| Parser(YetiParser)
+    Parser -->|Parse| AST{AST Construction}
+    AST -->|Namespace[]| Generator[Generator Strategy]
+    Generator -->|Use Dialect| PG[PostgresGenerator]
+    Generator -->|Use Dialect| SQLite[SQLiteGenerator]
+    PG -->|Generate| SQL_PG[Postgres SQL]
+    SQLite -->|Generate| SQL_SQLITE[SQLite SQL]
+```
+
+### 1. Parsing Phase (`@yeti/parse`)
+
+The parsing process begins with the `YetiParser` class, which takes raw Yeti schema strings as input.
+
+- **Line-by-Line Processing**: The parser iterates through the input line by line, filtering out comments and handling indentation to determine scope.
+- **Regex Matching**: Specialized regular expressions identify key structures:
+  - **Namespaces**: `namespace name:`
+  - **Entities**: `entity name:`
+  - **Enums**: `enum name:`
+  - **Attributes**: `@attribute(params)`
+- **AST Construction**: The parser builds an Abstract Syntax Tree (AST) consisting of `Namespace` objects, which contain `Entity` and `Enum` definitions, along with their fields and attributes.
+
+### 2. Code Generation (`@yeti/generator`)
+
+The generation phase transforms the AST into database-specific SQL.
+
+- **Generator Strategy**: The `BaseSQLGenerator` abstract class defines the core logic for traversing the AST.
+- **Dialect & Templates**: Implementations like `PostgresGenerator` provide specific `SQLDialect` and `TemplateProvider` strategies to handle database-specific syntax (e.g., data types, quoting rules).
+- **Output**: The generator iterates through namespaces, entities, and enums to produce the final DDL (Data Definition Language) SQL strings, including tables, foreign keys, and indexes.
+
+---
+
 ## Contributing
 
 Contributions are welcome! Feel free to submit issues or pull requests to help improve Yeti.
