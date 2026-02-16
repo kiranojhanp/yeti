@@ -21,4 +21,4 @@ export {
   Comment,
 } from "./parse";
 export type { Attribute, Entity, Enum, Field, Namespace } from "./types";
-export type { IToken } from "chevrotain";
+export type { IToken, CstNode } from "chevrotain";
