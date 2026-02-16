@@ -222,7 +222,7 @@ export class YetiCstParser extends CstParser {
 }
 
 // Singleton Parser Instance
-const parserInstance = new YetiCstParser();
+export const parserInstance = new YetiCstParser();
 const BaseYetiVisitor = parserInstance.getBaseCstVisitorConstructor();
 
 // -----------------
