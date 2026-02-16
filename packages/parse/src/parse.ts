@@ -189,8 +189,8 @@ export class YetiCstParser extends CstParser {
                     this.CONSUME2(Dot);
                     this.CONSUME5(Identifier); // tld
                   });
-                  // Optionally handle paths /foo/bar if needed?
-                  // For now, simple URL handling.
+                  // TODO: URL parsing is intentionally limited to `protocol://domain` or `protocol://domain.tld`.
+                  //       Paths (e.g. `/foo/bar`), query strings, ports, userinfo, and fragments are not supported and will fail to parse.
                 },
               },
             ]);
