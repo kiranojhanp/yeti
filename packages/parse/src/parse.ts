@@ -184,6 +184,9 @@ export class YetiParser {
       parenIdx + 1,
       lastParen > parenIdx ? lastParen : trimmed.length
     );
+    // For now, simple URL handling.
+    // TODO: URL parsing is intentionally limited to `protocol://domain` or `protocol://domain.tld`.
+    // Paths (e.g. `/foo/bar`), query strings, ports, userinfo, and fragments are not supported and will fail to parse.
     const params = paramStr ? paramStr.split(",").map((s) => s.trim()) : [];
     return { name, params };
   }
