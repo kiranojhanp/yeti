@@ -1,6 +1,6 @@
 {
   "name": "yeti-ecosystem",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "private": true,
   "repository": "https://github.com/kiranojhanp/yeti.git",
   "type": "module",
@@ -22,7 +22,7 @@
     "typescript": "5.5.4",
     "vitest": "^4.0.18"
   },
-  "packageManager": "bun@1.1.42",
+  "packageManager": "bun@1.2.19",
   "engines": {
     "node": ">=18"
   }
