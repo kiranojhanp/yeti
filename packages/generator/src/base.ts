@@ -27,12 +27,15 @@ export abstract class BaseSQLGenerator {
 
   // --- Protected Template Methods ---
   protected createSchema(namespace: string): string {
-    return this.templates.schema(namespace);
+    const qNamespace = this.dialect.quoteIdentifier(namespace);
+    return this.templates.schema(qNamespace);
   }
 
   protected createEnum(enumDef: Enum): string {
     const values = this.formatEnumValues(enumDef.values);
-    return this.templates.enum(this.namespace, enumDef.name, values);
+    const qNamespace = this.dialect.quoteIdentifier(this.namespace);
+    const qName = this.dialect.quoteIdentifier(enumDef.name);
+    return this.templates.enum(qNamespace, qName, values);
   }
 
   protected createTable(entity: Entity): string {
@@ -40,7 +43,9 @@ export abstract class BaseSQLGenerator {
       .map((field) => this.generateColumnDefinition(field))
       .join(",\n  ");
 
-    return this.templates.table(this.namespace, entity.name, columns);
+    const qNamespace = this.dialect.quoteIdentifier(this.namespace);
+    const qName = this.dialect.quoteIdentifier(entity.name);
+    return this.templates.table(qNamespace, qName, columns);
   }
 
   protected createIndexes(entity: Entity): string[] {
@@ -83,8 +88,6 @@ export abstract class BaseSQLGenerator {
   }
 
   // --- Abstract Methods for Dialect-Specific Behavior ---
-  protected abstract generatePrimaryKeyConstraint(): string;
-  protected abstract generateUniqueConstraint(): string;
   protected abstract supportsEnums(): boolean;
 
   // --- Private Helper Methods ---
@@ -123,16 +126,16 @@ export abstract class BaseSQLGenerator {
   }
 
   private generateFieldIndexes(tableName: string, field: Field): string[] {
-    return field.attributes
-      .filter((attr) => attr.name === "unique")
-      .map(() =>
-        this.templates.uniqueIndex(this.namespace, tableName, field.name)
-      );
+    // Unique constraint is handled inline by dialect.generateConstraint()
+    // No separate indexes needed
+    return [];
   }
 
   private generateFieldForeignKeys(tableName: string, field: Field): string[] {
     return field.attributes
-      .filter((attr) => attr.name === "fk" && attr.params)
+      .filter(
+        (attr) => attr.name === "fk" && attr.params && attr.params.length > 0
+      )
       .map((attr) =>
         this.parseForeignKey(tableName, field.name, attr.params![0])
       );
@@ -143,18 +146,21 @@ export abstract class BaseSQLGenerator {
     fieldName: string,
     reference: string
   ): string {
+    // NOTE: Currently assumes FK target is in the same namespace.
+    // Cross-namespace FK references (e.g., "> other_schema.users.id") are not supported.
     const match = reference.match(/>\s*([^.]+)\.(.+)/);
     if (!match) {
       throw new Error(`Invalid foreign key reference: ${reference}`);
     }
 
     const [_, targetTable, targetColumn] = match;
+    // Pre-quote all identifiers before passing to template
     return this.templates.foreignKey({
-      namespace: this.namespace,
-      tableName,
-      fieldName,
-      targetTable,
-      targetColumn,
+      namespace: this.dialect.quoteIdentifier(this.namespace),
+      tableName: this.dialect.quoteIdentifier(tableName),
+      fieldName: this.dialect.quoteIdentifier(fieldName),
+      targetTable: this.dialect.quoteIdentifier(targetTable),
+      targetColumn: this.dialect.quoteIdentifier(targetColumn),
     });
   }
 
@@ -165,13 +171,13 @@ export abstract class BaseSQLGenerator {
 
     if (this.enums.has(type)) {
       return this.supportsEnums()
-        ? `${this.namespace}.${type}`
+        ? `${this.dialect.quoteIdentifier(this.namespace)}.${this.dialect.quoteIdentifier(type)}`
         : this.dialect.typeMap.get("enum") || "VARCHAR(255)";
     }
     return this.dialect.typeMap.get(type.toLowerCase()) || type.toUpperCase();
   }
 
   private formatEnumValues(values: string[]): string {
-    return values.map((v) => `'${v}'`).join(", ");
+    return values.map((v) => `'${v.replace(/'/g, "''")}'`).join(", ");
   }
 }
