@@ -22,7 +22,7 @@
     "typescript": "5.5.4",
     "vitest": "^4.0.18"
   },
-  "packageManager": "bun@1.1.42",
+  "packageManager": "bun@1.2.19",
   "engines": {
     "node": ">=18"
   }
