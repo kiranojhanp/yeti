@@ -282,11 +282,10 @@ class YetiAstVisitor extends BaseYetiVisitor {
       return `> ${ctx.Identifier[0].image}.${ctx.Identifier[1].image}`;
     }
 
-    // Check for identifier-based patterns
-    // The identifier is always at index 0 relative to THIS rule's context for that ALT branch?
-    // Wait, `CONSUME3(Identifier)` puts it in `ctx.Identifier` array.
-    // If it's `CONSUME3`, it's still just `ctx.Identifier` in the output object, likely at index 0 if no other Identifiers consumed in this rule.
-    // However, `CONSUME4` and `CONSUME5` add more identifiers.
+    // Check for identifier-based patterns.
+    // In this rule, Identifier tokens are accumulated in ctx.Identifier in order of appearance.
+    // For the simple identifier case we use the first one (index 0); additional identifiers
+    // are used in more complex patterns handled below (for example, URLs or qualified names).
 
     if (ctx.Identifier) {
       let result = ctx.Identifier[0].image;
