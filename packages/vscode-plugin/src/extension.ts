@@ -68,10 +68,10 @@ class DocumentSemanticTokensProvider
     document: vscode.TextDocument,
     token: vscode.CancellationToken
   ): Promise<vscode.SemanticTokens> {
-    const allTokens = this._tokenize(document.getText());
+    const documentTokens = this._tokenize(document.getText());
     const builder = new vscode.SemanticTokensBuilder();
 
-    allTokens.forEach((token) => {
+    documentTokens.forEach((token) => {
       const type = this._getTokenType(token);
       if (type) {
         builder.push(
