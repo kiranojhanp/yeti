@@ -1,5 +1,7 @@
 export {
   YetiParser,
+  YetiCstParser,
+  parserInstance,
   YetiLexer,
   allTokens,
   NamespaceKeyword,
