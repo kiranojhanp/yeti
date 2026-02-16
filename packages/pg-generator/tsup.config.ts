@@ -5,14 +5,7 @@ export default defineConfig((options) => ({
   entry: ["src/index.ts"],
   dts: true,
   outDir: "dist",
-  format: ["esm"],
-  name: "@yeti/pg-generator",
-  outExtension({ format }) {
-    return {
-      js: `.${format}.js`,
-    };
-  },
-  sourcemap: false,
+  format: ["cjs", "esm"],
   clean: true,
   target: tsconfig.compilerOptions.target as "ES2016",
   minify: !options.watch,
