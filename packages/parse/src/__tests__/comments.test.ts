@@ -10,7 +10,7 @@ namespace app:
 `.trim();
 
     const parser = new YetiParser(input);
-    const result = parser.parse();
+    const { ast: result } = parser.parse();
 
     const field = result[0].entities[0].fields[0];
     expect(field.type).toBe("string");
@@ -25,7 +25,7 @@ namespace app:
 `.trim();
 
     const parser = new YetiParser(input);
-    const result = parser.parse();
+    const { ast: result } = parser.parse();
 
     expect(result[0].enums[0].values).toEqual(["active", "inactive"]);
   });
@@ -40,7 +40,7 @@ namespace app:
 `.trim();
 
     const parser = new YetiParser(input);
-    const result = parser.parse();
+    const { ast: result } = parser.parse();
 
     expect(result[0].entities).toHaveLength(1);
     expect(result[0].entities[0].fields).toHaveLength(1);
@@ -55,7 +55,7 @@ namespace app:
 `.trim();
 
     const parser = new YetiParser(input);
-    const result = parser.parse();
+    const { ast: result } = parser.parse();
 
     const attr = result[0].entities[0].fields[0].attributes[0];
     expect(attr.params).toEqual([]);

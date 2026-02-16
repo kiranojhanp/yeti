@@ -1,5 +1,22 @@
-import { createToken, Lexer, CstParser, CstNode, IToken } from "chevrotain";
-import { Namespace, Entity, Enum, Field, Attribute } from "./types";
+import {
+  createToken,
+  Lexer,
+  CstParser,
+  CstNode,
+  IToken,
+  ILexingError,
+  IRecognitionException,
+} from "chevrotain";
+import {
+  Namespace,
+  Entity,
+  Enum,
+  Field,
+  Attribute,
+  Location,
+  YetiError,
+  ParseResult,
+} from "./types";
 
 // -----------------
 // 1. Token Definitions
@@ -86,7 +103,10 @@ export const YetiLexer = new Lexer(allTokens);
 // -----------------
 export class YetiCstParser extends CstParser {
   constructor() {
-    super(allTokens);
+    super(allTokens, {
+      recoveryEnabled: true,
+      nodeLocationTracking: "full",
+    });
     this.performSelfAnalysis();
   }
 
@@ -208,6 +228,17 @@ const BaseYetiVisitor = parserInstance.getBaseCstVisitorConstructor();
 // -----------------
 // 4. AST Builder (Visitor)
 // -----------------
+
+function toLocation(loc: any): Location | undefined {
+  if (!loc) return undefined;
+  return {
+    startLine: loc.startLine,
+    endLine: loc.endLine,
+    startColumn: loc.startColumn,
+    endColumn: loc.endColumn,
+  };
+}
+
 class YetiAstVisitor extends BaseYetiVisitor {
   constructor() {
     super();
@@ -215,22 +246,42 @@ class YetiAstVisitor extends BaseYetiVisitor {
   }
 
   parsedFile(ctx: any): Namespace[] {
-    return ctx.parsedNamespace?.map((node: CstNode) => this.visit(node)) || [];
+    return (
+      ctx.parsedNamespace?.map((node: CstNode) => {
+        const ns = this.visit(node);
+        ns.loc = toLocation(node.location);
+        return ns;
+      }) || []
+    );
   }
 
   parsedNamespace(ctx: any): Namespace {
     return {
       name: ctx.Identifier[0].image,
       entities:
-        ctx.parsedEntity?.map((node: CstNode) => this.visit(node)) || [],
-      enums: ctx.parsedEnum?.map((node: CstNode) => this.visit(node)) || [],
+        ctx.parsedEntity?.map((node: CstNode) => {
+          const ent = this.visit(node);
+          ent.loc = toLocation(node.location);
+          return ent;
+        }) || [],
+      enums:
+        ctx.parsedEnum?.map((node: CstNode) => {
+          const en = this.visit(node);
+          en.loc = toLocation(node.location);
+          return en;
+        }) || [],
     };
   }
 
   parsedEntity(ctx: any): Entity {
     return {
       name: ctx.Identifier[0].image,
-      fields: ctx.parsedField?.map((node: CstNode) => this.visit(node)) || [],
+      fields:
+        ctx.parsedField?.map((node: CstNode) => {
+          const f = this.visit(node);
+          f.loc = toLocation(node.location);
+          return f;
+        }) || [],
     };
   }
 
@@ -243,7 +294,11 @@ class YetiAstVisitor extends BaseYetiVisitor {
 
   parsedField(ctx: any): Field {
     const attributes =
-      ctx.parsedAttribute?.map((node: CstNode) => this.visit(node)) || [];
+      ctx.parsedAttribute?.map((node: CstNode) => {
+        const attr = this.visit(node);
+        attr.loc = toLocation(node.location);
+        return attr;
+      }) || [];
 
     const ATTRIBUTE_PRIORITIES = new Map([
       ["pk", 1],
@@ -324,21 +379,26 @@ export class YetiParser {
     this.input = input;
   }
 
-  public parse(): Namespace[] {
+  public parse(): { ast: Namespace[]; errors: any[] } {
     const lexResult = YetiLexer.tokenize(this.input);
-
-    if (lexResult.errors.length > 0) {
-      throw new Error(`Lexing errors: ${lexResult.errors[0].message}`);
-    }
+    const errors: any[] = [...lexResult.errors];
 
     parserInstance.input = lexResult.tokens;
     const cst = parserInstance.parsedFile();
 
-    if (parserInstance.errors.length > 0) {
-      throw new Error(`Parsing errors: ${parserInstance.errors[0].message}`);
-    }
+    errors.push(...parserInstance.errors);
 
     const visitor = new YetiAstVisitor();
-    return visitor.visit(cst);
+    const ast = visitor.visit(cst) || [];
+
+    return {
+      ast,
+      errors: errors.map((e) => ({
+        message: e.message,
+        severity: "error",
+        // TODO: Map Chevrotain error location to our Location type
+        loc: undefined,
+      })),
+    };
   }
 }

@@ -14,7 +14,7 @@ namespace billing:
 `.trim();
 
     const parser = new YetiParser(input);
-    const result = parser.parse();
+    const { ast: result } = parser.parse();
 
     expect(result).toHaveLength(2);
 
@@ -43,7 +43,7 @@ namespace core:
 `.trim();
 
     const parser = new YetiParser(input);
-    const result = parser.parse();
+    const { ast: result } = parser.parse();
 
     expect(result).toHaveLength(1);
     expect(result[0].name).toBe("core");

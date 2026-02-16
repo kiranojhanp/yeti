@@ -9,7 +9,7 @@ namespace app:
 `.trim();
 
     const parser = new YetiParser(input);
-    const result = parser.parse();
+    const { ast: result } = parser.parse();
 
     expect(result).toHaveLength(1);
     expect(result[0].entities).toHaveLength(1);
@@ -24,7 +24,7 @@ namespace app:
 `.trim();
 
     const parser = new YetiParser(input);
-    const result = parser.parse();
+    const { ast: result } = parser.parse();
 
     expect(result).toHaveLength(1);
     expect(result[0].enums).toHaveLength(1);
@@ -41,7 +41,7 @@ namespace app:
 `.trim();
 
     const parser = new YetiParser(input);
-    const result = parser.parse();
+    const { ast: result } = parser.parse();
 
     expect(result).toHaveLength(1);
     expect(result[0].entities).toHaveLength(2);
@@ -62,7 +62,7 @@ namespace app:
 `.trim();
 
     const parser = new YetiParser(input);
-    const result = parser.parse();
+    const { ast: result } = parser.parse();
 
     expect(result).toHaveLength(1);
     expect(result[0].enums).toHaveLength(2);
