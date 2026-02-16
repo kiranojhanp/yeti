@@ -1,5 +1,6 @@
 import * as vscode from "vscode";
 import { YetiLexer, parserInstance, IToken, CstNode } from "@yeti/parse";
+import { generateSql } from "./commands/generate";
 
 const legend = new vscode.SemanticTokensLegend(
   ["keyword", "type", "variable", "property", "enumMember", "string", "number"], // token types
@@ -137,6 +138,10 @@ function traverseCst(node: CstNode, symbols: SymbolTable, uri: vscode.Uri) {
 }
 
 export function activate(context: vscode.ExtensionContext) {
+  context.subscriptions.push(
+    vscode.commands.registerCommand("yeti.generateSql", generateSql)
+  );
+
   context.subscriptions.push(
     vscode.languages.registerDocumentSemanticTokensProvider(
       { language: "yeti" },

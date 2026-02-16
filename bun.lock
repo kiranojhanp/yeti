@@ -12,7 +12,7 @@
     },
     "packages/generator": {
       "name": "@yeti/generator",
-      "version": "0.0.1-beta.2",
+      "version": "0.0.2",
       "devDependencies": {
         "@types/bun": "latest",
         "@yeti/parse": "*",
@@ -25,7 +25,7 @@
     },
     "packages/migration": {
       "name": "@yeti/migration-core",
-      "version": "0.0.1-beta.2",
+      "version": "0.0.2",
       "devDependencies": {
         "@types/bun": "latest",
         "@yeti/typescript-config": "*",
@@ -36,7 +36,7 @@
     },
     "packages/parse": {
       "name": "@yeti/parse",
-      "version": "0.1.1",
+      "version": "0.0.2",
       "dependencies": {
         "chevrotain": "^11.1.1",
       },
@@ -50,7 +50,7 @@
     },
     "packages/pg-generator": {
       "name": "@yeti/pg-generator",
-      "version": "0.0.1-beta.2",
+      "version": "0.0.2",
       "devDependencies": {
         "@types/bun": "latest",
         "@yeti/generator": "*",
@@ -64,7 +64,7 @@
     },
     "packages/sqlite-migration": {
       "name": "@yeti/sqlite-migration",
-      "version": "0.0.1-beta.2",
+      "version": "0.0.2",
       "dependencies": {
         "better-lock": "3.2.0",
         "better-sqlite3": "11.8.1",
@@ -82,13 +82,15 @@
     },
     "packages/typescript-config": {
       "name": "@yeti/typescript-config",
-      "version": "0.0.1-beta.2",
+      "version": "0.0.2",
     },
     "packages/vscode-plugin": {
-      "name": "yeti-vscode",
-      "version": "0.0.1-beta.2",
+      "name": "yeti-vscode-plugin",
+      "version": "0.0.2",
       "dependencies": {
+        "@yeti/generator": "workspace:*",
         "@yeti/parse": "workspace:*",
+        "@yeti/pg-generator": "workspace:*",
       },
       "devDependencies": {
         "@types/node": "^20.0.0",
@@ -508,7 +510,7 @@
 
     "wrappy": ["wrappy@1.0.2", "", {}, "sha512-l4Sp/DRseor9wL6EvV2+TuQn63dMkPjZ/sp9XkghTEbV9KlPS1xUsZ3u7/IQO4wxtcFB4bgpQPRcR3QCvezPcQ=="],
 
-    "yeti-vscode": ["yeti-vscode@workspace:packages/vscode-plugin"],
+    "yeti-vscode-plugin": ["yeti-vscode-plugin@workspace:packages/vscode-plugin"],
 
     "@vitest/expect/chai": ["chai@6.2.2", "", {}, "sha512-NUPRluOfOiTKBKvWPtSD4PhFvWCqOi0BGStNWs57X9js7XGTprSmFoz5F0tWhR4WPjNeR9jXqdC7/UpSJTnlRg=="],
 

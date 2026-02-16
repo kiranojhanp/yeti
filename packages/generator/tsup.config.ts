@@ -5,11 +5,11 @@ export default defineConfig((options) => ({
   entry: ["src/index.ts"],
   dts: true,
   outDir: "dist",
-  format: ["esm"],
+  format: ["esm", "cjs"],
   name: "@yeti/generator",
   outExtension({ format }) {
     return {
-      js: `.${format}.js`,
+      js: format === "esm" ? ".mjs" : ".cjs",
     };
   },
   sourcemap: false,

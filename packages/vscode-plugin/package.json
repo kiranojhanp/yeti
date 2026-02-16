@@ -22,6 +22,21 @@
     "package": "tsc -p ./"
   },
   "contributes": {
+    "commands": [
+      {
+        "command": "yeti.generateSql",
+        "title": "Generate SQL"
+      }
+    ],
+    "menus": {
+      "editor/title": [
+        {
+          "command": "yeti.generateSql",
+          "group": "navigation",
+          "when": "resourceLangId == yeti"
+        }
+      ]
+    },
     "grammars": [
       {
         "language": "yeti",
@@ -52,7 +67,9 @@
   },
   "icon": "images/logo.webp",
   "dependencies": {
-    "@yeti/parse": "workspace:*"
+    "@yeti/generator": "workspace:*",
+    "@yeti/parse": "workspace:*",
+    "@yeti/pg-generator": "workspace:*"
   },
   "devDependencies": {
     "@types/node": "^20.0.0",

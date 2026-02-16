@@ -4,11 +4,14 @@
   "type": "module",
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
-      "default": "./dist/index.esm.js"
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs",
+      "types": "./dist/index.d.ts"
     }
   },
-  "module": "src/index.ts",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "scripts": {
     "build": "tsup",
     "dev": "tsup --watch",
