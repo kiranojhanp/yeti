@@ -1,260 +1,344 @@
-import type { Attribute, Entity, Enum, Field, Namespace } from "./types";
+import { createToken, Lexer, CstParser, CstNode, IToken } from "chevrotain";
+import { Namespace, Entity, Enum, Field, Attribute } from "./types";
 
-// Constants and Types
-const PATTERNS = {
-  NAMESPACE: /^namespace\s+([^:]+):/,
-  ENTITY: /^entity\s+([^:]+):/,
-  ENUM: /^enum\s+([^:]+):/,
-  ATTRIBUTE: /^([^\(]+)(?:\((.*)\))?/,
-} as const;
+// -----------------
+// 1. Token Definitions
+// -----------------
 
-// Separate error messages for better maintenance
-const ERRORS = {
-  INVALID_LINE: (line: string) => `Invalid line format: "${line}"`,
-  INVALID_DECLARATION: (type: string, line: number) =>
-    `Invalid ${type} declaration on line ${line + 1}`,
-  INVALID_ATTRIBUTE: (attr: string) => `Invalid attribute: @${attr}`,
-} as const;
+// Keywords
+export const NamespaceKeyword = createToken({
+  name: "NamespaceKeyword",
+  pattern: /namespace/,
+});
+export const EntityKeyword = createToken({
+  name: "EntityKeyword",
+  pattern: /entity/,
+});
+export const EnumKeyword = createToken({
+  name: "EnumKeyword",
+  pattern: /enum/,
+});
+export const True = createToken({ name: "True", pattern: /true/ });
+export const False = createToken({ name: "False", pattern: /false/ });
 
-/**
- * YetiParser: Parses structured data definitions into typed objects
- *
- * Features:
- * - Namespace, entity, and enum parsing
- * - Attribute handling with priority ordering
- * - Comment support (#)
- * - Indentation-based structure
- */
-export class YetiParser {
-  // --- Configuration ---
-  private static readonly ATTRIBUTE_PRIORITIES = new Map([
-    ["pk", 1], // Primary keys first
-    ["unique", 2], // Then constraints
-    ["default", 3], // Then defaults
-    ["fk", 4], // Foreign keys last
-  ]);
+// Symbols
+export const Colon = createToken({ name: "Colon", pattern: /:/ });
+export const LParen = createToken({ name: "LParen", pattern: /\(/ });
+export const RParen = createToken({ name: "RParen", pattern: /\)/ });
+export const Comma = createToken({ name: "Comma", pattern: /,/ });
+export const At = createToken({ name: "At", pattern: /@/ });
+export const GreaterThan = createToken({ name: "GreaterThan", pattern: />/ });
+export const Dot = createToken({ name: "Dot", pattern: /\./ });
+export const Slash = createToken({ name: "Slash", pattern: /\// }); // New Token
 
-  // --- State ---
-  private readonly lines: string[];
-  private currentIndex: number = 0;
+// Literals
+export const StringLiteral = createToken({
+  name: "StringLiteral",
+  pattern: /'((?:[^'\\]|\\.)*)'/,
+});
+// Identifier (Must be after keywords)
+export const Identifier = createToken({
+  name: "Identifier",
+  pattern: /[a-zA-Z_][a-zA-Z0-9_]*/,
+});
 
-  constructor(input: string) {
-    // Remove empty lines during initialization
-    this.lines = input.split("\n").filter((line) => line.trim());
+// Comments & Whitespace
+export const Comment = createToken({
+  name: "Comment",
+  pattern: /#[^\n\r]*/,
+  group: "comments",
+});
+
+export const WhiteSpace = createToken({
+  name: "WhiteSpace",
+  pattern: /\s+/,
+  group: Lexer.SKIPPED,
+});
+
+// Token List (Order matters!)
+export const allTokens = [
+  WhiteSpace,
+  Comment,
+  NamespaceKeyword,
+  EntityKeyword,
+  EnumKeyword,
+  True,
+  False,
+  Colon,
+  LParen,
+  RParen,
+  Comma,
+  At,
+  GreaterThan,
+  Dot,
+  Slash,
+  StringLiteral,
+  Identifier,
+];
+
+// -----------------
+// 2. Lexer
+// -----------------
+export const YetiLexer = new Lexer(allTokens);
+
+// -----------------
+// 3. Parser
+// -----------------
+export class YetiCstParser extends CstParser {
+  constructor() {
+    super(allTokens);
+    this.performSelfAnalysis();
   }
 
-  // --- Public API ---
-  /**
-   * Parse the entire input into a structured format
-   * @returns Array of parsed namespaces
-   */
-  public parse(): Namespace[] {
-    const namespaces: Namespace[] = [];
+  public parsedFile = this.RULE("parsedFile", () => {
+    this.MANY(() => {
+      this.SUBRULE(this.parsedNamespace);
+    });
+  });
 
-    while (this.hasMoreLines()) {
-      const line = this.peekLine();
+  public parsedNamespace = this.RULE("parsedNamespace", () => {
+    this.CONSUME(NamespaceKeyword);
+    this.CONSUME(Identifier); // namespace name
+    this.CONSUME(Colon);
+    this.MANY(() => {
+      this.OR([
+        { ALT: () => this.SUBRULE(this.parsedEntity) },
+        { ALT: () => this.SUBRULE(this.parsedEnum) },
+      ]);
+    });
+  });
 
-      if (line.startsWith("namespace")) {
-        namespaces.push(this.parseNamespace());
-      } else {
-        this.nextLine(); // Skip non-namespace lines
-      }
-    }
+  public parsedEntity = this.RULE("parsedEntity", () => {
+    this.CONSUME(EntityKeyword);
+    this.CONSUME(Identifier); // entity name
+    this.CONSUME(Colon);
+    this.MANY(() => {
+      this.SUBRULE(this.parsedField);
+    });
+  });
 
-    return namespaces;
+  public parsedEnum = this.RULE("parsedEnum", () => {
+    this.CONSUME(EnumKeyword);
+    this.CONSUME(Identifier); // enum name
+    this.CONSUME(Colon);
+    this.MANY(() => {
+      this.CONSUME2(Identifier); // value
+    });
+  });
+
+  public parsedField = this.RULE("parsedField", () => {
+    this.CONSUME(Identifier); // field name
+    this.CONSUME(Colon);
+    this.CONSUME2(Identifier); // type name
+    this.MANY(() => {
+      this.SUBRULE(this.parsedAttribute);
+    });
+  });
+
+  public parsedAttribute = this.RULE("parsedAttribute", () => {
+    this.CONSUME(At);
+    this.CONSUME(Identifier); // attribute name
+    this.OPTION(() => {
+      this.CONSUME(LParen);
+      this.MANY_SEP({
+        SEP: Comma,
+        DEF: () => this.SUBRULE(this.parsedParam),
+      });
+      this.CONSUME(RParen);
+    });
+  });
+
+  public parsedParam = this.RULE("parsedParam", () => {
+    this.OR([
+      { ALT: () => this.CONSUME(StringLiteral) },
+      { ALT: () => this.CONSUME(True) },
+      { ALT: () => this.CONSUME(False) },
+      {
+        ALT: () => {
+          this.CONSUME(GreaterThan);
+          this.CONSUME(Identifier); // Entity
+          this.CONSUME(Dot);
+          this.CONSUME2(Identifier); // Field
+        },
+      },
+      // Handle ambiguous Identifier start (Simple ID, Function Call, URL)
+      {
+        ALT: () => {
+          this.CONSUME3(Identifier);
+          this.OPTION(() => {
+            this.OR1([
+              // Function Call: ident(...)
+              {
+                ALT: () => {
+                  this.CONSUME(LParen);
+                  this.MANY_SEP({
+                    SEP: Comma,
+                    DEF: () => this.SUBRULE(this.parsedParam),
+                  });
+                  this.CONSUME(RParen);
+                },
+              },
+              // URL: protocol://domain...
+              {
+                ALT: () => {
+                  this.CONSUME(Colon);
+                  this.CONSUME(Slash);
+                  this.CONSUME2(Slash);
+                  this.CONSUME4(Identifier); // domain
+                  this.OPTION2(() => {
+                    this.CONSUME2(Dot);
+                    this.CONSUME5(Identifier); // tld
+                  });
+                  // TODO: URL parsing is intentionally limited to `protocol://domain` or `protocol://domain.tld`.
+                  //       Paths (e.g. `/foo/bar`), query strings, ports, userinfo, and fragments are not supported and will fail to parse.
+                },
+              },
+            ]);
+          });
+        },
+      },
+    ]);
+  });
+}
+
+// Singleton Parser Instance
+const parserInstance = new YetiCstParser();
+const BaseYetiVisitor = parserInstance.getBaseCstVisitorConstructor();
+
+// -----------------
+// 4. AST Builder (Visitor)
+// -----------------
+class YetiAstVisitor extends BaseYetiVisitor {
+  constructor() {
+    super();
+    this.validateVisitor();
   }
 
-  // --- Core Parsing Methods ---
-  /**
-   * Parse a namespace and its contents
-   */
-  private parseNamespace(): Namespace {
-    const name = this.extractMatch(PATTERNS.NAMESPACE, "namespace");
-    this.nextLine(); // advance past declaration line
+  parsedFile(ctx: any): Namespace[] {
+    return ctx.parsedNamespace?.map((node: CstNode) => this.visit(node)) || [];
+  }
 
-    const namespace: Namespace = {
-      name,
-      entities: [],
-      enums: [],
+  parsedNamespace(ctx: any): Namespace {
+    return {
+      name: ctx.Identifier[0].image,
+      entities:
+        ctx.parsedEntity?.map((node: CstNode) => this.visit(node)) || [],
+      enums: ctx.parsedEnum?.map((node: CstNode) => this.visit(node)) || [],
     };
-
-    if (!this.hasMoreLines()) return namespace;
-    const baseIndent = this.getCurrentIndentation();
-
-    while (this.shouldContinueBlock(baseIndent)) {
-      const line = this.peekLine().trim();
-
-      if (this.isComment(line)) {
-        this.nextLine();
-        continue;
-      }
-
-      if (line.startsWith("entity")) {
-        namespace.entities.push(this.parseEntity());
-      } else if (line.startsWith("enum")) {
-        namespace.enums.push(this.parseEnum());
-      } else {
-        this.nextLine();
-      }
-    }
-
-    return namespace;
   }
 
-  /**
-   * Parse an entity definition
-   */
-  private parseEntity(): Entity {
-    const name = this.extractMatch(PATTERNS.ENTITY, "entity");
-    const fields: Field[] = [];
-    const declLine = this.peekLine(); // save for indent comparison
-    this.nextLine();
-    if (!this.hasMoreLines()) return { name, fields };
-    const declIndent = this.getIndentation(declLine);
-    const baseIndent = this.getCurrentIndentation();
-    if (baseIndent <= declIndent) return { name, fields }; // empty entity — next line is sibling
-
-    while (this.shouldContinueBlock(baseIndent)) {
-      const line = this.peekLine().trim();
-
-      if (!this.isComment(line)) {
-        fields.push(this.parseField(line));
-      }
-
-      this.nextLine();
-    }
-
-    return { name, fields };
+  parsedEntity(ctx: any): Entity {
+    return {
+      name: ctx.Identifier[0].image,
+      fields: ctx.parsedField?.map((node: CstNode) => this.visit(node)) || [],
+    };
   }
 
-  /**
-   * Parse an enum definition
-   */
-  private parseEnum(): Enum {
-    const name = this.extractMatch(PATTERNS.ENUM, "enum");
-    const values: string[] = [];
-    const declLine = this.peekLine(); // save for indent comparison
-    this.nextLine();
-    if (!this.hasMoreLines()) return { name, values };
-    const declIndent = this.getIndentation(declLine);
-    const baseIndent = this.getCurrentIndentation();
-    if (baseIndent <= declIndent) return { name, values }; // empty enum — next line is sibling
-
-    while (this.shouldContinueBlock(baseIndent)) {
-      const line = this.peekLine().trim();
-
-      if (!this.isComment(line)) {
-        values.push(line.replace(/#.*$/, "").trim());
-      }
-
-      this.nextLine();
-    }
-
-    return { name, values };
+  parsedEnum(ctx: any): Enum {
+    return {
+      name: ctx.Identifier[0].image,
+      values: ctx.Identifier.slice(1).map((t: IToken) => t.image),
+    };
   }
 
-  // --- Field and Attribute Parsing ---
-  /**
-   * Parse a field definition including its attributes
-   */
-  private parseField(line: string): Field {
-    const stripped = line.replace(/#.*$/, "").trim();
-    const [name, typeSection] = this.splitDefinition(stripped);
-    const [type, ...attributesRaw] = typeSection
-      .split("@")
-      .map((s) => s.trim());
+  parsedField(ctx: any): Field {
+    const attributes =
+      ctx.parsedAttribute?.map((node: CstNode) => this.visit(node)) || [];
 
-    const attributes = this.parseAndSortAttributes(attributesRaw);
+    const ATTRIBUTE_PRIORITIES = new Map([
+      ["pk", 1],
+      ["unique", 2],
+      ["default", 3],
+      ["fk", 4],
+    ]);
 
-    return { name, type, attributes };
+    attributes.sort((a: Attribute, b: Attribute) => {
+      const priorityA = ATTRIBUTE_PRIORITIES.get(a.name) ?? 999;
+      const priorityB = ATTRIBUTE_PRIORITIES.get(b.name) ?? 999;
+      return priorityA - priorityB;
+    });
+
+    return {
+      name: ctx.Identifier[0].image,
+      type: ctx.Identifier[1].image,
+      attributes,
+    };
   }
 
-  /**
-   * Parse a single attribute and its parameters
-   */
-  private parseAttribute(attr: string): Attribute {
-    const trimmed = attr.trim();
-    const parenIdx = trimmed.indexOf("(");
-    if (parenIdx === -1) {
-      return { name: trimmed, params: [] };
-    }
-    const name = trimmed.substring(0, parenIdx).trim();
-    const lastParen = trimmed.lastIndexOf(")");
-    const paramStr = trimmed.substring(
-      parenIdx + 1,
-      lastParen > parenIdx ? lastParen : trimmed.length
-    );
-    const params = paramStr ? paramStr.split(",").map((s) => s.trim()) : [];
+  parsedAttribute(ctx: any): Attribute {
+    const name = ctx.Identifier[0].image;
+    const params =
+      ctx.parsedParam?.map((node: CstNode) => this.visit(node)) || [];
     return { name, params };
   }
 
-  /**
-   * Parse and sort multiple attributes by priority
-   */
-  private parseAndSortAttributes(attributes: string[]): Attribute[] {
-    const parsed = attributes.map((attr) => this.parseAttribute(attr));
+  parsedParam(ctx: any): string {
+    if (ctx.StringLiteral) return ctx.StringLiteral[0].image.slice(1, -1);
+    if (ctx.True) return "true";
+    if (ctx.False) return "false";
 
-    return parsed.sort((a, b) => {
-      const priorityA = YetiParser.ATTRIBUTE_PRIORITIES.get(a.name) ?? 999;
-      const priorityB = YetiParser.ATTRIBUTE_PRIORITIES.get(b.name) ?? 999;
-      return priorityA - priorityB;
-    });
-  }
-
-  // --- Helper Methods ---
-  private getCurrentIndentation(): number {
-    return this.getIndentation(this.peekLine());
-  }
-
-  private shouldContinueBlock(baseIndent: number): boolean {
-    return (
-      this.hasMoreLines() && this.getIndentation(this.peekLine()) >= baseIndent
-    );
-  }
-
-  private isComment(line: string): boolean {
-    return line.startsWith("#");
-  }
-
-  private extractMatch(pattern: RegExp, type: string): string {
-    const line = this.lines[this.currentIndex].trim();
-    const match = line.match(pattern);
-
-    if (!match) {
-      throw new Error(ERRORS.INVALID_DECLARATION(type, this.currentIndex));
+    // Check for explicit Entity reference (> Entity.Field)
+    if (ctx.GreaterThan) {
+      return `> ${ctx.Identifier[0].image}.${ctx.Identifier[1].image}`;
     }
 
-    return match[1].trim();
-  }
+    // Check for identifier-based patterns.
+    // In this rule, Identifier tokens are accumulated in ctx.Identifier in order of appearance.
+    // For the simple identifier case we use the first one (index 0); additional identifiers
+    // are used in more complex patterns handled below (for example, URLs or qualified names).
 
-  private splitDefinition(line: string): [string, string] {
-    const colonIdx = line.indexOf(":");
-    if (colonIdx === -1) {
-      throw new Error(ERRORS.INVALID_LINE(line));
+    if (ctx.Identifier) {
+      let result = ctx.Identifier[0].image;
+
+      // Function call: ident(params...)
+      if (ctx.LParen) {
+        const innerParams =
+          ctx.parsedParam?.map((node: CstNode) => this.visit(node)) || [];
+        return `${result}(${innerParams.join(", ")})`;
+      }
+
+      // URL: protocol://domain.tld
+      if (ctx.Colon && ctx.Slash) {
+        result += "://";
+        if (ctx.Identifier[1]) result += ctx.Identifier[1].image; // domain
+        if (ctx.Dot && ctx.Identifier[2]) {
+          result += "." + ctx.Identifier[2].image; // tld
+        }
+        return result;
+      }
+
+      return result;
     }
-    const name = line.substring(0, colonIdx).trim();
-    const value = line.substring(colonIdx + 1).trim();
-    if (!name || !value) {
-      throw new Error(ERRORS.INVALID_LINE(line));
+
+    return "";
+  }
+}
+
+// -----------------
+// 5. Public API (Backward Compatibility)
+// -----------------
+export class YetiParser {
+  private input: string;
+
+  constructor(input: string) {
+    this.input = input;
+  }
+
+  public parse(): Namespace[] {
+    const lexResult = YetiLexer.tokenize(this.input);
+
+    if (lexResult.errors.length > 0) {
+      throw new Error(`Lexing errors: ${lexResult.errors[0].message}`);
     }
-    return [name, value];
-  }
 
-  // --- Iterator Methods ---
-  private hasMoreLines(): boolean {
-    return this.currentIndex < this.lines.length;
-  }
+    parserInstance.input = lexResult.tokens;
+    const cst = parserInstance.parsedFile();
 
-  private peekLine(): string {
-    return this.lines[this.currentIndex];
-  }
+    if (parserInstance.errors.length > 0) {
+      throw new Error(`Parsing errors: ${parserInstance.errors[0].message}`);
+    }
 
-  private nextLine(): string {
-    if (!this.hasMoreLines()) return "";
-    return this.lines[this.currentIndex++];
-  }
-
-  private getIndentation(line: string): number {
-    return line.search(/\S/);
+    const visitor = new YetiAstVisitor();
+    return visitor.visit(cst);
   }
 }
