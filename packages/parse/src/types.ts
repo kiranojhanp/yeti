@@ -17,7 +17,7 @@ export type Field = {
 
 export type Attribute = {
   name: string;
-  params?: string[];
+  params: string[];
 };
 
 export type Enum = {

@@ -70,13 +70,16 @@ export class YetiParser {
    */
   private parseNamespace(): Namespace {
     const name = this.extractMatch(PATTERNS.NAMESPACE, "namespace");
-    const baseIndent = this.getCurrentIndentation();
+    this.nextLine(); // advance past declaration line
 
     const namespace: Namespace = {
       name,
       entities: [],
       enums: [],
     };
+
+    if (!this.hasMoreLines()) return namespace;
+    const baseIndent = this.getCurrentIndentation();
 
     while (this.shouldContinueBlock(baseIndent)) {
       const line = this.peekLine().trim();
@@ -104,9 +107,12 @@ export class YetiParser {
   private parseEntity(): Entity {
     const name = this.extractMatch(PATTERNS.ENTITY, "entity");
     const fields: Field[] = [];
-
-    this.nextLine(); // Move past entity declaration
+    const declLine = this.peekLine(); // save for indent comparison
+    this.nextLine();
+    if (!this.hasMoreLines()) return { name, fields };
+    const declIndent = this.getIndentation(declLine);
     const baseIndent = this.getCurrentIndentation();
+    if (baseIndent <= declIndent) return { name, fields }; // empty entity — next line is sibling
 
     while (this.shouldContinueBlock(baseIndent)) {
       const line = this.peekLine().trim();
@@ -127,15 +133,18 @@ export class YetiParser {
   private parseEnum(): Enum {
     const name = this.extractMatch(PATTERNS.ENUM, "enum");
     const values: string[] = [];
-
+    const declLine = this.peekLine(); // save for indent comparison
     this.nextLine();
+    if (!this.hasMoreLines()) return { name, values };
+    const declIndent = this.getIndentation(declLine);
     const baseIndent = this.getCurrentIndentation();
+    if (baseIndent <= declIndent) return { name, values }; // empty enum — next line is sibling
 
     while (this.shouldContinueBlock(baseIndent)) {
       const line = this.peekLine().trim();
 
       if (!this.isComment(line)) {
-        values.push(line);
+        values.push(line.replace(/#.*$/, "").trim());
       }
 
       this.nextLine();
@@ -149,7 +158,8 @@ export class YetiParser {
    * Parse a field definition including its attributes
    */
   private parseField(line: string): Field {
-    const [name, typeSection] = this.splitDefinition(line);
+    const stripped = line.replace(/#.*$/, "").trim();
+    const [name, typeSection] = this.splitDefinition(stripped);
     const [type, ...attributesRaw] = typeSection
       .split("@")
       .map((s) => s.trim());
@@ -163,15 +173,19 @@ export class YetiParser {
    * Parse a single attribute and its parameters
    */
   private parseAttribute(attr: string): Attribute {
-    const match = attr.match(PATTERNS.ATTRIBUTE);
-    if (!match) {
-      throw new Error(ERRORS.INVALID_ATTRIBUTE(attr));
+    const trimmed = attr.trim();
+    const parenIdx = trimmed.indexOf("(");
+    if (parenIdx === -1) {
+      return { name: trimmed, params: [] };
     }
-
-    return {
-      name: match[1],
-      params: match[2]?.split(",").map((s) => s.trim()) || [],
-    };
+    const name = trimmed.substring(0, parenIdx).trim();
+    const lastParen = trimmed.lastIndexOf(")");
+    const paramStr = trimmed.substring(
+      parenIdx + 1,
+      lastParen > parenIdx ? lastParen : trimmed.length
+    );
+    const params = paramStr ? paramStr.split(",").map((s) => s.trim()) : [];
+    return { name, params };
   }
 
   /**
@@ -210,17 +224,20 @@ export class YetiParser {
       throw new Error(ERRORS.INVALID_DECLARATION(type, this.currentIndex));
     }
 
-    return match[1];
+    return match[1].trim();
   }
 
   private splitDefinition(line: string): [string, string] {
-    const parts = line.split(":").map((part) => part.trim());
-
-    if (parts.length !== 2) {
+    const colonIdx = line.indexOf(":");
+    if (colonIdx === -1) {
       throw new Error(ERRORS.INVALID_LINE(line));
     }
-
-    return [parts[0], parts[1]];
+    const name = line.substring(0, colonIdx).trim();
+    const value = line.substring(colonIdx + 1).trim();
+    if (!name || !value) {
+      throw new Error(ERRORS.INVALID_LINE(line));
+    }
+    return [name, value];
   }
 
   // --- Iterator Methods ---
@@ -233,7 +250,8 @@ export class YetiParser {
   }
 
   private nextLine(): string {
-    return this.lines[this.currentIndex++] || "";
+    if (!this.hasMoreLines()) return "";
+    return this.lines[this.currentIndex++];
   }
 
   private getIndentation(line: string): number {
