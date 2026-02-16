@@ -3,7 +3,18 @@ import { Migration } from "./types";
 export class MigrationValidator {
   static validate(files: Migration[], applied: Migration[]): void {
     this.validateSequence(files);
+    this.validateAppliedContiguous(applied);
     this.validateHashes(files, applied);
+  }
+
+  private static validateAppliedContiguous(applied: Migration[]): void {
+    for (let i = 0; i < applied.length; i++) {
+      if (applied[i].id !== i + 1) {
+        throw new Error(
+          `Applied migrations are not contiguous: expected id ${i + 1}, found ${applied[i].id}`
+        );
+      }
+    }
   }
 
   private static validateSequence(migrations: Migration[]): void {

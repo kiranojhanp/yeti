@@ -1,33 +1,29 @@
 import { readdirSync, readFileSync } from "fs";
 import { createHash } from "crypto";
-import { Migration } from "./types";
+import { join } from "path";
+import type { Migration } from "./types";
 
 export class FileLoader {
-  static loadMigrations(path: string): Migration[] {
-    return readdirSync(path)
+  static loadMigrations(dirPath: string): Migration[] {
+    return readdirSync(dirPath)
       .filter((file) => /^\d+[-_].+\.(sql|js)$/.test(file))
-      .sort((a, b) => this.getMigrationId(a) - this.getMigrationId(b))
-      .map((file) => ({
-        id: this.getMigrationId(file),
-        name: this.getMigrationName(file),
-        content: readFileSync(`${path}/${file}`, "utf8"),
-        hash: createHash("sha256")
-          .update(readFileSync(`${path}/${file}`))
-          .digest("hex"),
-        file,
-      }));
-  }
-
-  private static getMigrationId(filename: string): number {
-    const match = filename.match(/^(\d+)/);
-    if (!match) throw new Error(`Invalid filename: ${filename}`);
-    return parseInt(match[1], 10);
-  }
-
-  private static getMigrationName(filename: string): string {
-    return filename
-      .replace(/^\d+[-_]/, "")
-      .replace(/\.(sql|js)$/, "")
-      .replace(/[-_]/g, " ");
+      .sort((a, b) => {
+        const idA = parseInt(a.split(/[-_]/)[0]);
+        const idB = parseInt(b.split(/[-_]/)[0]);
+        return idA - idB;
+      })
+      .map((file) => {
+        const fullPath = join(dirPath, file);
+        const buffer = readFileSync(fullPath);
+        const content = buffer.toString("utf8");
+        const hash = createHash("sha256").update(buffer).digest("hex");
+        return {
+          id: parseInt(file.split(/[-_]/)[0]),
+          name: file.replace(/\.(sql|js)$/, ""),
+          content,
+          hash,
+          file: fullPath,
+        };
+      });
   }
 }

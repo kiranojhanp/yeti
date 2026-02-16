@@ -11,10 +11,8 @@
   "module": "src/index.ts",
   "scripts": {
     "build": "tsup",
-    "dev": "tsup --watch"
-  },
-  "dependencies": {
-    "commander": "13.1.0"
+    "dev": "tsup --watch",
+    "test": "vitest run"
   },
   "devDependencies": {
     "@types/bun": "latest",

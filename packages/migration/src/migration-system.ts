@@ -18,14 +18,20 @@ export class MigrationSystem {
         MigrationValidator.validate(files, applied);
         const pending = files.slice(applied.length);
 
+        // NOTE: Each migration runs in its own transaction intentionally.
+        // DDL statements cannot be rolled back in many databases (e.g., MySQL, Oracle).
         for (const migration of pending) {
           await this.applyMigration(migration);
         }
 
-        return { applied: pending, pending: [] };
+        return { newlyApplied: pending, remaining: [] };
       });
     } finally {
-      await this.adapter.disconnect();
+      try {
+        await this.adapter.disconnect();
+      } catch {
+        // Don't mask the original error
+      }
     }
   }
 
@@ -34,15 +40,20 @@ export class MigrationSystem {
 
     if (migration.file.endsWith(".js")) {
       const module = await import(migration.file);
-      sql =
-        typeof module.generateSql === "function"
-          ? await module.generateSql()
-          : module.generateSql;
+      const gen = module.generateSql ?? module.default?.generateSql;
+      if (gen === undefined) {
+        throw new Error(
+          `Migration ${migration.file} does not export 'generateSql'`
+        );
+      }
+      sql = typeof gen === "function" ? await gen() : gen;
     }
 
-    await this.adapter.applyMigration({
-      ...migration,
-      sql: sql.replace(/^-- .*$/gm, ""),
-    });
+    if (typeof sql !== "string") {
+      throw new Error(`Migration ${migration.name} produced non-string SQL`);
+    }
+
+    // Let the database handle SQL comments natively — don't strip them
+    await this.adapter.applyMigration({ ...migration, sql });
   }
 }

@@ -7,8 +7,8 @@ export interface Migration {
 }
 
 export interface MigrationResult {
-  applied: Migration[];
-  pending: Migration[];
+  newlyApplied: Migration[];
+  remaining: Migration[];
 }
 
 export interface MigrationAdapter {
@@ -20,7 +20,6 @@ export interface MigrationAdapter {
   applyMigration(migration: Migration & { sql: string }): Promise<void>;
 }
 
-export type AdapterConfig = {
-  type: "sqlite" | "postgres";
-  [key: string]: any;
-};
+export type AdapterConfig =
+  | { type: "sqlite"; path: string; walMode?: boolean }
+  | { type: "postgres"; connectionString: string };
