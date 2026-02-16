@@ -17,10 +17,10 @@
   ],
   "scripts": {
     "vscode:prepublish": "npm run package",
-    "build": "npm run compile",
-    "compile": "tsc -p ./",
-    "watch": "tsc -watch -p ./",
-    "package": "tsc -p ./"
+    "build": "esbuild src/extension.ts --bundle --outfile=dist/extension.js --external:vscode --format=cjs --platform=node --sourcemap",
+    "watch": "esbuild src/extension.ts --bundle --outfile=dist/extension.js --external:vscode --format=cjs --platform=node --sourcemap --watch",
+    "package": "esbuild src/extension.ts --bundle --outfile=dist/extension.js --external:vscode --format=cjs --platform=node --minify",
+    "typecheck": "tsc -p ./ --noEmit"
   },
   "contributes": {
     "commands": [
@@ -75,6 +75,7 @@
   "devDependencies": {
     "@types/node": "^20.0.0",
     "@types/vscode": "^1.96.0",
+    "esbuild": "^0.25.0",
     "typescript": "^5.5.4"
   },
   "vsce": {

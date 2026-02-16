@@ -2,11 +2,6 @@ import * as vscode from "vscode";
 import { YetiLexer, parserInstance, IToken, CstNode } from "@yeti/parse";
 import { generateSql } from "./commands/generate";
 
-const legend = new vscode.SemanticTokensLegend(
-  ["keyword", "type", "variable", "property", "enumMember", "string", "number"], // token types
-  ["declaration", "readonly"] // token modifiers
-);
-
 interface SymbolTable {
   entities: string[];
   enums: string[];
@@ -143,14 +138,6 @@ export function activate(context: vscode.ExtensionContext) {
   );
 
   context.subscriptions.push(
-    vscode.languages.registerDocumentSemanticTokensProvider(
-      { language: "yeti" },
-      new DocumentSemanticTokensProvider(),
-      legend
-    )
-  );
-
-  context.subscriptions.push(
     vscode.languages.registerCompletionItemProvider(
       { language: "yeti" },
       new YetiCompletionItemProvider(),
@@ -182,57 +169,6 @@ export function activate(context: vscode.ExtensionContext) {
       new YetiRenameProvider()
     )
   );
-}
-
-class DocumentSemanticTokensProvider
-  implements vscode.DocumentSemanticTokensProvider
-{
-  async provideDocumentSemanticTokens(
-    document: vscode.TextDocument,
-    token: vscode.CancellationToken
-  ): Promise<vscode.SemanticTokens> {
-    const text = document.getText();
-    const lexingResult = YetiLexer.tokenize(text);
-
-    // Simple semantic highlighting based on tokens
-    const builder = new vscode.SemanticTokensBuilder(legend);
-
-    lexingResult.tokens.forEach((token) => {
-      const type = this.getTokenType(token);
-      if (type) {
-        builder.push(
-          new vscode.Range(
-            new vscode.Position(token.startLine! - 1, token.startColumn! - 1),
-            new vscode.Position(
-              token.startLine! - 1,
-              token.startColumn! - 1 + token.image.length
-            )
-          ),
-          type
-        );
-      }
-    });
-
-    return builder.build();
-  }
-
-  private getTokenType(token: IToken): string | undefined {
-    if (
-      token.tokenType.name === "EntityKeyword" ||
-      token.tokenType.name === "NamespaceKeyword" ||
-      token.tokenType.name === "EnumKeyword"
-    ) {
-      return "keyword";
-    }
-    if (token.tokenType.name === "Identifier") {
-      // Naive heuristic: if previous token was 'entity' -> declaration
-      return "variable";
-    }
-    if (token.tokenType.name === "StringLiteral") {
-      return "string";
-    }
-    return undefined;
-  }
 }
 
 class YetiCompletionItemProvider implements vscode.CompletionItemProvider {
@@ -295,7 +231,17 @@ class YetiCompletionItemProvider implements vscode.CompletionItemProvider {
 
           if (isFieldType) {
             // Standard Types
-            ["String", "Int", "Boolean", "Date", "Float", "ID"].forEach((t) => {
+            [
+              "serial",
+              "integer",
+              "varchar",
+              "text",
+              "timestamp",
+              "boolean",
+              "float",
+              "decimal",
+              "json",
+            ].forEach((t) => {
               items.push(
                 new vscode.CompletionItem(t, vscode.CompletionItemKind.Class)
               );

@@ -148,7 +148,7 @@
       ]
     },
     "datatypes": {
-      "match": "\\b(serial|varchar|text|integer|timestamp|boolean)\\b",
+      "match": "\\b(serial|varchar|text|integer|timestamp|boolean|float|decimal|json)\\b",
       "name": "storage.type.primitive.yeti"
     },
     "strings": {
