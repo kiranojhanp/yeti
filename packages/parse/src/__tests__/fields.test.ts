@@ -10,7 +10,7 @@ namespace app:
 `.trim();
 
     const parser = new YetiParser(input);
-    const result = parser.parse();
+    const { ast: result } = parser.parse();
 
     const field = result[0].entities[0].fields[0];
     expect(field.name).toBe("url");
@@ -28,7 +28,7 @@ namespace app:
 `.trim();
 
     const parser = new YetiParser(input);
-    const result = parser.parse();
+    const { ast: result } = parser.parse();
 
     const field = result[0].entities[0].fields[0];
     expect(field.name).toBe("created_at");
@@ -46,7 +46,7 @@ namespace  myns :
 `.trim();
 
     const parser = new YetiParser(input);
-    const result = parser.parse();
+    const { ast: result } = parser.parse();
 
     expect(result[0].name).toBe("myns");
     expect(result[0].entities[0].name).toBe("MyEntity");
@@ -82,7 +82,7 @@ namespace app:
 `.trim();
 
     const parser = new YetiParser(input);
-    const result = parser.parse();
+    const { ast: result } = parser.parse();
 
     const attr = result[0].entities[0].fields[0].attributes[0];
     expect(attr.name).toBe("pk");
