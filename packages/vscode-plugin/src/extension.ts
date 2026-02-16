@@ -11,50 +11,74 @@ interface SymbolTable {
   enums: string[];
   enumValues: Map<string, string[]>;
   entityFields: Map<string, Map<string, string>>; // Entity -> Field -> Type
+  definitions: Map<string, vscode.Location>; // Name -> Location
 }
 
-function extractSymbols(tokenVector: IToken[]): SymbolTable {
+function extractSymbols(tokenVector: IToken[], uri: vscode.Uri): SymbolTable {
   const symbols: SymbolTable = {
     entities: [],
     enums: [],
     enumValues: new Map(),
     entityFields: new Map(),
+    definitions: new Map(),
   };
 
   // Reset parser state
   parserInstance.input = tokenVector;
 
   try {
-    // Parse the file. Even if it throws/errors, we might get a partial CST or we catch it.
     const cst = parserInstance.parsedFile();
 
     if (cst) {
-      traverseCst(cst, symbols);
+      traverseCst(cst, symbols, uri);
     }
   } catch (e) {
-    // Ignore parsing errors for symbol extraction, just do our best
     console.error("Symbol extraction error", e);
   }
 
   return symbols;
 }
 
-function traverseCst(node: CstNode, symbols: SymbolTable) {
+function traverseCst(node: CstNode, symbols: SymbolTable, uri: vscode.Uri) {
   if (node.name === "parsedEntity") {
     const entityNameToken = node.children.Identifier?.[0] as IToken;
     if (entityNameToken) {
       const entityName = entityNameToken.image;
       symbols.entities.push(entityName);
+      symbols.definitions.set(
+        entityName,
+        new vscode.Location(
+          uri,
+          new vscode.Range(
+            entityNameToken.startLine! - 1,
+            entityNameToken.startColumn! - 1,
+            entityNameToken.endLine! - 1,
+            entityNameToken.endColumn!
+          )
+        )
+      );
 
       const fieldMap = new Map<string, string>();
       if (node.children.parsedField) {
         (node.children.parsedField as CstNode[]).forEach((fieldNode) => {
-          const fieldName = (fieldNode.children.Identifier?.[0] as IToken)
-            ?.image;
+          const fieldNameToken = fieldNode.children.Identifier?.[0] as IToken;
           const fieldType = (fieldNode.children.Identifier?.[1] as IToken)
             ?.image;
-          if (fieldName && fieldType) {
+          if (fieldNameToken && fieldType) {
+            const fieldName = fieldNameToken.image;
             fieldMap.set(fieldName, fieldType);
+            symbols.definitions.set(
+              `${entityName}.${fieldName}`,
+              new vscode.Location(
+                uri,
+                new vscode.Range(
+                  fieldNameToken.startLine! - 1,
+                  fieldNameToken.startColumn! - 1,
+                  fieldNameToken.endLine! - 1,
+                  fieldNameToken.endColumn!
+                )
+              )
+            );
           }
         });
       }
@@ -65,13 +89,38 @@ function traverseCst(node: CstNode, symbols: SymbolTable) {
     if (enumNameToken) {
       const enumName = enumNameToken.image;
       symbols.enums.push(enumName);
+      symbols.definitions.set(
+        enumName,
+        new vscode.Location(
+          uri,
+          new vscode.Range(
+            enumNameToken.startLine! - 1,
+            enumNameToken.startColumn! - 1,
+            enumNameToken.endLine! - 1,
+            enumNameToken.endColumn!
+          )
+        )
+      );
 
       const values: string[] = [];
       if (node.children.Identifier && node.children.Identifier.length > 1) {
         // Skip first (name)
-        values.push(
-          ...node.children.Identifier.slice(1).map((t: any) => t.image)
-        );
+        const valueTokens = node.children.Identifier.slice(1) as IToken[];
+        valueTokens.forEach((t) => {
+          values.push(t.image);
+          symbols.definitions.set(
+            `${enumName}.${t.image}`,
+            new vscode.Location(
+              uri,
+              new vscode.Range(
+                t.startLine! - 1,
+                t.startColumn! - 1,
+                t.endLine! - 1,
+                t.endColumn!
+              )
+            )
+          );
+        });
       }
       symbols.enumValues.set(enumName, values);
     }
@@ -81,7 +130,7 @@ function traverseCst(node: CstNode, symbols: SymbolTable) {
   if (node.children) {
     for (const key in node.children) {
       (node.children[key] as CstNode[]).forEach((child) => {
-        if (child.name) traverseCst(child, symbols);
+        if (child.name) traverseCst(child, symbols, uri);
       });
     }
   }
@@ -105,6 +154,27 @@ export function activate(context: vscode.ExtensionContext) {
       "@",
       "(",
       ">" // Trigger characters
+    )
+  );
+
+  context.subscriptions.push(
+    vscode.languages.registerHoverProvider(
+      { language: "yeti" },
+      new YetiHoverProvider()
+    )
+  );
+
+  context.subscriptions.push(
+    vscode.languages.registerDefinitionProvider(
+      { language: "yeti" },
+      new YetiDefinitionProvider()
+    )
+  );
+
+  context.subscriptions.push(
+    vscode.languages.registerRenameProvider(
+      { language: "yeti" },
+      new YetiRenameProvider()
     )
   );
 }
@@ -171,7 +241,7 @@ class YetiCompletionItemProvider implements vscode.CompletionItemProvider {
     const lexResult = YetiLexer.tokenize(text);
 
     // 1. Extract Symbols from full text (for cross-references)
-    const symbols = extractSymbols(lexResult.tokens);
+    const symbols = extractSymbols(lexResult.tokens, document.uri);
 
     // 2. Compute Content Assist at cursor
     const offset = document.offsetAt(position);
@@ -351,5 +421,149 @@ class YetiCompletionItemProvider implements vscode.CompletionItemProvider {
       console.error("Autocomplete error", e);
       return [];
     }
+  }
+}
+
+class YetiHoverProvider implements vscode.HoverProvider {
+  provideHover(
+    document: vscode.TextDocument,
+    position: vscode.Position,
+    token: vscode.CancellationToken
+  ): vscode.ProviderResult<vscode.Hover> {
+    const range = document.getWordRangeAtPosition(position);
+    if (!range) return undefined;
+
+    const word = document.getText(range);
+    const text = document.getText();
+    const lexResult = YetiLexer.tokenize(text);
+    const symbols = extractSymbols(lexResult.tokens, document.uri);
+
+    // Check if it's an Entity
+    if (symbols.entities.includes(word)) {
+      return new vscode.Hover(`**Entity** \`${word}\``);
+    }
+    // Check if it's an Enum
+    if (symbols.enums.includes(word)) {
+      return new vscode.Hover(`**Enum** \`${word}\``);
+    }
+    // Check if it's a Field (naive check: search in all entities)
+    for (const [entity, fields] of symbols.entityFields) {
+      if (fields.has(word)) {
+        const type = fields.get(word);
+        return new vscode.Hover(
+          `**Field** \`${word}\`\n\nType: \`${type}\`\n\nEntity: \`${entity}\``
+        );
+      }
+    }
+    // Check if it's an Enum Value
+    for (const [enumName, values] of symbols.enumValues) {
+      if (values.includes(word)) {
+        return new vscode.Hover(
+          `**Enum Value** \`${word}\`\n\nEnum: \`${enumName}\``
+        );
+      }
+    }
+
+    return undefined;
+  }
+}
+
+class YetiDefinitionProvider implements vscode.DefinitionProvider {
+  provideDefinition(
+    document: vscode.TextDocument,
+    position: vscode.Position,
+    token: vscode.CancellationToken
+  ): vscode.ProviderResult<vscode.Definition | vscode.LocationLink[]> {
+    const range = document.getWordRangeAtPosition(position);
+    if (!range) return undefined;
+
+    const word = document.getText(range);
+    const text = document.getText();
+    const lexResult = YetiLexer.tokenize(text);
+    const symbols = extractSymbols(lexResult.tokens, document.uri);
+
+    // If it's a known symbol definition, return it
+    if (symbols.definitions.has(word)) {
+      // If we are hovering over the definition itself, returning it is fine.
+      // But if we are referencing it, we need to find the definition.
+      // Currently extractSymbols only stores the definition location by name.
+      // It doesn't tell us if the *current position* is a reference or definition.
+      // However, "Go to Definition" usually works by looking up the symbol name in the index.
+      return symbols.definitions.get(word);
+    }
+
+    // Handle "Entity.Field" or "Enum.Value" cases (e.g. in params)
+    // Naive approach: check if word is a field name in any entity
+    // Better approach: look at context. But for now, simple lookup.
+    // Note: If multiple entities have same field name, this is ambiguous.
+    // For now, we return the first one found or list all? DefinitionProvider can return array.
+
+    const locations: vscode.Location[] = [];
+
+    // Check for "Entity.Field" pattern if word is part of it?
+    // VSCode gives us the word at position.
+    // If we want to support "Entity.Field", we might need to look at surrounding text.
+
+    // Let's just return definitions for matching fields/values
+    for (const [name, loc] of symbols.definitions) {
+      if (name.endsWith(`.${word}`)) {
+        locations.push(loc);
+      }
+    }
+
+    if (locations.length > 0) return locations;
+
+    return undefined;
+  }
+}
+
+class YetiRenameProvider implements vscode.RenameProvider {
+  provideRenameEdits(
+    document: vscode.TextDocument,
+    position: vscode.Position,
+    newName: string,
+    token: vscode.CancellationToken
+  ): vscode.ProviderResult<vscode.WorkspaceEdit> {
+    const range = document.getWordRangeAtPosition(position);
+    if (!range) return undefined;
+
+    const word = document.getText(range);
+    const text = document.getText();
+    const lexResult = YetiLexer.tokenize(text);
+
+    // We need to find ALL occurrences of this token.
+    // Using the lexer is safer than regex.
+
+    const edit = new vscode.WorkspaceEdit();
+
+    lexResult.tokens.forEach((t) => {
+      if (t.image === word && t.tokenType.name === "Identifier") {
+        // We should refine this to only rename valid symbols (e.g. not keywords that happen to look like identifiers, though our lexer handles that).
+        // Also scope: If we rename a Field, we should only rename fields of that Entity?
+        // Without full semantic analysis (resolving references), global rename is risky.
+        // But for a "basic" implementation, renaming all occurrences of the identifier is a starting point.
+        // However, let's be slightly smarter:
+        // If we are renaming an Entity, we rename:
+        // 1. The definition
+        // 2. Usages as types
+        // 3. Usages in > Entity.Field
+
+        // This requires knowing if 'word' is an Entity, Field, etc.
+        // extractSymbols gives us that info.
+
+        edit.replace(
+          document.uri,
+          new vscode.Range(
+            t.startLine! - 1,
+            t.startColumn! - 1,
+            t.endLine! - 1,
+            t.endColumn!
+          ),
+          newName
+        );
+      }
+    });
+
+    return edit;
   }
 }
