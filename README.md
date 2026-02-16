@@ -63,7 +63,7 @@ Yeti transforms your schema definitions into production-ready SQL through a mult
 graph TD
     Input[Yeti Schema .yeti] -->|Input String| Parser(YetiParser)
     Parser -->|Parse| AST{AST Construction}
-    AST -->|Namespace[]| Generator[Generator Strategy]
+    AST -->|Namespace| Generator[Generator Strategy]
     Generator -->|Use Dialect| PG[PostgresGenerator]
     Generator -->|Use Dialect| SQLite[SQLiteGenerator]
     PG -->|Generate| SQL_PG[Postgres SQL]
