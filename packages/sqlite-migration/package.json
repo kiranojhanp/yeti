@@ -11,8 +11,7 @@
   "module": "src/index.ts",
   "scripts": {
     "build": "tsup",
-    "dev": "tsup --watch",
-    "test": "vitest run"
+    "dev": "tsup --watch"
   },
   "dependencies": {
     "better-lock": "3.2.0",
