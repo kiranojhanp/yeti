@@ -277,7 +277,7 @@ class YetiCompletionItemProvider implements vscode.CompletionItemProvider {
 
       const items: vscode.CompletionItem[] = [];
 
-      suggestions.forEach((suggestion) => {
+      suggestions.forEach((suggestion: any) => {
         const lastToken =
           tokensForAssist.length > 0
             ? tokensForAssist[tokensForAssist.length - 1]
@@ -295,27 +295,75 @@ class YetiCompletionItemProvider implements vscode.CompletionItemProvider {
 
           if (isFieldType) {
             // Standard Types
-            ["String", "Int", "Boolean", "Date", "Float", "ID"].forEach((t) => {
-              items.push(
-                new vscode.CompletionItem(t, vscode.CompletionItemKind.Class)
+            [
+              { label: "String", detail: "TEXT" },
+              { label: "Int", detail: "INTEGER" },
+              { label: "Boolean", detail: "BOOLEAN" },
+              { label: "Date", detail: "TIMESTAMP" },
+              { label: "Float", detail: "FLOAT" },
+              { label: "ID", detail: "UUID" },
+              { label: "Serial", detail: "SERIAL" },
+            ].forEach((t: any) => {
+              const item = new vscode.CompletionItem(
+                t.label,
+                vscode.CompletionItemKind.Class
               );
+              item.detail = t.detail;
+              items.push(item);
             });
+
             // Entities
             symbols.entities.forEach((e) => {
-              items.push(
-                new vscode.CompletionItem(e, vscode.CompletionItemKind.Struct)
+              const item = new vscode.CompletionItem(
+                e,
+                vscode.CompletionItemKind.Struct
               );
+              item.detail = "Entity";
+              items.push(item);
             });
             // Enums
             symbols.enums.forEach((e) => {
-              items.push(
-                new vscode.CompletionItem(e, vscode.CompletionItemKind.Enum)
+              const item = new vscode.CompletionItem(
+                e,
+                vscode.CompletionItemKind.Enum
               );
+              item.detail = "Enum";
+              items.push(item);
             });
+
+            // Suggest Attributes immediately after type
+            items.push(
+              new vscode.CompletionItem("@", vscode.CompletionItemKind.Property)
+            );
           }
           // Context: Inside an Attribute Param?
           // parsedParam -> ... > Entity.Field
           else if (ruleStack.includes("parsedParam")) {
+            // Value suggestions for @default
+            if (
+              lastToken?.tokenType.name === "LParen" ||
+              lastToken?.tokenType.name === "Comma"
+            ) {
+              // Check if we are inside @default
+              // This requires looking back further in token stream or rule stack context
+              // Simple heuristic: check if previous tokens include @default
+              const isDefault = tokensForAssist.some(
+                (t) => t.image === "default"
+              ); // Simple check
+              if (isDefault) {
+                ["now()", "true", "false", "null", "''", "0", "1"].forEach(
+                  (val) => {
+                    items.push(
+                      new vscode.CompletionItem(
+                        val,
+                        vscode.CompletionItemKind.Value
+                      )
+                    );
+                  }
+                );
+              }
+            }
+
             // Check if we are typing after a Dot
             if (lastToken?.tokenType.name === "Dot") {
               // Likely > Entity.Field or Enum.Value
@@ -330,7 +378,6 @@ class YetiCompletionItemProvider implements vscode.CompletionItemProvider {
 
                 // If it's an Entity, suggest fields
                 if (symbols.entityFields.has(name)) {
-                  // ... (existing logic) ...
                   const fields = symbols.entityFields.get(name);
                   if (fields) {
                     fields.forEach((type, field) => {
@@ -339,13 +386,17 @@ class YetiCompletionItemProvider implements vscode.CompletionItemProvider {
                         vscode.CompletionItemKind.Field
                       );
                       item.detail = type;
+                      // Prioritize PKs - but we don't have PK info in symbol table yet.
+                      // Naive prioritization
+                      if (field === "id") {
+                        item.sortText = "0000";
+                      }
                       items.push(item);
                     });
                   }
                 }
                 // If it's an Enum, suggest values
                 if (symbols.enumValues.has(name)) {
-                  // ... (existing logic) ...
                   const values = symbols.enumValues.get(name);
                   if (values) {
                     values.forEach((val) => {
@@ -363,20 +414,89 @@ class YetiCompletionItemProvider implements vscode.CompletionItemProvider {
             // Check if we are typing after GreaterThan (Entity ref)
             else if (lastToken?.tokenType.name === "GreaterThan") {
               symbols.entities.forEach((e) => {
-                items.push(
-                  new vscode.CompletionItem(e, vscode.CompletionItemKind.Struct)
+                const item = new vscode.CompletionItem(
+                  e,
+                  vscode.CompletionItemKind.Struct
                 );
+                item.detail = "Entity";
+                items.push(item);
               });
             }
           }
-        } else if (suggestion.nextTokenType.name === "At") {
-          // Suggest Attributes
-          ["pk", "unique", "default", "fk"].forEach((attr) => {
+          // Context: Start of a line inside Entity (Field definition)
+          else if (
+            ruleStack.includes("parsedEntity") &&
+            !ruleStack.includes("parsedField")
+          ) {
+            // Suggest common field patterns
+            const idField = new vscode.CompletionItem(
+              "id: serial @pk",
+              vscode.CompletionItemKind.Snippet
+            );
+            idField.insertText = new vscode.SnippetString("id: serial @pk");
+            idField.documentation = "Primary Key Field";
+            items.push(idField);
+
+            const createdAt = new vscode.CompletionItem(
+              "created_at",
+              vscode.CompletionItemKind.Snippet
+            );
+            createdAt.insertText = new vscode.SnippetString(
+              "created_at: timestamp @default(now())"
+            );
+            createdAt.documentation = "Timestamp Field";
+            items.push(createdAt);
+
+            const updatedAt = new vscode.CompletionItem(
+              "updated_at",
+              vscode.CompletionItemKind.Snippet
+            );
+            updatedAt.insertText = new vscode.SnippetString(
+              "updated_at: timestamp @default(now())"
+            );
+            updatedAt.documentation = "Timestamp Field";
+            items.push(updatedAt);
+
+            const fkField = new vscode.CompletionItem(
+              "fk_field",
+              vscode.CompletionItemKind.Snippet
+            );
+            fkField.label = "Foreign Key Field";
+            fkField.insertText = new vscode.SnippetString(
+              "${1:name}: ${2:type} @fk(> ${3:entity}.${4:field})"
+            );
+            fkField.documentation = "Foreign Key Field Pattern";
+            items.push(fkField);
+          }
+        }
+        // Suggest Attributes
+        else if (suggestion.nextTokenType.name === "At") {
+          const attributes = [
+            { label: "@pk", snippet: "@pk", detail: "Primary Key" },
+            {
+              label: "@unique",
+              snippet: "@unique",
+              detail: "Unique Constraint",
+            },
+            {
+              label: "@default",
+              snippet: "@default($1)",
+              detail: "Default Value",
+            },
+            {
+              label: "@fk",
+              snippet: "@fk(> ${1:Entity}.${2:id})",
+              detail: "Foreign Key",
+            },
+          ];
+
+          attributes.forEach((attr) => {
             const item = new vscode.CompletionItem(
-              "@" + attr,
+              attr.label,
               vscode.CompletionItemKind.Property
             );
-            item.insertText = "@" + attr;
+            item.insertText = new vscode.SnippetString(attr.snippet);
+            item.detail = attr.detail;
             items.push(item);
           });
         }
@@ -395,6 +515,17 @@ class YetiCompletionItemProvider implements vscode.CompletionItemProvider {
               vscode.CompletionItemKind.Keyword
             )
           );
+
+          // Multi-line entity snippet
+          const entitySnippet = new vscode.CompletionItem(
+            "entity snippet",
+            vscode.CompletionItemKind.Snippet
+          );
+          entitySnippet.insertText = new vscode.SnippetString(
+            "entity ${1:name}:\n\tid: serial @pk\n\tcreated_at: timestamp @default(now())\n\t$0"
+          );
+          entitySnippet.label = "entity ...";
+          items.push(entitySnippet);
         } else if (suggestion.nextTokenType.name === "EnumKeyword") {
           items.push(
             new vscode.CompletionItem("enum", vscode.CompletionItemKind.Keyword)
@@ -402,21 +533,33 @@ class YetiCompletionItemProvider implements vscode.CompletionItemProvider {
         }
 
         // Handle At special case (if next expected is Identifier but we just typed At)
-        // Wait, if we popped Identifier, this logic might need adjustment.
-        // If we typed '@', lastToken is At. tokensForAssist has At.
-        // suggestion says Identifier (attribute name).
-        // So this block handles:
         if (
           suggestion.nextTokenType.name === "Identifier" &&
           lastToken?.tokenType.name === "At"
         ) {
-          ["pk", "unique", "default", "fk"].forEach((attr) => {
-            items.push(
-              new vscode.CompletionItem(
-                attr,
-                vscode.CompletionItemKind.Property
-              )
+          const attributes = [
+            { label: "pk", snippet: "pk", detail: "Primary Key" },
+            { label: "unique", snippet: "unique", detail: "Unique Constraint" },
+            {
+              label: "default",
+              snippet: "default($1)",
+              detail: "Default Value",
+            },
+            {
+              label: "fk",
+              snippet: "fk(> ${1:Entity}.${2:id})",
+              detail: "Foreign Key",
+            },
+          ];
+
+          attributes.forEach((attr) => {
+            const item = new vscode.CompletionItem(
+              attr.label,
+              vscode.CompletionItemKind.Property
             );
+            item.insertText = new vscode.SnippetString(attr.snippet);
+            item.detail = attr.detail;
+            items.push(item);
           });
         }
       });
@@ -541,7 +684,7 @@ class YetiRenameProvider implements vscode.RenameProvider {
 
     const edit = new vscode.WorkspaceEdit();
 
-    lexResult.tokens.forEach((t) => {
+    lexResult.tokens.forEach((t: IToken) => {
       if (t.image === word && t.tokenType.name === "Identifier") {
         // We should refine this to only rename valid symbols (e.g. not keywords that happen to look like identifiers, though our lexer handles that).
         // Also scope: If we rename a Field, we should only rename fields of that Entity?
