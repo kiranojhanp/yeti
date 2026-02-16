@@ -7,14 +7,6 @@ export class PostgresGenerator extends BaseSQLGenerator {
     super(new PostgresDialect(), new PostgresTemplates());
   }
 
-  protected generatePrimaryKeyConstraint(): string {
-    return "PRIMARY KEY";
-  }
-
-  protected generateUniqueConstraint(): string {
-    return "UNIQUE";
-  }
-
   protected supportsEnums(): boolean {
     return true;
   }

@@ -6,7 +6,6 @@ import type { SQLDialect } from "@yeti/generator";
  */
 export class PostgresDialect implements SQLDialect {
   readonly name = "PostgreSQL";
-  readonly defaultNowFn = "CURRENT_TIMESTAMP";
   readonly serialType = "SERIAL";
 
   readonly typeMap = new Map([
@@ -20,7 +19,7 @@ export class PostgresDialect implements SQLDialect {
     ["json", "JSONB"],
   ]);
 
-  generateConstraint(attr: Attribute): string | null {
+  generateConstraint(attr: Attribute, _fieldType: string): string | null {
     switch (attr.name) {
       case "pk":
         return "PRIMARY KEY";
@@ -29,18 +28,21 @@ export class PostgresDialect implements SQLDialect {
       case "default":
         const value = attr.params?.[0];
         if (!value) return null;
-        return this.generateDefaultConstraint(attr.params?.[0]);
+        return this.generateDefaultConstraint(value);
       default:
         return null;
     }
   }
 
-  generateDefaultConstraint(value: string | undefined): string {
-    if (!value) return "";
-    return value === "now()" ? "DEFAULT CURRENT_TIMESTAMP" : `DEFAULT ${value}`;
+  generateDefaultConstraint(value: string | undefined): string | null {
+    if (value === undefined || value === null) return null;
+    if (value === "now()") return "DEFAULT CURRENT_TIMESTAMP";
+    if (/^\d+(\.\d+)?$/.test(value)) return `DEFAULT ${value}`;
+    if (value === "true" || value === "false") return `DEFAULT ${value}`;
+    return `DEFAULT '${value.replace(/'/g, "''")}'`;
   }
 
   quoteIdentifier(id: string): string {
-    return `"${id}"`;
+    return `"${id.replace(/"/g, '""')}"`;
   }
 }
