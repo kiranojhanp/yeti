@@ -12,13 +12,15 @@
     "build": "turbo build",
     "dev": "turbo dev",
     "format": "prettier --write \"**/*.{ts,tsx,md}\" && npx sort-package-json \"**/package.json\"",
+    "test": "turbo test",
     "lint": "turbo lint",
     "release": "npx bumpp --commit --push --tag --recursive"
   },
   "devDependencies": {
     "prettier": "^3.2.5",
     "turbo": "^2.3.3",
-    "typescript": "5.5.4"
+    "typescript": "5.5.4",
+    "vitest": "^4.0.18"
   },
   "packageManager": "bun@1.1.42",
   "engines": {
