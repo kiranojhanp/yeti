@@ -9,11 +9,11 @@
     "packages/*"
   ],
   "scripts": {
-    "build": "turbo build",
-    "dev": "turbo dev",
+    "build": "turbo run build",
+    "dev": "turbo run dev",
     "format": "prettier --write \"**/*.{ts,tsx,md}\" && npx sort-package-json \"**/package.json\"",
-    "test": "turbo test --concurrency 1",
-    "lint": "turbo lint",
+    "test": "turbo run test --concurrency 1",
+    "lint": "turbo run lint",
     "release": "npx bumpp --commit --push --tag --recursive"
   },
   "devDependencies": {
