@@ -1,0 +1,131 @@
+"use client";
+
+import { useState } from "react";
+import Link from "next/link";
+import { cn } from "@/lib/utils";
+
+const navLinks = [
+  { label: "Features", href: "#features" },
+  { label: "Comparison", href: "#comparison" },
+  { label: "Testimonials", href: "#testimonials" },
+  { label: "Pricing", href: "#pricing" },
+  { label: "FAQ", href: "#faq" },
+];
+
+export function Navbar() {
+  const [active, setActive] = useState<string | null>(null);
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  return (
+    <nav className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-lg border-b border-foreground/5">
+      <div className="flex items-center justify-between px-6 md:px-12 py-5">
+        <Link
+          href="/"
+          onClick={(e) => {
+            setActive(null);
+            if (window.location.pathname === "/") {
+              e.preventDefault();
+              window.scrollTo({ top: 0, behavior: "smooth" });
+            }
+          }}
+          className="font-serif text-2xl"
+        >
+          yeti.
+        </Link>
+
+        {/* Desktop links */}
+        <div className="hidden md:flex items-center gap-8">
+          {navLinks.map(({ label, href }) => {
+            const id = href.replace("#", "");
+            const isActive = active === id;
+            return (
+              <a
+                key={href}
+                href={href}
+                onClick={() => setActive(id)}
+                className={cn(
+                  "text-sm transition-colors",
+                  isActive
+                    ? "text-foreground font-medium"
+                    : "text-muted-foreground hover:text-foreground"
+                )}
+              >
+                {label}
+              </a>
+            );
+          })}
+        </div>
+
+        <div className="flex items-center gap-3">
+          <a
+            href="https://github.com/kiranojhanp/yeti"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="bg-foreground text-background text-sm font-medium px-5 py-2.5 rounded-full hover:bg-muted-foreground transition-colors"
+          >
+            View on GitHub
+          </a>
+
+          {/* Mobile hamburger */}
+          <button
+            className="md:hidden flex flex-col gap-1.5 p-1"
+            onClick={() => setMenuOpen((o) => !o)}
+            aria-label="Toggle menu"
+          >
+            <span
+              className={cn(
+                "block w-5 h-px bg-foreground transition-all duration-300 origin-center",
+                menuOpen && "rotate-45 translate-y-[7px]"
+              )}
+            />
+            <span
+              className={cn(
+                "block w-5 h-px bg-foreground transition-all duration-300",
+                menuOpen && "opacity-0"
+              )}
+            />
+            <span
+              className={cn(
+                "block w-5 h-px bg-foreground transition-all duration-300 origin-center",
+                menuOpen && "-rotate-45 -translate-y-[7px]"
+              )}
+            />
+          </button>
+        </div>
+      </div>
+
+      {/* Mobile menu */}
+      <div
+        className={cn(
+          "md:hidden overflow-hidden transition-all duration-300 ease-in-out border-t border-foreground/5",
+          menuOpen ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
+        )}
+      >
+        <div className="flex flex-col px-6 py-4 gap-5">
+          {navLinks.map(({ label, href }) => {
+            const id = href.replace("#", "");
+            const isActive = active === id;
+            return (
+              <a
+                key={href}
+                href={href}
+                onClick={() => {
+                  setActive(id);
+                  setMenuOpen(false);
+                }}
+                className={cn(
+                  "text-sm transition-colors",
+                  isActive
+                    ? "text-foreground font-medium"
+                    : "text-muted-foreground hover:text-foreground"
+                )}
+              >
+                {label}
+              </a>
+            );
+          })}
+        </div>
+      </div>
+    </nav>
+  );
+}

@@ -1,5 +1,7 @@
+import { Navbar } from "@/components/navbar";
 import { HeroSection } from "@/components/hero-section";
 import { FeaturesSection } from "@/components/features-section";
+import { ComparisonSection } from "@/components/comparison-section";
 import { TestimonialsSection } from "@/components/testimonials-section";
 import { PricingCard } from "@/components/pricing-card";
 import { PricingFAQ } from "@/components/pricing-faq";
@@ -26,46 +28,7 @@ export default function Page() {
   return (
     <main className="min-h-screen bg-background text-foreground font-sans">
       {/* Navigation */}
-      <nav className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 md:px-12 py-5 bg-background/80 backdrop-blur-lg border-b border-foreground/5">
-        <span className="font-serif text-2xl">yeti.</span>
-        <div className="hidden md:flex items-center gap-8">
-          <a
-            href="#hero"
-            className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-          >
-            Product
-          </a>
-          <a
-            href="#features"
-            className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-          >
-            Features
-          </a>
-          <a
-            href="#testimonials"
-            className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-          >
-            Testimonials
-          </a>
-          <a href="#pricing" className="text-sm font-medium transition-colors">
-            Pricing
-          </a>
-          <a
-            href="#faq"
-            className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-          >
-            FAQ
-          </a>
-        </div>
-        <a
-          href="https://github.com/kiranojhanp/yeti"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="bg-foreground text-background text-sm font-medium px-5 py-2.5 rounded-full hover:bg-muted-foreground transition-colors cursor-pointer"
-        >
-          View on GitHub
-        </a>
-      </nav>
+      <Navbar />
 
       {/* Hero Section */}
       <div id="hero">
@@ -74,6 +37,9 @@ export default function Page() {
 
       {/* Features Section */}
       <FeaturesSection />
+
+      {/* Comparison Section */}
+      <ComparisonSection />
 
       {/* Testimonials Section */}
       <TestimonialsSection />
@@ -116,10 +82,13 @@ export default function Page() {
               ☕ Buy me a coffee
             </a>
           </div>
+        </div>
+      </section>
 
-          <div id="faq">
-            <PricingFAQ />
-          </div>
+      {/* FAQ Section */}
+      <section id="faq" className="py-16 md:py-24 px-6 md:px-12">
+        <div className="max-w-4xl mx-auto">
+          <PricingFAQ />
         </div>
       </section>
 
