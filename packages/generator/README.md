@@ -1,15 +1,15 @@
 # @yeti/generator
 
-To install dependencies:
+Base SQL generator for Yeti. Provides the abstract `BaseSQLGenerator` class that database-specific generators extend.
+
+## Setup
 
 ```bash
 bun install
 ```
 
-To run:
+## Usage
 
 ```bash
 bun run src/index.ts
 ```
-
-This project was created using `bun init` in bun v1.1.42. [Bun](https://bun.sh) is a fast all-in-one JavaScript runtime.

@@ -1,17 +1,17 @@
 # Yeti
 
 > [!WARNING]
-> This project is under active development and is currently in its initial stages.
+> This project is under active development and still in its early stages.
 >
-> - **Expect frequent changes:** The API, features, and overall structure may undergo significant modifications.
-> - **Potential for bugs:** There may be unexpected bugs or stability issues.
-> - **Limited documentation:** Documentation may be incomplete or outdated.
+> - **Expect frequent changes:** The API, features, and structure will shift as the project matures.
+> - **Bugs are likely:** You may hit unexpected issues or instability.
+> - **Documentation is incomplete:** Some docs are missing or behind the code.
 >
-> We appreciate your understanding and welcome your feedback as we continue to improve this project.
+> Feedback is welcome as work continues.
 
 ---
 
-**Yeti** is a lightweight and expressive database markup language designed for intuitive schema and relationship design. Yeti makes it easy to define entities, fields, relationships, and constraints in a concise format.
+**Yeti** is a lightweight database markup language for defining schemas and relationships. Write your entities, fields, constraints, and relationships in a concise, readable format — Yeti handles the SQL.
 
 ![Yeti code](./images/yeti-code.png)
 
@@ -19,12 +19,10 @@
 
 ## Features
 
-- **Human-Readable Syntax**: Define schemas in a way that is easy to write and understand.
-- **Built-In Constraints**: Specify data types, defaults, constraints, and relationships directly in the schema.
-- **Expressive Relationships**: Handle one-to-one, one-to-many, and many-to-many relationships effortlessly.
-- **Index Support**: Define indexes on fields to optimize database performance.
-
----
+- **Readable syntax** — schemas are plain text that reads like what it describes
+- **Built-in constraints** — types, defaults, and relationships live in the schema
+- **Relationship support** — one-to-one, one-to-many, and many-to-many work out of the box
+- **Index definitions** — declare indexes directly on fields
 
 ---
 
@@ -59,10 +57,10 @@ namespace todo_app:
 
 ## Contributing
 
-Contributions are welcome! Feel free to submit issues or pull requests to help improve Yeti.
+Issues and pull requests are welcome.
 
 ---
 
 ## License
 
-Yeti is open-source software licensed under the MIT License.
+MIT

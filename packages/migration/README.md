@@ -1,15 +1,15 @@
-# migration
+# @yeti/migration-core
 
-To install dependencies:
+Core migration system for Yeti. Tracks and applies schema changes to your database.
+
+## Setup
 
 ```bash
 bun install
 ```
 
-To run:
+## Usage
 
 ```bash
 bun run src/index.ts
 ```
-
-This project was created using `bun init` in bun v1.2.0. [Bun](https://bun.sh) is a fast all-in-one JavaScript runtime.

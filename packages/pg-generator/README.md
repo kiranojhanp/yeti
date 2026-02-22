@@ -1,15 +1,15 @@
 # @yeti/pg-generator
 
-To install dependencies:
+PostgreSQL code generator for Yeti. Takes a parsed Yeti AST and outputs PostgreSQL DDL.
+
+## Setup
 
 ```bash
 bun install
 ```
 
-To run:
+## Usage
 
 ```bash
 bun run src/index.ts
 ```
-
-This project was created using `bun init` in bun v1.1.42. [Bun](https://bun.sh) is a fast all-in-one JavaScript runtime.

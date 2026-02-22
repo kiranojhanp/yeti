@@ -1,15 +1,15 @@
 # @yeti/parse
 
-To install dependencies:
+Yeti schema parser. Reads `.yeti` files and produces an AST of namespaces, entities, enums, and their attributes.
+
+## Setup
 
 ```bash
 bun install
 ```
 
-To run:
+## Usage
 
 ```bash
 bun run index.ts
 ```
-
-This project was created using `bun init` in bun v1.1.42. [Bun](https://bun.sh) is a fast all-in-one JavaScript runtime.

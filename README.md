@@ -1,17 +1,17 @@
 # Yeti
 
 > [!WARNING]
-> This project is under active development and is currently in its initial stages.
+> This project is under active development and still in its early stages.
 >
-> - **Expect frequent changes:** The API, features, and overall structure may undergo significant modifications.
-> - **Potential for bugs:** There may be unexpected bugs or stability issues.
-> - **Limited documentation:** Documentation may be incomplete or outdated.
+> - **Expect frequent changes:** The API, features, and structure will shift as the project matures.
+> - **Bugs are likely:** You may hit unexpected issues or instability.
+> - **Documentation is incomplete:** Some docs are missing or behind the code.
 >
-> We appreciate your understanding and welcome your feedback as we continue to improve this project.
+> Feedback is welcome as work continues.
 
 ---
 
-**Yeti** is a lightweight and expressive database markup language designed for intuitive schema and relationship design. Yeti makes it easy to define entities, fields, relationships, and constraints in a concise format.
+**Yeti** is a lightweight database markup language for defining schemas and relationships. Write your entities, fields, constraints, and relationships in a concise, readable format — Yeti handles the SQL.
 
 ![Yeti code](./packages/vscode-plugin/images/yeti-code.png)
 
@@ -19,12 +19,12 @@
 
 ## Features
 
-- **Human-Readable Syntax**: Define schemas in a way that is easy to write and understand.
-- **Built-In Constraints**: Specify data types, defaults, constraints, and relationships directly in the schema.
-- **Expressive Relationships**: Handle one-to-one, one-to-many, and many-to-many relationships effortlessly.
-- **Index Support**: Define indexes on fields to optimize database performance.
-- **Database Migrations**: A dedicated system for managing and applying database schema changes.
-- **VS Code Support**: Syntax highlighting for `.yeti` files.
+- **Readable syntax** — schemas are plain text that reads like what it describes
+- **Built-in constraints** — types, defaults, and relationships live in the schema
+- **Relationship support** — one-to-one, one-to-many, and many-to-many work out of the box
+- **Index definitions** — declare indexes directly on fields
+- **Migration management** — a built-in system for tracking and applying schema changes
+- **VS Code integration** — syntax highlighting for `.yeti` files
 
 ---
 
@@ -59,7 +59,7 @@ namespace todo_app:
 
 ## Architecture & Workflow
 
-Yeti transforms your schema definitions into production-ready SQL through a multi-step process involving lexical analysis, parsing, dialect-specific code generation, and migration management.
+Yeti turns schema files into SQL through three stages: parsing, code generation, and migration.
 
 ```mermaid
 graph TD
@@ -86,43 +86,39 @@ graph TD
     Schema --> Parser
 ```
 
-### 1. Parsing Phase (`@yeti/parse`)
+### 1. Parsing (`@yeti/parse`)
 
-The parsing process begins with the `YetiParser` class, which takes raw Yeti schema strings as input.
+`YetiParser` reads a raw Yeti schema string and builds an AST from it.
 
-- **Line-by-Line Processing**: The parser iterates through the input line by line, filtering out comments and handling indentation to determine scope.
-- **Regex Matching**: Specialized regular expressions identify key structures:
-  - **Namespaces**: `namespace name:`
-  - **Entities**: `entity name:`
-  - **Enums**: `enum name:`
-  - **Attributes**: `@attribute(params)`
-- **AST Construction**: The parser builds an Abstract Syntax Tree (AST) consisting of `Namespace` objects, which contain `Entity` and `Enum` definitions, along with their fields and attributes.
+- Processes input line by line, stripping comments and using indentation to determine scope
+- Uses regex patterns to identify namespaces, entities, enums, and attributes
+- Produces a tree of `Namespace` objects, each containing `Entity` and `Enum` definitions with their fields and attributes
 
 ### 2. Code Generation (`@yeti/generator`)
 
-The generation phase transforms the AST into database-specific SQL.
+The generator walks the AST and produces database-specific SQL.
 
-- **Generator Strategy**: The `BaseSQLGenerator` abstract class defines the core logic for traversing the AST.
-- **Dialect & Templates**: Implementations like `PostgresGenerator` provide specific `SQLDialect` and `TemplateProvider` strategies to handle database-specific syntax (e.g., data types, quoting rules).
-- **Output**: The generator iterates through namespaces, entities, and enums to produce the final DDL (Data Definition Language) SQL strings, including tables, foreign keys, and indexes.
+- `BaseSQLGenerator` provides the core traversal logic as an abstract class
+- Concrete implementations like `PostgresGenerator` supply a `SQLDialect` and `TemplateProvider` for database-specific syntax — data types, quoting rules, and so on
+- Output covers tables, foreign keys, and indexes as DDL strings
 
-### 3. Database Migration (`@yeti/migration-core`)
+### 3. Migration (`@yeti/migration-core`)
 
-The migration system takes the generated SQL and applies it to your database in a controlled, safe manner.
+The migration system applies generated SQL to your database in a controlled way.
 
-- **Migration System**: The `MigrationSystem` manages the lifecycle of database changes, ensuring migrations are applied in the correct order.
-- **Adapters**: Database-specific adapters (like `@yeti/sqlite-migration`) handle the connection and execution of SQL commands.
-- **Validation**: The system validates migration files against the applied history to prevent inconsistencies.
-- **Locking**: Ensures safe concurrent migration execution using `better-lock` or similar mechanisms.
+- `MigrationSystem` tracks which migrations have run and applies them in order
+- Database-specific adapters (like `@yeti/sqlite-migration`) handle the actual connection and execution
+- Applied history is validated against migration files to catch inconsistencies
+- Concurrent runs are protected with `better-lock`
 
 ---
 
 ## Contributing
 
-Contributions are welcome! Feel free to submit issues or pull requests to help improve Yeti.
+Issues and pull requests are welcome.
 
 ---
 
 ## License
 
-Yeti is open-source software licensed under the MIT License.
+MIT
