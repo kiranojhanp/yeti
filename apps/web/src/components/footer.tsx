@@ -1,201 +1,115 @@
 import Link from "next/link";
 
-function ArrowUpRight({ className }: { className?: string }) {
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="18"
-      height="18"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      className={className}
-    >
-      <path d="M7 17l9.2-9.2M17 17V7H7" />
-    </svg>
-  );
-}
-
-const socials = [
-  { name: "GitHub", href: "https://github.com/kiranojhanp/yeti" },
-  { name: "Twitter / X", href: "#" },
+const stats = [
+  { value: "MIT", label: "Licensed" },
+  { value: "5+", label: "Packages" },
+  { value: "100%", label: "Free" },
 ];
 
-const resources = [
-  { name: "Documentation", href: "#" },
-  { name: "Changelog", href: "#" },
+const links = [
+  { name: "GitHub", href: "https://github.com/kiranojhanp/yeti" },
+  { name: "npm", href: "https://www.npmjs.com/package/@yeti/parse" },
   {
-    name: "npm — @yeti/parse",
-    href: "https://www.npmjs.com/package/@yeti/parse",
-  },
-  {
-    name: "VS Code Extension",
+    name: "VS Code",
     href: "https://marketplace.visualstudio.com/items?itemName=kiranojhanp.yeti-vscode-plugin",
   },
-];
-
-const product = [
-  { name: "Features", href: "#hero" },
-  { name: "Testimonials", href: "#testimonials" },
+  { name: "Features", href: "#features" },
   { name: "Pricing", href: "#pricing" },
   { name: "FAQ", href: "#faq" },
 ];
 
 export function Footer() {
   return (
-    <footer className="border-t border-foreground/10 bg-foreground text-background overflow-hidden">
-      {/* Main Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 min-h-[380px]">
-        {/* Brand Column */}
-        <div className="col-span-1 md:col-span-2 lg:col-span-1 p-8 lg:p-10 border-b md:border-b lg:border-b-0 lg:border-r border-background/10 flex flex-col justify-between">
-          <div>
-            <h2 className="font-serif text-5xl lg:text-6xl tracking-tight mb-2">
-              yeti.
-            </h2>
-            <p className="font-serif italic text-2xl text-background/50">
-              schema language
-            </p>
-          </div>
-          <div className="mt-10 lg:mt-0 space-y-4">
-            <div className="w-12 h-12 bg-accent rounded-full flex items-center justify-center text-accent-foreground text-lg animate-[spin_8s_linear_infinite]">
-              <svg
-                width="20"
-                height="20"
-                viewBox="0 0 24 24"
-                fill="currentColor"
-              >
-                <path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 16.8l-6.2 4.5 2.4-7.4L2 9.4h7.6z" />
-              </svg>
-            </div>
-            <p className="text-sm leading-relaxed text-background/40 max-w-[240px]">
-              Write your schema once. In plain text. Let Yeti handle the rest.
-            </p>
-          </div>
-        </div>
-
-        {/* Socials Column */}
-        <div className="p-8 lg:p-10 border-b md:border-b-0 md:border-r border-background/10">
-          <div className="flex items-center justify-between mb-8 border-b border-background/20 pb-3">
-            <h4 className="font-sans text-sm font-medium uppercase tracking-widest text-background/60">
-              Socials
-            </h4>
-            <ArrowUpRight className="text-background/40" />
-          </div>
-          <ul className="space-y-4">
-            {socials.map((item) => (
-              <li key={item.name}>
-                <Link
-                  href={item.href}
-                  className="text-lg font-medium text-background/80 hover:text-accent hover:translate-x-2 transition-all duration-200 inline-block"
-                >
-                  {item.name}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </div>
-
-        {/* Resources Column */}
-        <div className="p-8 lg:p-10 border-b md:border-b-0 lg:border-r border-background/10">
-          <div className="flex items-center justify-between mb-8 border-b border-background/20 pb-3">
-            <h4 className="font-sans text-sm font-medium uppercase tracking-widest text-background/60">
-              Resources
-            </h4>
-            <ArrowUpRight className="text-background/40" />
-          </div>
-          <ul className="space-y-4">
-            {resources.map((item) => (
-              <li key={item.name}>
-                <Link
-                  href={item.href}
-                  className="text-lg font-medium text-background/80 hover:text-accent hover:translate-x-2 transition-all duration-200 inline-block"
-                >
-                  {item.name}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </div>
-
-        {/* Contact Column */}
-        <div className="p-8 lg:p-10">
-          <div className="flex items-center justify-between mb-8 border-b border-background/20 pb-3">
-            <h4 className="font-sans text-sm font-medium uppercase tracking-widest text-background/60">
-              {"Let's Talk"}
-            </h4>
-            <ArrowUpRight className="text-background/40" />
-          </div>
-          <div className="space-y-5">
+    <footer className="bg-background text-foreground py-20 px-6 border-t border-foreground/10">
+      <div className="max-w-7xl mx-auto grid md:grid-cols-2 gap-12 items-center">
+        {/* Left — headline + CTAs */}
+        <div>
+          <h2 className="font-serif text-6xl md:text-8xl tracking-tight leading-[0.95] mb-6">
+            Write it
+            <br />
+            <em className="italic text-muted-foreground">once.</em>
+          </h2>
+          <p className="text-muted-foreground max-w-md mb-8 leading-relaxed">
+            Yeti is open source, MIT licensed, and built by one person. No
+            accounts, no tiers, no lock-in — just a{" "}
+            <code className="font-mono text-foreground bg-foreground/5 px-1.5 py-0.5 rounded text-sm">
+              .yeti
+            </code>{" "}
+            file and production-ready SQL.
+          </p>
+          <div className="flex flex-wrap gap-4">
+            <Link
+              href="https://github.com/kiranojhanp/yeti"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="bg-foreground text-background px-8 py-4 rounded-full text-sm font-medium uppercase tracking-wide hover:bg-muted-foreground transition-colors duration-200"
+            >
+              Get started free
+            </Link>
             <Link
               href="mailto:hello@yetiql.dev"
-              className="block text-lg font-medium text-background hover:text-accent transition-colors"
+              className="border border-foreground/20 px-8 py-4 rounded-full text-sm font-medium uppercase tracking-wide hover:bg-foreground hover:text-background transition-all duration-200"
             >
-              hello@yetiql.dev
+              Get in touch
             </Link>
-            <p className="text-sm text-background/40 leading-relaxed">
-              Open source, one maintainer. Issues and PRs welcome on GitHub.
-            </p>
-
-            <div className="flex flex-wrap items-center gap-x-4 gap-y-2 pt-4">
-              {product.map((item) => (
-                <Link
-                  key={item.name}
-                  href={item.href}
-                  className="text-xs uppercase tracking-wider text-background/40 hover:text-accent transition-colors"
-                >
-                  {item.name}
-                </Link>
-              ))}
-            </div>
-
-            <div className="flex gap-3 pt-4">
-              {/* Email button */}
-              <button className="w-11 h-11 border border-background/20 rounded-full flex items-center justify-center text-background/60 hover:bg-background hover:text-foreground transition-colors cursor-pointer">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="16"
-                  height="16"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
-                  <polyline points="22,6 12,13 2,6" />
-                </svg>
-              </button>
-              {/* Chat button */}
-              <button className="w-11 h-11 border border-background/20 rounded-full flex items-center justify-center text-background/60 hover:bg-background hover:text-foreground transition-colors cursor-pointer">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="16"
-                  height="16"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z" />
-                </svg>
-              </button>
-            </div>
           </div>
+        </div>
+
+        {/* Right — stats grid */}
+        <div className="grid grid-cols-2 gap-4">
+          {stats.map((stat) => (
+            <div
+              key={stat.label}
+              className="bg-muted/40 border border-foreground/8 p-8 rounded-3xl"
+            >
+              <div className="font-serif text-5xl tracking-tight mb-2">
+                {stat.value}
+              </div>
+              <div className="text-xs font-medium uppercase tracking-widest text-muted-foreground">
+                {stat.label}
+              </div>
+            </div>
+          ))}
+
+          {/* Arrow CTA tile */}
+          <Link
+            href="https://github.com/kiranojhanp/yeti"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="bg-foreground text-background p-8 rounded-3xl flex items-center justify-center group hover:bg-muted-foreground transition-colors duration-200"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="32"
+              height="32"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="-rotate-45 group-hover:rotate-0 transition-transform duration-300"
+            >
+              <path d="M5 12h14M12 5l7 7-7 7" />
+            </svg>
+          </Link>
         </div>
       </div>
 
-      {/* Copyright Bar */}
-      <div className="border-t border-background/10 px-6 md:px-8 py-5 flex flex-col md:flex-row justify-between items-center text-xs uppercase tracking-widest text-background/30 gap-2">
-        <span>2026 Yeti. MIT licensed.</span>
-        <span className="flex items-center gap-1">
-          Built with <span className="text-accent">care</span> and intention.
-        </span>
+      {/* Bottom bar */}
+      <div className="max-w-7xl mx-auto mt-20 pt-8 border-t border-foreground/10 flex flex-col md:flex-row justify-between items-center gap-4 text-xs uppercase tracking-widest text-muted-foreground">
+        <span>© 2026 Yeti. MIT licensed.</span>
+        <div className="flex flex-wrap justify-center gap-6">
+          {links.map((link) => (
+            <Link
+              key={link.name}
+              href={link.href}
+              className="hover:text-foreground transition-colors"
+            >
+              {link.name}
+            </Link>
+          ))}
+        </div>
       </div>
     </footer>
   );

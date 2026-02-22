@@ -51,12 +51,17 @@ const faqs = [
 
 export function PricingFAQ() {
   return (
-    <div className="max-w-2xl mx-auto mt-24">
+    <div className="max-w-2xl mx-auto mt-0">
       <div className="text-center mb-12">
-        <h3 className="font-serif text-3xl md:text-4xl tracking-tight mb-3">
+        <div className="inline-block px-4 py-2 border-b border-dashed border-background/40 mb-4">
+          <span className="text-sm uppercase tracking-widest font-medium text-background/60">
+            FAQ
+          </span>
+        </div>
+        <h3 className="font-serif text-3xl md:text-4xl tracking-tight mb-3 text-background">
           Frequently Asked Questions
         </h3>
-        <p className="text-muted-foreground text-sm">
+        <p className="text-background/50 text-sm">
           Everything you need to know about Yeti.
         </p>
       </div>
@@ -66,12 +71,12 @@ export function PricingFAQ() {
           <AccordionItem
             key={index}
             value={`item-${index}`}
-            className="border-foreground/15"
+            className="border-background/15"
           >
-            <AccordionTrigger className="text-left font-sans text-base hover:no-underline py-5">
+            <AccordionTrigger className="text-left font-sans text-base hover:no-underline py-5 text-background hover:text-background/80">
               {faq.question}
             </AccordionTrigger>
-            <AccordionContent className="text-muted-foreground leading-relaxed pb-5">
+            <AccordionContent className="text-background/55 leading-relaxed pb-5">
               {faq.answer}
             </AccordionContent>
           </AccordionItem>

@@ -146,19 +146,19 @@ export function FeaturesSection() {
   return (
     <section
       id="features"
-      className="py-16 md:py-24 px-6 md:px-12 border-b border-foreground/10"
+      className="py-16 md:py-24 px-6 md:px-12 bg-foreground text-background"
     >
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="text-center mb-16">
-          <div className="inline-block px-4 py-2 border-b border-dashed border-foreground mb-4">
-            <span className="text-sm uppercase tracking-widest font-medium">
+          <div className="inline-block px-4 py-2 border-b border-dashed border-background/40 mb-4">
+            <span className="text-sm uppercase tracking-widest font-medium text-background/60">
               Features
             </span>
           </div>
-          <h2 className="font-serif text-4xl md:text-5xl tracking-tight">
+          <h2 className="font-serif text-4xl md:text-5xl tracking-tight text-background">
             Everything in the toolchain,{" "}
-            <em className="italic text-muted-foreground">
+            <em className="italic text-background/50">
               nothing you don&apos;t need
             </em>
           </h2>
@@ -175,11 +175,13 @@ export function FeaturesSection() {
               className="flex flex-col items-start text-left opacity-0 translate-y-5 transition-all duration-700"
               style={{ transitionDelay: `${index * 80}ms` }}
             >
-              <div className="w-16 h-16 bg-muted border border-foreground/10 rounded-md flex items-center justify-center mb-6 hover:bg-accent transition-all duration-300">
+              <div className="w-16 h-16 bg-background/10 border border-background/15 rounded-md flex items-center justify-center mb-6 hover:bg-background/20 transition-all duration-300 text-background">
                 {feature.icon}
               </div>
-              <h3 className="font-serif text-2xl mb-3">{feature.title}</h3>
-              <p className="text-muted-foreground text-sm leading-relaxed">
+              <h3 className="font-serif text-2xl mb-3 text-background">
+                {feature.title}
+              </h3>
+              <p className="text-background/55 text-sm leading-relaxed">
                 {feature.description}
               </p>
             </div>

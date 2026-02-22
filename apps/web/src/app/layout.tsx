@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Toaster } from "@/components/ui/sonner";
+import { TooltipProvider } from "@/components/ui/tooltip";
 import { Instrument_Serif, Space_Grotesk } from "next/font/google";
 import "./globals.css";
 
@@ -50,7 +51,7 @@ export default function RootLayout({
       className={`${instrumentSerif.variable} ${spaceGrotesk.variable}`}
     >
       <body className="font-sans antialiased">
-        {children}
+        <TooltipProvider>{children}</TooltipProvider>
         <Toaster />
       </body>
     </html>
