@@ -1,4 +1,5 @@
 import { HeroSection } from "@/components/hero-section";
+import { FeaturesSection } from "@/components/features-section";
 import { TestimonialsSection } from "@/components/testimonials-section";
 import { PricingCard } from "@/components/pricing-card";
 import { PricingFAQ } from "@/components/pricing-faq";
@@ -70,6 +71,9 @@ export default function Page() {
       <div id="hero">
         <HeroSection />
       </div>
+
+      {/* Features Section */}
+      <FeaturesSection />
 
       {/* Testimonials Section */}
       <TestimonialsSection />
