@@ -1,6 +1,5 @@
 import { HeroSection } from "@/components/hero-section";
 import { TestimonialsSection } from "@/components/testimonials-section";
-import { PricingHeader } from "@/components/pricing-header";
 import { PricingCard } from "@/components/pricing-card";
 import { PricingFAQ } from "@/components/pricing-faq";
 import { Footer } from "@/components/footer";
@@ -8,35 +7,17 @@ import { Footer } from "@/components/footer";
 const plans = [
   {
     name: "Free",
-    price: "$0",
-    description: "Perfect for getting started",
-    features: ["Up to 5 projects", "Basic templates", "Cloud sync"],
+    features: [
+      "@yeti/parse — the parser",
+      "@yeti/generator — base SQL generator",
+      "@yeti/pg-generator — PostgreSQL DDL",
+      "@yeti/migration-core — migration engine",
+      "@yeti/sqlite-migration — SQLite adapter",
+      "VS Code extension",
+      "MIT licensed",
+    ],
     ctaText: "Get Started",
-  },
-  {
-    name: "Pro",
-    price: "$9",
-    description: "For professional creators",
-    features: [
-      "Unlimited projects",
-      "Premium templates",
-      "Team collaboration",
-      "Priority support",
-    ],
-    ctaText: "Start Free Trial",
     popular: true,
-  },
-  {
-    name: "Team",
-    price: "$19",
-    description: "For growing teams",
-    features: [
-      "Everything in Pro",
-      "Up to 10 team members",
-      "Advanced analytics",
-      "Custom integrations",
-    ],
-    ctaText: "Contact Sales",
   },
 ];
 
@@ -45,7 +26,7 @@ export default function Page() {
     <main className="min-h-screen bg-background text-foreground font-sans">
       {/* Navigation */}
       <nav className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 md:px-12 py-5 bg-background/80 backdrop-blur-lg border-b border-foreground/5">
-        <span className="font-serif text-2xl">acme.</span>
+        <span className="font-serif text-2xl">yeti.</span>
         <div className="hidden md:flex items-center gap-8">
           <a
             href="#hero"
@@ -54,7 +35,7 @@ export default function Page() {
             Product
           </a>
           <a
-            href="#hero"
+            href="#features"
             className="text-sm text-muted-foreground hover:text-foreground transition-colors"
           >
             Features
@@ -75,9 +56,14 @@ export default function Page() {
             FAQ
           </a>
         </div>
-        <button className="bg-foreground text-background text-sm font-medium px-5 py-2.5 rounded-full hover:bg-muted-foreground transition-colors cursor-pointer">
-          Sign Up
-        </button>
+        <a
+          href="https://github.com/kiranojhanp/yeti"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="bg-foreground text-background text-sm font-medium px-5 py-2.5 rounded-full hover:bg-muted-foreground transition-colors cursor-pointer"
+        >
+          View on GitHub
+        </a>
       </nav>
 
       {/* Hero Section */}
@@ -90,16 +76,20 @@ export default function Page() {
 
       {/* Pricing Section */}
       <section id="pricing" className="py-16 md:py-24 px-6 md:px-12">
-        <div className="max-w-7xl mx-auto">
-          <PricingHeader />
+        <div className="max-w-4xl mx-auto">
+          <div className="text-center mb-10">
+            <div className="inline-block px-4 py-2 border-b border-dashed border-foreground mb-4">
+              <span className="text-sm uppercase tracking-widest font-medium">
+                Pricing
+              </span>
+            </div>
+          </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+          {/* Single free card — centered, capped width */}
+          <div className="max-w-md mx-auto">
             {plans.map((plan, index) => (
               <PricingCard
                 key={plan.name}
-                name={plan.name}
-                price={plan.price}
-                description={plan.description}
                 features={plan.features}
                 ctaText={plan.ctaText}
                 popular={plan.popular}
@@ -108,23 +98,19 @@ export default function Page() {
             ))}
           </div>
 
-          {/* Trust bar */}
-          <div className="mt-16 text-center">
-            <p className="text-sm text-muted-foreground mb-6">
-              Trusted by teams at
+          {/* Buy me a coffee */}
+          <div className="mt-12 text-center">
+            <p className="text-sm text-muted-foreground mb-4">
+              Yeti is built by one person, in the open, for free.
             </p>
-            <div className="flex flex-wrap items-center justify-center gap-8 md:gap-14 opacity-40">
-              {["Vercel", "Stripe", "Linear", "Notion", "Figma"].map(
-                (brand) => (
-                  <span
-                    key={brand}
-                    className="font-serif text-xl md:text-2xl text-foreground select-none"
-                  >
-                    {brand}
-                  </span>
-                )
-              )}
-            </div>
+            <a
+              href="https://buymeacoffee.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-full border border-foreground/20 text-sm font-medium hover:bg-foreground hover:text-background transition-all duration-300"
+            >
+              ☕ Buy me a coffee
+            </a>
           </div>
 
           <div id="faq">

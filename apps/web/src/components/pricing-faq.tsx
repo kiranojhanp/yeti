@@ -1,34 +1,53 @@
-"use client"
+"use client";
 
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
-} from "@/components/ui/accordion"
+} from "@/components/ui/accordion";
 
 const faqs = [
   {
-    question: "Can I switch plans at any time?",
+    question: "What databases does Yeti support?",
     answer:
-      "Yes, you can upgrade or downgrade your plan at any time. Changes take effect immediately, and we'll prorate your billing accordingly.",
+      "PostgreSQL is the primary target today, with a full generator and migration system. SQLite is supported for migrations via @yeti/sqlite-migration. More adapters are planned — the generator architecture was designed specifically to make adding new targets straightforward.",
   },
   {
-    question: "Is there a free trial for Pro?",
+    question: "Is this an ORM?",
     answer:
-      "Absolutely! All paid plans come with a 14-day free trial. No credit card required to start.",
+      "No. Yeti only deals with schema definition and migrations. It doesn't touch queries, models, or your application code. You can use it alongside any ORM, alongside raw SQL, or alongside nothing at all.",
   },
   {
-    question: "What happens when I exceed my project limit?",
+    question: "Does Yeti generate TypeScript types?",
     answer:
-      "On the Free plan, you'll need to upgrade to create more projects. On paid plans, you can create unlimited projects without any restrictions.",
+      "Not yet. It's on the roadmap. The AST has all the information needed to generate types — it just hasn't been built yet.",
   },
   {
-    question: "Do you offer discounts for annual billing?",
+    question: "What version is this?",
     answer:
-      "Yes, you can save up to 20% by choosing annual billing. Contact our sales team for custom enterprise pricing.",
+      "v0.0.4. The project is early. The language syntax is mostly stable, but the APIs are not guaranteed to stay the same between minor versions. Check the changelog before upgrading in production.",
   },
-]
+  {
+    question: "Can I use Yeti without VS Code?",
+    answer:
+      "Yes. The editor extension is optional. The parser, generator, and migration system are all standalone npm packages you can use in any Node.js or Bun project.",
+  },
+  {
+    question: "Who maintains this?",
+    answer:
+      "kiranojhanp — one person, open source, MIT licensed. If it's useful to you, buying a coffee is the best way to support continued development.",
+  },
+  {
+    question: "Can I contribute?",
+    answer:
+      "Yes. The project is on GitHub. Issues and pull requests are open. If you're building a new database adapter, reach out first so the work doesn't duplicate what's already in progress.",
+  },
+  {
+    question: "What's the license?",
+    answer: "MIT. Use it however you want.",
+  },
+];
 
 export function PricingFAQ() {
   return (
@@ -38,7 +57,7 @@ export function PricingFAQ() {
           Frequently Asked Questions
         </h3>
         <p className="text-muted-foreground text-sm">
-          Everything you need to know about the plans.
+          Everything you need to know about Yeti.
         </p>
       </div>
 
@@ -59,5 +78,5 @@ export function PricingFAQ() {
         ))}
       </Accordion>
     </div>
-  )
+  );
 }

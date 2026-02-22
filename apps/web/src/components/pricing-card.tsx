@@ -1,22 +1,16 @@
-"use client"
+"use client";
 
-import { cn } from "@/lib/utils"
-import { CheckIcon } from "./check-icon"
+import { cn } from "@/lib/utils";
+import { CheckIcon } from "./check-icon";
 
 interface PricingCardProps {
-  name: string
-  price: string
-  description: string
-  features: string[]
-  ctaText: string
-  popular?: boolean
-  delay?: number
+  features: string[];
+  ctaText: string;
+  popular?: boolean;
+  delay?: number;
 }
 
 export function PricingCard({
-  name,
-  price,
-  description,
   features,
   ctaText,
   popular = false,
@@ -36,23 +30,17 @@ export function PricingCard({
     >
       {popular && (
         <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-foreground text-background text-xs uppercase tracking-wide px-4 py-1 rounded-full">
-          Popular
+          Open Source
         </div>
       )}
 
       <div className="mb-8">
-        <h3 className="font-serif text-2xl mb-2">{name}</h3>
-        <div className="flex items-baseline gap-2 mb-4">
-          <span className="font-serif text-5xl tracking-tight">{price}</span>
-          <span className="text-muted-foreground">/month</span>
-        </div>
-        <p
-          className={cn(
-            "text-sm",
-            popular ? "text-foreground" : "text-muted-foreground"
-          )}
-        >
-          {description}
+        <h3 className="font-serif text-4xl md:text-5xl tracking-tight mb-2">
+          Free. All of it.
+        </h3>
+        <p className="text-sm text-muted-foreground mb-6 leading-relaxed">
+          Every package. The VS Code extension. Future adapters. MIT licensed.
+          No account, no usage limits, no &ldquo;community tier.&rdquo;
         </p>
       </div>
 
@@ -76,5 +64,5 @@ export function PricingCard({
         {ctaText}
       </button>
     </div>
-  )
+  );
 }

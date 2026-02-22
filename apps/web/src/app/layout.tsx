@@ -17,9 +17,9 @@ const spaceGrotesk = Space_Grotesk({
 });
 
 export const metadata: Metadata = {
-  title: "Vantage - Clarity for Your Chaotic Mind",
+  title: "Yeti — Write your schema once. In plain text.",
   description:
-    "The all-in-one workspace for those who think differently. Organize thoughts, manage projects, and schedule your day.",
+    "Yeti is a schema definition language for databases. Describe what you want and it generates production-ready SQL. No ORM lock-in. No boilerplate.",
   icons: {
     icon: [
       {

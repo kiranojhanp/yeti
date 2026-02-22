@@ -1,5 +1,5 @@
-import { ArrowRight, Play } from "lucide-react"
-import { DashboardMockup } from "./dashboard-mockup"
+import { ArrowRight, Play } from "lucide-react";
+import { DashboardMockup } from "./dashboard-mockup";
 
 export function HeroSection() {
   return (
@@ -9,15 +9,13 @@ export function HeroSection() {
 
       <div className="max-w-4xl mx-auto text-center z-10 relative">
         {/* Badge */}
-        <div
-          className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-background border border-foreground/15 shadow-sm mb-8 animate-fade-down"
-        >
+        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-background border border-foreground/15 shadow-sm mb-8 animate-fade-down">
           <span className="flex h-2 w-2 relative">
             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-accent opacity-75" />
             <span className="relative inline-flex rounded-full h-2 w-2 bg-accent" />
           </span>
           <span className="text-sm font-medium text-muted-foreground">
-            Vantage 2.0 is live
+            v0.0.4 — now available
           </span>
         </div>
 
@@ -26,8 +24,8 @@ export function HeroSection() {
           className="font-serif text-6xl md:text-8xl text-foreground leading-[0.95] md:leading-[1.1] mb-8 animate-fade-up text-balance"
           style={{ animationDelay: "100ms" }}
         >
-          Clarity for your <br className="hidden md:block" />
-          <span className="italic text-muted-foreground">chaotic</span> mind.
+          Write your schema once. <br className="hidden md:block" />
+          In <span className="italic text-muted-foreground">plain text.</span>
         </h1>
 
         {/* Subhead */}
@@ -35,8 +33,13 @@ export function HeroSection() {
           className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-10 leading-relaxed animate-fade-up"
           style={{ animationDelay: "200ms" }}
         >
-          The all-in-one workspace for those who think differently. Organize
-          thoughts, manage projects, and schedule your day without the overwhelm.
+          Yeti is a schema definition language for databases. Describe what you
+          want — entities, relationships, constraints — and it generates
+          production-ready SQL. No ORM lock-in. No boilerplate. Just a{" "}
+          <code className="font-mono text-foreground bg-foreground/5 px-1.5 py-0.5 rounded">
+            .yeti
+          </code>{" "}
+          file.
         </p>
 
         {/* CTAs */}
@@ -44,14 +47,24 @@ export function HeroSection() {
           className="flex flex-col sm:flex-row items-center justify-center gap-4 animate-fade-up"
           style={{ animationDelay: "300ms" }}
         >
-          <button className="bg-foreground text-background px-8 py-4 rounded-full text-base font-medium hover:bg-muted-foreground transition shadow-lg hover:shadow-xl hover:-translate-y-1 transform duration-300 flex items-center gap-2 group cursor-pointer">
-            Start for free
+          <a
+            href="https://github.com/kiranojhanp/yeti"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="bg-foreground text-background px-8 py-4 rounded-full text-base font-medium hover:bg-muted-foreground transition shadow-lg hover:shadow-xl hover:-translate-y-1 transform duration-300 flex items-center gap-2 group cursor-pointer"
+          >
+            Get started free
             <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-          </button>
-          <button className="bg-background text-foreground border border-foreground/15 px-8 py-4 rounded-full text-base font-medium hover:border-foreground/40 transition flex items-center gap-2 cursor-pointer">
+          </a>
+          <a
+            href="https://marketplace.visualstudio.com/items?itemName=kiranojhanp.yeti-vscode-plugin"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="bg-background text-foreground border border-foreground/15 px-8 py-4 rounded-full text-base font-medium hover:border-foreground/40 transition flex items-center gap-2 cursor-pointer"
+          >
             <Play className="w-4 h-4 text-muted-foreground fill-current" />
-            See how it works
-          </button>
+            Install VS Code extension
+          </a>
         </div>
       </div>
 
@@ -63,5 +76,5 @@ export function HeroSection() {
         <DashboardMockup />
       </div>
     </section>
-  )
+  );
 }

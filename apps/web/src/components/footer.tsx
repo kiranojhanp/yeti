@@ -1,4 +1,4 @@
-import Link from "next/link"
+import Link from "next/link";
 
 function ArrowUpRight({ className }: { className?: string }) {
   return (
@@ -16,29 +16,33 @@ function ArrowUpRight({ className }: { className?: string }) {
     >
       <path d="M7 17l9.2-9.2M17 17V7H7" />
     </svg>
-  )
+  );
 }
 
 const socials = [
+  { name: "GitHub", href: "https://github.com/kiranojhanp/yeti" },
   { name: "Twitter / X", href: "#" },
-  { name: "LinkedIn", href: "#" },
-  { name: "GitHub", href: "#" },
-  { name: "Dribbble", href: "#" },
-]
+];
 
 const resources = [
   { name: "Documentation", href: "#" },
   { name: "Changelog", href: "#" },
-  { name: "Blog", href: "#" },
-  { name: "Status Page", href: "#" },
-]
+  {
+    name: "npm — @yeti/parse",
+    href: "https://www.npmjs.com/package/@yeti/parse",
+  },
+  {
+    name: "VS Code Extension",
+    href: "https://marketplace.visualstudio.com/items?itemName=kiranojhanp.yeti-vscode-plugin",
+  },
+];
 
 const product = [
   { name: "Features", href: "#hero" },
   { name: "Testimonials", href: "#testimonials" },
   { name: "Pricing", href: "#pricing" },
   { name: "FAQ", href: "#faq" },
-]
+];
 
 export function Footer() {
   return (
@@ -49,20 +53,25 @@ export function Footer() {
         <div className="col-span-1 md:col-span-2 lg:col-span-1 p-8 lg:p-10 border-b md:border-b lg:border-b-0 lg:border-r border-background/10 flex flex-col justify-between">
           <div>
             <h2 className="font-serif text-5xl lg:text-6xl tracking-tight mb-2">
-              acme.
+              yeti.
             </h2>
             <p className="font-serif italic text-2xl text-background/50">
-              workspace
+              schema language
             </p>
           </div>
           <div className="mt-10 lg:mt-0 space-y-4">
             <div className="w-12 h-12 bg-accent rounded-full flex items-center justify-center text-accent-foreground text-lg animate-[spin_8s_linear_infinite]">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+              >
                 <path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 16.8l-6.2 4.5 2.4-7.4L2 9.4h7.6z" />
               </svg>
             </div>
             <p className="text-sm leading-relaxed text-background/40 max-w-[240px]">
-              Clarity for your chaotic mind. Building tools with purpose, precision, and care.
+              Write your schema once. In plain text. Let Yeti handle the rest.
             </p>
           </div>
         </div>
@@ -121,13 +130,13 @@ export function Footer() {
           </div>
           <div className="space-y-5">
             <Link
-              href="mailto:hello@acme.app"
+              href="mailto:hello@yetiql.dev"
               className="block text-lg font-medium text-background hover:text-accent transition-colors"
             >
-              hello@acme.app
+              hello@yetiql.dev
             </Link>
             <p className="text-sm text-background/40 leading-relaxed">
-              Currently accepting new teams and enterprise partnerships.
+              Open source, one maintainer. Issues and PRs welcome on GitHub.
             </p>
 
             <div className="flex flex-wrap items-center gap-x-4 gap-y-2 pt-4">
@@ -183,11 +192,11 @@ export function Footer() {
 
       {/* Copyright Bar */}
       <div className="border-t border-background/10 px-6 md:px-8 py-5 flex flex-col md:flex-row justify-between items-center text-xs uppercase tracking-widest text-background/30 gap-2">
-        <span>2026 Acme Inc. All rights reserved.</span>
+        <span>2026 Yeti. MIT licensed.</span>
         <span className="flex items-center gap-1">
           Built with <span className="text-accent">care</span> and intention.
         </span>
       </div>
     </footer>
-  )
+  );
 }

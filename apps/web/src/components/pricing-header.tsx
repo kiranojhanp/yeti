@@ -7,11 +7,12 @@ export function PricingHeader() {
         </span>
       </div>
       <h2 className="font-serif text-4xl md:text-5xl lg:text-6xl tracking-tight mb-4 text-balance">
-        Simple, Transparent Pricing
+        Free. All of it.
       </h2>
       <p className="text-muted-foreground max-w-2xl mx-auto text-base leading-relaxed">
-        Choose the plan that works best for you. Upgrade or downgrade anytime.
+        Every package. The VS Code extension. Future adapters. MIT licensed. No
+        account, no usage limits, no &ldquo;community tier.&rdquo;
       </p>
     </div>
-  )
+  );
 }
