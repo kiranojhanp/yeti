@@ -23,13 +23,13 @@ export const navbarContent = {
 } as const;
 
 export const heroContent = {
-  status: "v0.0.4 — now available",
+  status: "v0.0.4 is out now",
   title: {
     prefix: "Write your schema once.",
     emphasis: "plain text.",
   },
   description:
-    "Yeti is a schema definition language for databases. Describe what you want — entities, relationships, constraints — and it generates production-ready SQL. No ORM lock-in. No boilerplate. Just a",
+    "Yeti is a schema language for databases. Describe what you need: entities, relationships, constraints. It handles the SQL. No ORM lock-in, no boilerplate, just a",
   ctas: {
     primary: { label: "Get started", href: siteLinks.github },
     secondary: { label: "Install VS Code extension", href: siteLinks.vscode },
@@ -52,19 +52,19 @@ export const featuresSectionContent = {
     {
       title: "Error-recovering parser",
       description:
-        "The @yeti/parse package reads .yeti files and produces a fully typed AST with line and column tracking on every node. When you make a syntax mistake, it recovers and keeps parsing — you see all your errors at once, not one at a time.",
+        "The @yeti/parse package reads .yeti files and produces a fully typed AST with line and column tracking on every node. Make a syntax mistake and it keeps going, so you see every error at once instead of fixing them one at a time.",
       iconKey: "parser",
     },
     {
       title: "Full PostgreSQL DDL",
       description:
-        "@yeti/pg-generator converts your schema to valid PostgreSQL. Enum types, foreign key ordering, double-quoted identifiers, and SQL injection-safe defaults — all handled. You write the schema; it writes the SQL.",
+        "@yeti/pg-generator converts your schema to valid PostgreSQL. Enum types, foreign key ordering, double-quoted identifiers, and SQL injection-safe defaults are all handled. You write the schema. It writes the SQL.",
       iconKey: "postgres",
     },
     {
       title: "Hash-verified migrations",
       description:
-        "@yeti/migration-core validates SHA-256 hashes on every applied migration. Sequence gaps, out-of-order applies, and tampered files all stop the run before anything touches your database.",
+        "@yeti/migration-core validates SHA-256 hashes on every applied migration. Sequence gaps, out-of-order applies, and tampered files all stop the run before anything reaches your database.",
       iconKey: "migrations",
     },
     {
@@ -76,13 +76,13 @@ export const featuresSectionContent = {
     {
       title: "VS Code extension",
       description:
-        "Autocomplete, hover documentation, go to definition, rename symbol, and a Generate SQL command — all schema-aware. It only loads when a .yeti file is open.",
+        "Autocomplete, hover docs, go to definition, rename symbol, and a Generate SQL command, all schema-aware. It only loads when a .yeti file is open.",
       iconKey: "vscode",
     },
     {
       title: "Extensible generators",
       description:
-        "Adding a new database target means implementing two interfaces: SQLDialect and TemplateProvider. The base generator handles the rest. MySQL, SQLite DDL, documentation — the architecture doesn't care.",
+        "Adding a new database target means implementing two interfaces: SQLDialect and TemplateProvider. The base generator handles the rest. MySQL, SQLite DDL, documentation generators all fit the same architecture.",
       iconKey: "extensible",
     },
   ],
@@ -108,7 +108,7 @@ export const comparisonContent = {
         Flyway: "no",
         Atlas: "yes",
       },
-      notes: { Prisma: "PSL — but ORM-coupled, not standalone" },
+      notes: { Prisma: "PSL (ORM-coupled, not standalone)" },
     },
     {
       label: "ORM-free",
@@ -222,34 +222,34 @@ export const comparisonContent = {
         Drizzle: "Apache 2.0",
         Liquibase: "Open-core",
         Flyway: "Restricted (Redgate)",
-        Atlas: "EULA — CE is Apache 2.0",
+        Atlas: "EULA (CE is Apache 2.0)",
       },
     },
   ],
   blurbs: {
     DBML: {
       headline: "Great DSL. No migrations.",
-      body: "DBML is the closest thing to what Yeti is building — clean, ORM-free schema syntax. But it stops at documentation. No migration engine, no editor tooling beyond basic highlighting. Yeti is what DBML would be if it took migrations seriously.",
+      body: "DBML is the closest thing to what Yeti is building: clean, ORM-free schema syntax. But it stops at documentation. No migration engine, no editor tooling beyond basic highlighting. Yeti is what DBML would be if it took migrations seriously.",
     },
     Prisma: {
       headline: "Best ORM DX. Tied to Prisma.",
-      body: "The schema format only exists to serve Prisma Client. Step outside what Prisma supports and you're writing raw SQL anyway — with two sources of truth. Migrate also needs a shadow database just to diff.",
+      body: "The schema format exists to serve Prisma Client, not you. Step outside what Prisma supports and you're writing raw SQL anyway, with two sources of truth. Migrate also needs a shadow database just to diff.",
     },
     Drizzle: {
       headline: "TypeScript, not a DSL.",
-      body: "The schema is TypeScript code — pgTable, mysqlTable. Switching databases means rewriting the schema. The editor experience is IntelliSense, not schema-aware tooling. No go-to-definition for entities you defined in your own file.",
+      body: "The schema is TypeScript code: pgTable, mysqlTable. Switching databases means rewriting the schema. The editor experience is IntelliSense, not schema-aware tooling. No go-to-definition for entities you defined in your own file.",
     },
     Liquibase: {
       headline: "Changelog, not a schema.",
-      body: "60+ databases and battle-tested since 2006. But Liquibase has no schema — just a changelog of every change ever made. To understand current state you replay history or inspect a live database. Enterprise features are commercial.",
+      body: "60+ databases and battle-tested since 2006. But Liquibase has no schema, just a changelog of every change ever made. To understand the current state you replay history or inspect a live database. Enterprise features are commercial.",
     },
     Flyway: {
       headline: "Simple model, commercial ceiling.",
-      body: "Numbered SQL files applied in order — clean mental model. But no schema definition, no rollbacks without paying, and checksum validation breaks if someone edits whitespace in an applied file. Now owned by Redgate.",
+      body: "Numbered SQL files applied in order, a clean mental model. But no schema definition, no rollbacks without paying, and checksum validation breaks if someone edits whitespace in an applied file. Now owned by Redgate.",
     },
     Atlas: {
       headline: "Most powerful. Steepest curve.",
-      body: "Declarative schema-as-code, 50+ migration linting checks, Kubernetes operator. Genuinely impressive. But HCL syntax, EULA on the default binary, and the best features are behind Atlas Cloud.",
+      body: "Declarative schema-as-code, 50+ migration linting checks, Kubernetes operator. Genuinely impressive. But it uses HCL syntax, the default binary has a EULA, and the best features are behind Atlas Cloud.",
     },
   },
   help: {
@@ -328,7 +328,7 @@ export const testimonialsSectionContent = {
     },
     {
       quote:
-        "Switching databases required rewriting the schema to use different table constructors. It wasn't a schema — it was just ORM config that happened to describe a database.",
+        "Switching databases required rewriting the schema to use different table constructors. It wasn't a schema. It was just ORM config that happened to describe a database.",
       boldParts: ["just ORM config"],
       name: "On ORM-coupled schemas",
       title: "a common realization",
@@ -347,17 +347,17 @@ export const pricingSectionContent = {
     ctaText: "Get Started",
     ctaHref: siteLinks.github,
     features: [
-      "@yeti/parse — the parser",
-      "@yeti/generator — base SQL generator",
-      "@yeti/pg-generator — PostgreSQL DDL",
-      "@yeti/migration-core — migration engine",
-      "@yeti/sqlite-migration — SQLite adapter",
+      "@yeti/parse (the parser)",
+      "@yeti/generator (base SQL generator)",
+      "@yeti/pg-generator (PostgreSQL DDL)",
+      "@yeti/migration-core (migration engine)",
+      "@yeti/sqlite-migration (SQLite adapter)",
       "VS Code extension",
       "MIT licensed",
     ],
   },
   support: {
-    text: "Yeti is built by one person, in the open, for free.",
+    text: "Yeti is built by one person, in the open, for free. If it saves you time, a coffee goes a long way.",
     ctaLabel: "☕ Buy me a coffee",
     ctaHref: siteLinks.buyMeCoffee,
   },
@@ -371,37 +371,37 @@ export const faqSectionContent = {
     {
       question: "What databases does Yeti support?",
       answer:
-        "PostgreSQL is the primary target today, with a full generator and migration system. SQLite is supported for migrations via @yeti/sqlite-migration. More adapters are planned — the generator architecture was designed specifically to make adding new targets straightforward.",
+        "PostgreSQL is the primary target today, with a full generator and migration system. SQLite is supported for migrations via @yeti/sqlite-migration. More adapters are planned, and the generator architecture was designed to make adding new targets straightforward.",
     },
     {
       question: "Is this an ORM?",
       answer:
-        "No. Yeti only deals with schema definition and migrations. It doesn't touch queries, models, or your application code. You can use it alongside any ORM, alongside raw SQL, or alongside nothing at all.",
+        "No. Yeti handles schema definition and migrations, nothing else. It doesn't touch queries, models, or your application code. Use it with any ORM, with raw SQL, or on its own.",
     },
     {
       question: "Does Yeti generate TypeScript types?",
       answer:
-        "Not yet. It's on the roadmap. The AST has all the information needed to generate types — it just hasn't been built yet.",
+        "Not yet, but it's on the roadmap. The AST already has all the information needed to generate types.",
     },
     {
       question: "What version is this?",
       answer:
-        "v0.0.4. The project is early. The language syntax is mostly stable, but the APIs are not guaranteed to stay the same between minor versions. Check the changelog before upgrading in production.",
+        "v0.0.4. The project is early. Language syntax is mostly stable, but the APIs may change between minor versions. Check the changelog before upgrading in production.",
     },
     {
       question: "Can I use Yeti without VS Code?",
       answer:
-        "Yes. The editor extension is optional. The parser, generator, and migration system are all standalone npm packages you can use in any Node.js or Bun project.",
+        "Yes. The editor extension is optional. The parser, generator, and migration system are standalone npm packages that work in any Node.js or Bun project.",
     },
     {
       question: "Who maintains this?",
       answer:
-        "kiranojhanp — one person, open source, MIT licensed. If it's useful to you, buying a coffee is the best way to support continued development.",
+        "kiranojhanp, one person, open source, MIT licensed. If Yeti saves you time, buying a coffee is the best way to support continued development.",
     },
     {
       question: "Can I contribute?",
       answer:
-        "Yes. The project is on GitHub. Issues and pull requests are open. If you're building a new database adapter, reach out first so the work doesn't duplicate what's already in progress.",
+        "Yes. The project is on GitHub and issues and pull requests are open. If you're building a new database adapter, reach out first so the work doesn't duplicate what's already in progress.",
     },
     {
       question: "What's the license?",
@@ -414,7 +414,7 @@ export const footerContent = {
   titlePrefix: "Write it",
   titleEmphasis: "once.",
   description:
-    "Yeti is open source, MIT licensed, and built by one person. No accounts, no tiers, no lock-in — just a",
+    "Yeti is open source, MIT licensed, and built by one person. No accounts, no tiers, no lock-in, just a",
   primaryCta: { label: "Get started", href: siteLinks.github },
   secondaryCta: { label: "Get in touch", href: siteLinks.email },
   stats: [
