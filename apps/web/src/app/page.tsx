@@ -22,7 +22,10 @@ export default function Page() {
 
       <TestimonialsSection />
 
-      <section id="pricing" className="section-shell bg-surface-2">
+      <section
+        id="pricing"
+        className="section-shell border-t border-line-soft/70 bg-surface-1"
+      >
         <div className="mx-auto w-full max-w-4xl">
           <div className="text-center mb-10">
             <div className="section-label">
