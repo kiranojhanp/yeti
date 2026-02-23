@@ -172,18 +172,23 @@ export function FeaturesSection() {
               ref={(el) => {
                 itemRefs.current[index] = el;
               }}
-              className="flex flex-col items-start text-left opacity-0 translate-y-5 transition-all duration-700"
+              className="opacity-0 translate-y-5 transition-all duration-700"
               style={{ transitionDelay: `${index * 80}ms` }}
             >
-              <div className="w-16 h-16 bg-background/10 border border-background/15 rounded-md flex items-center justify-center mb-6 hover:bg-background/20 transition-all duration-300 text-background">
-                {feature.icon}
+              <div
+                tabIndex={0}
+                className="group flex flex-col items-start text-left rounded-xl border border-background/10 bg-gradient-to-b from-background/10 to-background/0 p-6 md:p-7 transition-all duration-300 hover:-translate-y-1 hover:border-background/20 hover:bg-background/10 hover:shadow-[0_12px_32px_-22px_rgba(255,255,255,0.5)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-background/30 focus-visible:ring-offset-2 focus-visible:ring-offset-foreground"
+              >
+                <div className="w-16 h-16 md:w-20 md:h-20 bg-background/10 border border-background/15 rounded-lg flex items-center justify-center mb-6 text-background/70 ring-1 ring-inset ring-background/10 transition-all duration-300 group-hover:bg-background/20 group-hover:scale-[1.03] group-hover:text-background">
+                  {feature.icon}
+                </div>
+                <h3 className="font-serif text-2xl mb-3 text-background/90 transition-colors duration-300 group-hover:text-background">
+                  {feature.title}
+                </h3>
+                <p className="text-background/55 text-sm leading-relaxed transition-colors duration-300 group-hover:text-background/70">
+                  {feature.description}
+                </p>
               </div>
-              <h3 className="font-serif text-2xl mb-3 text-background">
-                {feature.title}
-              </h3>
-              <p className="text-background/55 text-sm leading-relaxed">
-                {feature.description}
-              </p>
             </div>
           ))}
         </div>
