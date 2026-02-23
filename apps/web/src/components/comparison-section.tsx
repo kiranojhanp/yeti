@@ -13,182 +13,17 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { comparisonContent, type CellValue } from "@/content/site-content";
 
-const tools = [
-  "Yeti",
-  "DBML",
-  "Prisma",
-  "Drizzle",
-  "Liquibase",
-  "Flyway",
-  "Atlas",
-];
-
-const rows: {
+const tools = comparisonContent.tools;
+const rows: readonly {
   label: string;
-  values: Record<string, "yes" | "no" | "partial" | "note">;
+  values: Record<string, CellValue>;
   notes?: Record<string, string>;
-}[] = [
-  {
-    label: "Pure schema DSL",
-    values: {
-      Yeti: "yes",
-      DBML: "yes",
-      Prisma: "yes",
-      Drizzle: "no",
-      Liquibase: "no",
-      Flyway: "no",
-      Atlas: "yes",
-    },
-    notes: { Prisma: "PSL — but ORM-coupled, not standalone" },
-  },
-  {
-    label: "ORM-free",
-    values: {
-      Yeti: "yes",
-      DBML: "yes",
-      Prisma: "no",
-      Drizzle: "no",
-      Liquibase: "yes",
-      Flyway: "yes",
-      Atlas: "yes",
-    },
-  },
-  {
-    label: "Migration engine",
-    values: {
-      Yeti: "yes",
-      DBML: "no",
-      Prisma: "yes",
-      Drizzle: "yes",
-      Liquibase: "yes",
-      Flyway: "yes",
-      Atlas: "yes",
-    },
-  },
-  {
-    label: "Hash-verified migrations",
-    values: {
-      Yeti: "yes",
-      DBML: "no",
-      Prisma: "partial",
-      Drizzle: "no",
-      Liquibase: "partial",
-      Flyway: "partial",
-      Atlas: "partial",
-    },
-    notes: {
-      Yeti: "SHA-256 per file",
-      Prisma: "Checksum only",
-      Liquibase: "MD5, partial",
-      Flyway: "Breaks on whitespace",
-      Atlas: "Directory-level",
-    },
-  },
-  {
-    label: "VS Code autocomplete",
-    values: {
-      Yeti: "yes",
-      DBML: "no",
-      Prisma: "yes",
-      Drizzle: "note",
-      Liquibase: "no",
-      Flyway: "no",
-      Atlas: "no",
-    },
-    notes: { Drizzle: "TS only, not schema-aware" },
-  },
-  {
-    label: "Go to definition",
-    values: {
-      Yeti: "yes",
-      DBML: "no",
-      Prisma: "no",
-      Drizzle: "note",
-      Liquibase: "no",
-      Flyway: "no",
-      Atlas: "no",
-    },
-    notes: { Drizzle: "TS only, not schema-aware" },
-  },
-  {
-    label: "Rename symbol",
-    values: {
-      Yeti: "yes",
-      DBML: "no",
-      Prisma: "no",
-      Drizzle: "note",
-      Liquibase: "no",
-      Flyway: "no",
-      Atlas: "no",
-    },
-    notes: { Drizzle: "TS only, not schema-aware" },
-  },
-  {
-    label: "No JVM or runtime required",
-    values: {
-      Yeti: "yes",
-      DBML: "yes",
-      Prisma: "yes",
-      Drizzle: "yes",
-      Liquibase: "no",
-      Flyway: "no",
-      Atlas: "yes",
-    },
-  },
-  {
-    label: "License",
-    values: {
-      Yeti: "yes",
-      DBML: "yes",
-      Prisma: "note",
-      Drizzle: "note",
-      Liquibase: "note",
-      Flyway: "note",
-      Atlas: "note",
-    },
-    notes: {
-      Yeti: "MIT",
-      DBML: "MIT",
-      Prisma: "Apache 2.0",
-      Drizzle: "Apache 2.0",
-      Liquibase: "Open-core",
-      Flyway: "Restricted (Redgate)",
-      Atlas: "EULA — CE is Apache 2.0",
-    },
-  },
-];
+}[] = comparisonContent.rows;
+const blurbs = comparisonContent.blurbs;
 
-const blurbs: Record<string, { headline: string; body: string }> = {
-  DBML: {
-    headline: "Great DSL. No migrations.",
-    body: "DBML is the closest thing to what Yeti is building — clean, ORM-free schema syntax. But it stops at documentation. No migration engine, no editor tooling beyond basic highlighting. Yeti is what DBML would be if it took migrations seriously.",
-  },
-  Prisma: {
-    headline: "Best ORM DX. Tied to Prisma.",
-    body: "The schema format only exists to serve Prisma Client. Step outside what Prisma supports and you're writing raw SQL anyway — with two sources of truth. Migrate also needs a shadow database just to diff.",
-  },
-  Drizzle: {
-    headline: "TypeScript, not a DSL.",
-    body: "The schema is TypeScript code — pgTable, mysqlTable. Switching databases means rewriting the schema. The editor experience is IntelliSense, not schema-aware tooling. No go-to-definition for entities you defined in your own file.",
-  },
-  Liquibase: {
-    headline: "Changelog, not a schema.",
-    body: "60+ databases and battle-tested since 2006. But Liquibase has no schema — just a changelog of every change ever made. To understand current state you replay history or inspect a live database. Enterprise features are commercial.",
-  },
-  Flyway: {
-    headline: "Simple model, commercial ceiling.",
-    body: "Numbered SQL files applied in order — clean mental model. But no schema definition, no rollbacks without paying, and checksum validation breaks if someone edits whitespace in an applied file. Now owned by Redgate.",
-  },
-  Atlas: {
-    headline: "Most powerful. Steepest curve.",
-    body: "Declarative schema-as-code, 50+ migration linting checks, Kubernetes operator. Genuinely impressive. But HCL syntax, EULA on the default binary, and the best features are behind Atlas Cloud.",
-  },
-};
-
-type ToolBlurbKey = Exclude<(typeof tools)[number], "Yeti">;
-
-type CellValue = "yes" | "no" | "partial" | "note";
+type ToolBlurbKey = keyof typeof blurbs;
 
 function ComparisonHelp({ className }: { className?: string }) {
   return (
@@ -196,7 +31,7 @@ function ComparisonHelp({ className }: { className?: string }) {
       <HoverCardTrigger asChild>
         <button
           type="button"
-          aria-label="Comparison legend and caveat help"
+          aria-label={comparisonContent.help.ariaLabel}
           className={cn(
             "inline-flex h-8 w-8 items-center justify-center rounded-md border border-line-soft bg-surface-1 text-ink-soft shadow-sm transition-all hover:border-foreground/30 hover:bg-surface-2 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
             className
@@ -213,14 +48,14 @@ function ComparisonHelp({ className }: { className?: string }) {
       >
         <div>
           <p className="text-[10px] uppercase tracking-[0.12em] text-ink-soft">
-            Quick guide
+            {comparisonContent.help.heading}
           </p>
           <p className="mt-1 text-[11px] leading-relaxed text-ink-soft">
-            Open any tool header for notes. In cells,
+            {comparisonContent.help.bodyPrefix}
             <span className="mx-1 inline-flex h-4 w-4 items-center justify-center rounded-full border border-foreground/55 bg-foreground/[0.04] text-[10px] text-foreground/75">
               ~
             </span>
-            means partial support or caveats.
+            {comparisonContent.help.bodySuffix}
           </p>
         </div>
 
@@ -229,24 +64,24 @@ function ComparisonHelp({ className }: { className?: string }) {
             <span className="inline-flex h-6 w-6 items-center justify-center rounded-full border border-emerald-300/45 bg-emerald-300/15 text-xs font-semibold text-emerald-100">
               ✓
             </span>
-            Native support
+            {comparisonContent.help.nativeSupport}
           </p>
           <p className="inline-flex items-center gap-2 ml-2">
             <span className="inline-flex h-6 w-6 items-center justify-center rounded-full border border-amber-300/45 bg-amber-300/15 text-xs font-semibold text-amber-100">
               ~
             </span>
-            Partial support
+            {comparisonContent.help.partialSupport}
           </p>
           <p className="inline-flex items-center gap-2">
             <span className="inline-flex h-6 w-6 items-center justify-center rounded-full border border-rose-300/45 bg-rose-300/15 text-rose-100 text-xs font-semibold">
               ✕
             </span>
-            Not available
+            {comparisonContent.help.notAvailable}
           </p>
         </div>
 
         <p className="mt-2 text-[10px] leading-relaxed text-ink-soft">
-          Snapshot from public docs (Feb 2026).
+          {comparisonContent.help.footnote}
         </p>
       </HoverCardContent>
     </HoverCard>
@@ -353,7 +188,9 @@ function ComparisonBlurbPanel() {
                   scope="col"
                   className="sticky left-0 z-20 w-44 bg-surface-1 px-3 py-3 text-left sm:w-48 md:px-4"
                 >
-                  <span className="sr-only">Capability</span>
+                  <span className="sr-only">
+                    {comparisonContent.help.capabilityLabel}
+                  </span>
                 </th>
                 {tools.map((tool) =>
                   tool === "Yeti" ? (
@@ -364,7 +201,7 @@ function ComparisonBlurbPanel() {
                     >
                       {tool}
                       <span className="block text-xs font-normal text-ink-soft">
-                        you are here
+                        {comparisonContent.yetiColumnSubtitle}
                       </span>
                     </th>
                   ) : (
@@ -453,12 +290,14 @@ export function ComparisonSection() {
       <div className="section-inner">
         <div ref={sectionRef} className="section-header reveal-up-init">
           <div className="section-label">
-            <span className="section-label-text">Comparison</span>
+            <span className="section-label-text">
+              {comparisonContent.label}
+            </span>
           </div>
           <h2 className="mb-4 font-serif text-3xl tracking-tight sm:text-4xl md:text-5xl">
-            How Yeti stacks up against{" "}
+            {comparisonContent.titlePrefix}{" "}
             <em className="premium-gradient-comparison italic">
-              the alternatives
+              {comparisonContent.titleEmphasis}
             </em>
           </h2>
         </div>

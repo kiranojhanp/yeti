@@ -1,5 +1,6 @@
 import { ArrowRight, Play } from "lucide-react";
 import { DashboardMockup } from "./dashboard-mockup";
+import { heroContent } from "@/content/site-content";
 
 export function HeroSection() {
   return (
@@ -13,7 +14,7 @@ export function HeroSection() {
             <span className="relative inline-flex rounded-full h-2 w-2 bg-foreground/40" />
           </span>
           <span className="text-sm font-medium text-ink-soft">
-            v0.0.4 — now available
+            {heroContent.status}
           </span>
         </div>
 
@@ -21,17 +22,18 @@ export function HeroSection() {
           className="mb-6 text-balance font-serif text-5xl leading-[0.96] text-foreground animate-fade-up sm:text-6xl md:mb-8 md:text-8xl md:leading-[1.1]"
           style={{ animationDelay: "100ms" }}
         >
-          Write your schema once. <br className="hidden md:block" />
-          In <span className="premium-gradient-hero italic">plain text.</span>
+          {heroContent.title.prefix} <br className="hidden md:block" />
+          In{" "}
+          <span className="premium-gradient-hero italic">
+            {heroContent.title.emphasis}
+          </span>
         </h1>
 
         <p
           className="mx-auto mb-8 max-w-2xl text-base leading-relaxed text-ink-soft animate-fade-up sm:text-lg md:mb-10 md:text-xl"
           style={{ animationDelay: "200ms" }}
         >
-          Yeti is a schema definition language for databases. Describe what you
-          want — entities, relationships, constraints — and it generates
-          production-ready SQL. No ORM lock-in. No boilerplate. Just a{" "}
+          {heroContent.description}{" "}
           <code className="inline-code-chip">.yeti</code> file.
         </p>
 
@@ -40,22 +42,22 @@ export function HeroSection() {
           style={{ animationDelay: "300ms" }}
         >
           <a
-            href="https://github.com/kiranojhanp/yeti"
+            href={heroContent.ctas.primary.href}
             target="_blank"
             rel="noopener noreferrer"
             className="btn-hero-primary group flex w-full sm:w-auto"
           >
-            Get started free
+            {heroContent.ctas.primary.label}
             <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
           </a>
           <a
-            href="https://marketplace.visualstudio.com/items?itemName=kiranojhanp.yeti-vscode-plugin"
+            href={heroContent.ctas.secondary.href}
             target="_blank"
             rel="noopener noreferrer"
             className="btn-hero-secondary flex w-full sm:w-auto"
           >
             <Play className="w-4 h-4 text-muted-foreground fill-current" />
-            Install VS Code extension
+            {heroContent.ctas.secondary.label}
           </a>
         </div>
       </div>

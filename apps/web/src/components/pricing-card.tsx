@@ -1,8 +1,9 @@
 import { cn } from "@/lib/utils";
+import { pricingSectionContent } from "@/content/site-content";
 import { CheckIcon } from "./check-icon";
 
 interface PricingCardProps {
-  features: string[];
+  features: readonly string[];
   ctaText: string;
   popular?: boolean;
 }
@@ -19,15 +20,16 @@ export function PricingCard({
         popular ? "pricing-shell-popular" : "pricing-shell-default"
       )}
     >
-      {popular && <div className="pricing-badge">Open Source</div>}
+      {popular && (
+        <div className="pricing-badge">{pricingSectionContent.plan.badge}</div>
+      )}
 
       <div className="mb-8">
         <h3 className="mb-2 font-serif text-3xl tracking-tight sm:text-4xl md:text-5xl">
-          Free. All of it.
+          {pricingSectionContent.plan.title}
         </h3>
         <p className="mb-6 text-sm leading-relaxed text-ink-soft">
-          Every package. The VS Code extension. Future adapters. MIT licensed.
-          No account, no usage limits, no &ldquo;community tier.&rdquo;
+          {pricingSectionContent.plan.description}
         </p>
       </div>
 
@@ -41,7 +43,7 @@ export function PricingCard({
       </ul>
 
       <a
-        href="https://github.com/kiranojhanp/yeti"
+        href={pricingSectionContent.plan.ctaHref}
         target="_blank"
         rel="noopener noreferrer"
         className={cn(

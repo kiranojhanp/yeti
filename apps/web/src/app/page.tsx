@@ -6,6 +6,7 @@ import { TestimonialsSection } from "@/components/testimonials-section";
 import { PricingCard } from "@/components/pricing-card";
 import { PricingFAQ } from "@/components/pricing-faq";
 import { Footer } from "@/components/footer";
+import { pricingSectionContent } from "@/content/site-content";
 
 export default function Page() {
   return (
@@ -29,37 +30,31 @@ export default function Page() {
         <div className="mx-auto w-full max-w-4xl">
           <div className="text-center mb-10">
             <div className="section-label">
-              <span className="section-label-text">Pricing</span>
+              <span className="section-label-text">
+                {pricingSectionContent.label}
+              </span>
             </div>
           </div>
 
           <div className="max-w-md mx-auto">
             <PricingCard
-              features={[
-                "@yeti/parse — the parser",
-                "@yeti/generator — base SQL generator",
-                "@yeti/pg-generator — PostgreSQL DDL",
-                "@yeti/migration-core — migration engine",
-                "@yeti/sqlite-migration — SQLite adapter",
-                "VS Code extension",
-                "MIT licensed",
-              ]}
-              ctaText="Get Started"
+              features={pricingSectionContent.plan.features}
+              ctaText={pricingSectionContent.plan.ctaText}
               popular={true}
             />
           </div>
 
           <div className="mt-12 text-center">
             <p className="mb-4 text-sm text-ink-soft">
-              Yeti is built by one person, in the open, for free.
+              {pricingSectionContent.support.text}
             </p>
             <a
-              href="https://buymeacoffee.com"
+              href={pricingSectionContent.support.ctaHref}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 rounded-full border border-line-soft bg-background/70 px-6 py-3 text-sm font-medium transition-all duration-300 hover:border-foreground/20 hover:bg-background"
             >
-              ☕ Buy me a coffee
+              {pricingSectionContent.support.ctaLabel}
             </a>
           </div>
         </div>

@@ -5,14 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { useActiveSection } from "@/hooks/use-active-section";
-
-const navLinks = [
-  { label: "Features", href: "#features", id: "features" },
-  { label: "Comparison", href: "#comparison", id: "comparison" },
-  { label: "Testimonials", href: "#testimonials", id: "testimonials" },
-  { label: "Pricing", href: "#pricing", id: "pricing" },
-  { label: "FAQ", href: "#faq", id: "faq" },
-] as const;
+import { navbarContent, siteLinks } from "@/content/site-content";
 
 export function Navbar() {
   const navRef = useRef<HTMLElement>(null);
@@ -56,12 +49,12 @@ export function Navbar() {
             height={24}
             className="h-6 w-6"
           />
-          <span>Yeti.</span>
+          <span>{navbarContent.brand}</span>
         </Link>
 
         {/* Desktop links */}
         <div className="hidden items-center gap-7 md:flex">
-          {navLinks.map(({ label, href, id }) => {
+          {navbarContent.navLinks.map(({ label, href, id }) => {
             const isActive = activeSection === id;
             return (
               <a
@@ -80,12 +73,13 @@ export function Navbar() {
 
         <div className="flex items-center gap-3">
           <a
-            href="https://github.com/kiranojhanp/yeti"
+            href={siteLinks.github}
             target="_blank"
             rel="noopener noreferrer"
+            aria-label={navbarContent.githubButton.ariaLabel}
             className="btn-pill-compact-primary"
           >
-            View on GitHub
+            {navbarContent.githubButton.label}
           </a>
 
           {/* Mobile hamburger */}
@@ -125,7 +119,7 @@ export function Navbar() {
         )}
       >
         <div className="flex flex-col gap-4 px-5 py-4 sm:px-6">
-          {navLinks.map(({ label, href, id }) => {
+          {navbarContent.navLinks.map(({ label, href, id }) => {
             const isActive = activeSection === id;
             return (
               <a
