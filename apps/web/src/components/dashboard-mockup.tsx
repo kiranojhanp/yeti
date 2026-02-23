@@ -209,9 +209,25 @@ export function DashboardMockup() {
               <div className="h-2.5 w-2.5 rounded-full bg-yellow-400/80" />
               <div className="h-2.5 w-2.5 rounded-full bg-green-400/80" />
             </div>
+            <div className="ml-1 inline-flex items-center gap-1.5 rounded-md border border-foreground/10 bg-background px-2 py-1 text-[10px] font-medium text-foreground sm:hidden">
+              <Image
+                src="/icon.png"
+                alt="Yeti"
+                width={14}
+                height={14}
+                className="h-3.5 w-3.5"
+              />
+              Yeti
+            </div>
             <div className="ml-2 hidden items-center gap-2 rounded-md border border-foreground/10 bg-background px-2.5 py-1 text-[10px] font-mono text-muted-foreground sm:flex">
-              <FileCode2 className="h-3 w-3" />
-              schema/main.yeti
+              <Image
+                src="/icon.png"
+                alt="Yeti"
+                width={14}
+                height={14}
+                className="h-3.5 w-3.5"
+              />
+              db/schema.yeti
             </div>
             <div className="ml-auto flex items-center gap-1.5 sm:gap-2">
               <button

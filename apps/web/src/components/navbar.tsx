@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { useActiveSection } from "@/hooks/use-active-section";
@@ -46,9 +47,16 @@ export function Navbar() {
         <Link
           href="/"
           onClick={handleLogoClick}
-          className="font-serif text-xl sm:text-2xl"
+          className="inline-flex items-center gap-2 font-serif text-xl sm:text-2xl"
         >
-          yeti.
+          <Image
+            src="/icon.png"
+            alt="Yeti"
+            width={24}
+            height={24}
+            className="h-6 w-6"
+          />
+          <span>Yeti.</span>
         </Link>
 
         {/* Desktop links */}
