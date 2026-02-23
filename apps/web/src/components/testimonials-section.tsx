@@ -151,9 +151,9 @@ export function TestimonialsSection() {
           isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
         }`}
       >
-        {/* Fade masks */}
-        <div className="absolute left-0 top-0 bottom-0 w-24 md:w-40 bg-gradient-to-r from-foreground to-transparent z-10 pointer-events-none" />
-        <div className="absolute right-0 top-0 bottom-0 w-24 md:w-40 bg-gradient-to-l from-foreground to-transparent z-10 pointer-events-none" />
+        {/* Edge fades */}
+        <div className="absolute left-0 top-0 bottom-0 w-40 md:w-64 bg-gradient-to-r from-white/55 via-white/20 to-transparent blur-[2px] z-10 pointer-events-none" />
+        <div className="absolute right-0 top-0 bottom-0 w-40 md:w-64 bg-gradient-to-l from-white/55 via-white/20 to-transparent blur-[2px] z-10 pointer-events-none" />
 
         {/* Scrolling container */}
         <div className="overflow-hidden">
@@ -162,10 +162,7 @@ export function TestimonialsSection() {
             style={{ width: "fit-content" }}
           >
             {allCards.map((testimonial, index) => (
-              <TestimonialCard
-                key={String(index)}
-                {...testimonial}
-              />
+              <TestimonialCard key={String(index)} {...testimonial} />
             ))}
           </div>
         </div>
