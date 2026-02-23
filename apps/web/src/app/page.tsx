@@ -7,23 +7,6 @@ import { PricingCard } from "@/components/pricing-card";
 import { PricingFAQ } from "@/components/pricing-faq";
 import { Footer } from "@/components/footer";
 
-const plans = [
-  {
-    name: "Free",
-    features: [
-      "@yeti/parse — the parser",
-      "@yeti/generator — base SQL generator",
-      "@yeti/pg-generator — PostgreSQL DDL",
-      "@yeti/migration-core — migration engine",
-      "@yeti/sqlite-migration — SQLite adapter",
-      "VS Code extension",
-      "MIT licensed",
-    ],
-    ctaText: "Get Started",
-    popular: true,
-  },
-];
-
 export default function Page() {
   return (
     <main className="min-h-screen bg-background text-foreground font-sans">
@@ -60,15 +43,19 @@ export default function Page() {
 
           {/* Single free card — centered, capped width */}
           <div className="max-w-md mx-auto">
-            {plans.map((plan, index) => (
-              <PricingCard
-                key={plan.name}
-                features={plan.features}
-                ctaText={plan.ctaText}
-                popular={plan.popular}
-                delay={index * 100}
-              />
-            ))}
+            <PricingCard
+              features={[
+                "@yeti/parse — the parser",
+                "@yeti/generator — base SQL generator",
+                "@yeti/pg-generator — PostgreSQL DDL",
+                "@yeti/migration-core — migration engine",
+                "@yeti/sqlite-migration — SQLite adapter",
+                "VS Code extension",
+                "MIT licensed",
+              ]}
+              ctaText="Get Started"
+              popular={true}
+            />
           </div>
 
           {/* Buy me a coffee */}

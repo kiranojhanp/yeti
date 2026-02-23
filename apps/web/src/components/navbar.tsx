@@ -1,17 +1,17 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { useActiveSection } from "@/hooks/use-active-section";
 
 const navLinks = [
-  { label: "Features", href: "#features" },
-  { label: "Comparison", href: "#comparison" },
-  { label: "Testimonials", href: "#testimonials" },
-  { label: "Pricing", href: "#pricing" },
-  { label: "FAQ", href: "#faq" },
-];
+  { label: "Features", href: "#features", id: "features" },
+  { label: "Comparison", href: "#comparison", id: "comparison" },
+  { label: "Testimonials", href: "#testimonials", id: "testimonials" },
+  { label: "Pricing", href: "#pricing", id: "pricing" },
+  { label: "FAQ", href: "#faq", id: "faq" },
+] as const;
 
 export function Navbar() {
   const navRef = useRef<HTMLElement>(null);
@@ -30,6 +30,13 @@ export function Navbar() {
     return () => ro.disconnect();
   }, []);
 
+  const handleLogoClick = useCallback((e: React.MouseEvent) => {
+    if (window.location.pathname === "/") {
+      e.preventDefault();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  }, []);
+
   return (
     <nav
       ref={navRef}
@@ -38,12 +45,7 @@ export function Navbar() {
       <div className="flex items-center justify-between px-6 md:px-12 py-5">
         <Link
           href="/"
-          onClick={(e) => {
-            if (window.location.pathname === "/") {
-              e.preventDefault();
-              window.scrollTo({ top: 0, behavior: "smooth" });
-            }
-          }}
+          onClick={handleLogoClick}
           className="font-serif text-2xl"
         >
           yeti.
@@ -51,8 +53,7 @@ export function Navbar() {
 
         {/* Desktop links */}
         <div className="hidden md:flex items-center gap-8">
-          {navLinks.map(({ label, href }) => {
-            const id = href.replace("#", "");
+          {navLinks.map(({ label, href, id }) => {
             const isActive = activeSection === id;
             return (
               <a
@@ -86,6 +87,7 @@ export function Navbar() {
             className="md:hidden flex flex-col gap-1.5 p-1"
             onClick={() => setMenuOpen((o) => !o)}
             aria-label="Toggle menu"
+            aria-expanded={menuOpen}
           >
             <span
               className={cn(
@@ -117,8 +119,7 @@ export function Navbar() {
         )}
       >
         <div className="flex flex-col px-6 py-4 gap-5">
-          {navLinks.map(({ label, href }) => {
-            const id = href.replace("#", "");
+          {navLinks.map(({ label, href, id }) => {
             const isActive = activeSection === id;
             return (
               <a

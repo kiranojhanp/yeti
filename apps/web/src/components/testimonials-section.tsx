@@ -73,17 +73,22 @@ function highlightBoldParts(quote: string, boldParts: string[]) {
   return result;
 }
 
+const processedTestimonials = testimonials.map((t) => ({
+  ...t,
+  highlightedQuote: highlightBoldParts(t.quote, t.boldParts),
+}));
+const allCards = [...processedTestimonials, ...processedTestimonials];
+
 function TestimonialCard({
-  quote,
-  boldParts,
+  highlightedQuote,
   name,
   title,
   avatarColors,
-}: (typeof testimonials)[0]) {
+}: Omit<(typeof processedTestimonials)[0], "quote" | "boldParts">) {
   return (
     <div className="flex-none w-[340px] bg-background text-foreground rounded-2xl border border-foreground/10 p-7 flex flex-col justify-between h-[340px]">
       <p className="font-serif text-xl leading-snug tracking-tight">
-        {highlightBoldParts(quote, boldParts)}
+        {highlightedQuote}
       </p>
       <div className="flex items-center gap-3 mt-6">
         <div
@@ -115,8 +120,6 @@ export function TestimonialsSection() {
     if (sectionRef.current) observer.observe(sectionRef.current);
     return () => observer.disconnect();
   }, []);
-
-  const allCards = [...testimonials, ...testimonials];
 
   return (
     <section
@@ -160,7 +163,7 @@ export function TestimonialsSection() {
           >
             {allCards.map((testimonial, index) => (
               <TestimonialCard
-                key={`${testimonial.name}-${index}`}
+                key={String(index)}
                 {...testimonial}
               />
             ))}

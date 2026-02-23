@@ -1,13 +1,14 @@
 import type { Metadata } from "next";
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import { ThemeProvider } from "@/components/theme-provider";
 import { Instrument_Serif, Space_Grotesk } from "next/font/google";
 import "./globals.css";
 
 const instrumentSerif = Instrument_Serif({
   subsets: ["latin"],
   weight: "400",
-  style: ["normal", "italic"],
+  style: "normal",
   variable: "--font-instrument-serif",
 });
 
@@ -48,11 +49,19 @@ export default function RootLayout({
   return (
     <html
       lang="en"
+      suppressHydrationWarning
       className={`${instrumentSerif.variable} ${spaceGrotesk.variable}`}
     >
       <body className="font-sans antialiased">
-        <TooltipProvider>{children}</TooltipProvider>
-        <Toaster />
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <TooltipProvider>{children}</TooltipProvider>
+          <Toaster />
+        </ThemeProvider>
       </body>
     </html>
   );

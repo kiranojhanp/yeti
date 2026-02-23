@@ -38,20 +38,20 @@ export function Footer() {
             file and production-ready SQL.
           </p>
           <div className="flex flex-wrap gap-4">
-            <Link
+            <a
               href="https://github.com/kiranojhanp/yeti"
               target="_blank"
               rel="noopener noreferrer"
               className="bg-foreground text-background px-8 py-4 rounded-full text-sm font-medium uppercase tracking-wide hover:bg-muted-foreground transition-colors duration-200"
             >
               Get started free
-            </Link>
-            <Link
+            </a>
+            <a
               href="mailto:hello@yetiql.dev"
               className="border border-foreground/20 px-8 py-4 rounded-full text-sm font-medium uppercase tracking-wide hover:bg-foreground hover:text-background transition-all duration-200"
             >
               Get in touch
-            </Link>
+            </a>
           </div>
         </div>
 
@@ -72,7 +72,7 @@ export function Footer() {
           ))}
 
           {/* Arrow CTA tile */}
-          <Link
+          <a
             href="https://github.com/kiranojhanp/yeti"
             target="_blank"
             rel="noopener noreferrer"
@@ -92,7 +92,7 @@ export function Footer() {
             >
               <path d="M5 12h14M12 5l7 7-7 7" />
             </svg>
-          </Link>
+          </a>
         </div>
       </div>
 
@@ -100,15 +100,27 @@ export function Footer() {
       <div className="max-w-7xl mx-auto mt-20 pt-8 border-t border-foreground/10 flex flex-col md:flex-row justify-between items-center gap-4 text-xs uppercase tracking-widest text-muted-foreground">
         <span>© 2026 Yeti. MIT licensed.</span>
         <div className="flex flex-wrap justify-center gap-6">
-          {links.map((link) => (
-            <Link
-              key={link.name}
-              href={link.href}
-              className="hover:text-foreground transition-colors"
-            >
-              {link.name}
-            </Link>
-          ))}
+          {links.map((link) =>
+            link.href.startsWith("#") ? (
+              <Link
+                key={link.name}
+                href={link.href}
+                className="hover:text-foreground transition-colors"
+              >
+                {link.name}
+              </Link>
+            ) : (
+              <a
+                key={link.name}
+                href={link.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-foreground transition-colors"
+              >
+                {link.name}
+              </a>
+            )
+          )}
         </div>
       </div>
     </footer>
