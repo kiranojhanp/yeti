@@ -553,6 +553,7 @@
   .premium-gradient-comparison,
   .premium-gradient-testimonials,
   .premium-gradient-footer {
+    display: inline-block;
     background-size: 200% 100%;
     background-repeat: repeat;
     background-position: 0% 50%;
@@ -562,6 +563,21 @@
     color: transparent;
     will-change: background-position;
     animation: shimmer 8s linear infinite;
+  }
+
+  .premium-gradient-text::selection,
+  .premium-gradient-hero::selection,
+  .premium-gradient-features::selection,
+  .premium-gradient-comparison::selection,
+  .premium-gradient-testimonials::selection,
+  .premium-gradient-footer::selection,
+  .premium-gradient-text::-moz-selection,
+  .premium-gradient-hero::-moz-selection,
+  .premium-gradient-features::-moz-selection,
+  .premium-gradient-comparison::-moz-selection,
+  .premium-gradient-testimonials::-moz-selection,
+  .premium-gradient-footer::-moz-selection {
+    -webkit-text-fill-color: currentColor;
   }
 
   .premium-gradient-text {

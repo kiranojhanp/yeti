@@ -52,7 +52,7 @@ export default function RootLayout({
       suppressHydrationWarning
       className={`${instrumentSerif.variable} ${spaceGrotesk.variable}`}
     >
-      <body className="font-sans antialiased">
+      <body className="font-sans antialiased selection:bg-foreground selection:text-background">
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
