@@ -86,7 +86,7 @@ function TestimonialCard({
   avatarColors,
 }: Omit<(typeof processedTestimonials)[0], "quote" | "boldParts">) {
   return (
-    <div className="flex h-[312px] w-[286px] flex-none flex-col justify-between rounded-2xl border border-line-soft bg-background/75 p-6 text-foreground shadow-[0_20px_38px_-36px_rgba(22,22,22,0.45)] sm:h-[332px] sm:w-[320px] sm:p-7">
+    <div className="testimonial-card">
       <p className="font-serif text-lg leading-snug tracking-tight sm:text-xl">
         {highlightedQuote}
       </p>
@@ -129,8 +129,8 @@ export function TestimonialsSection() {
     >
       <div className="section-inner">
         <div
-          className={`mb-14 text-center transition-all duration-700 md:mb-20 ${
-            isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+          className={`mb-14 text-center md:mb-20 ${
+            isVisible ? "reveal-up-visible" : "reveal-up-soft-init"
           }`}
         >
           <div className="section-label mb-5">
@@ -146,8 +146,8 @@ export function TestimonialsSection() {
 
       {/* Carousel */}
       <div
-        className={`relative transition-all duration-700 delay-200 ${
-          isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+        className={`relative delay-200 ${
+          isVisible ? "reveal-up-visible" : "reveal-up-soft-init"
         }`}
       >
         <div className="overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_10%,black_90%,transparent)]">

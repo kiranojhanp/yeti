@@ -432,8 +432,8 @@ export function ComparisonSection() {
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            entry.target.classList.add("opacity-100", "translate-y-0");
-            entry.target.classList.remove("opacity-0", "translate-y-5");
+            entry.target.classList.add("reveal-up-visible");
+            entry.target.classList.remove("reveal-up-init");
             observer.unobserve(entry.target);
           }
         });
@@ -447,10 +447,7 @@ export function ComparisonSection() {
   return (
     <section id="comparison" className="section-shell">
       <div className="section-inner">
-        <div
-          ref={sectionRef}
-          className="section-header opacity-0 translate-y-5 transition-all duration-700"
-        >
+        <div ref={sectionRef} className="section-header reveal-up-init">
           <div className="section-label">
             <span className="section-label-text">Comparison</span>
           </div>

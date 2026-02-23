@@ -61,9 +61,7 @@ export function Navbar() {
                 href={href}
                 className={cn(
                   "text-sm transition-colors",
-                  isActive
-                    ? "font-medium text-foreground"
-                    : "text-ink-soft hover:text-foreground"
+                  isActive ? "font-medium text-foreground" : "link-subtle"
                 )}
               >
                 {label}
@@ -77,7 +75,7 @@ export function Navbar() {
             href="https://github.com/kiranojhanp/yeti"
             target="_blank"
             rel="noopener noreferrer"
-            className="rounded-full border border-foreground bg-foreground px-4 py-2 text-xs font-medium text-background transition-colors hover:bg-foreground/85 sm:px-5 sm:py-2.5 sm:text-sm"
+            className="btn-pill-compact-primary"
           >
             View on GitHub
           </a>
@@ -130,9 +128,7 @@ export function Navbar() {
                 }}
                 className={cn(
                   "text-sm transition-colors",
-                  isActive
-                    ? "font-medium text-foreground"
-                    : "text-ink-soft hover:text-foreground"
+                  isActive ? "font-medium text-foreground" : "link-subtle"
                 )}
               >
                 {label}

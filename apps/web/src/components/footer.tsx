@@ -31,24 +31,19 @@ export function Footer() {
           <p className="mb-8 max-w-md leading-relaxed text-ink-soft">
             Yeti is open source, MIT licensed, and built by one person. No
             accounts, no tiers, no lock-in — just a{" "}
-            <code className="font-mono text-foreground bg-foreground/5 px-1.5 py-0.5 rounded text-sm">
-              .yeti
-            </code>{" "}
-            file and production-ready SQL.
+            <code className="inline-code-chip text-sm">.yeti</code> file and
+            production-ready SQL.
           </p>
           <div className="flex flex-wrap gap-4">
             <a
               href="https://github.com/kiranojhanp/yeti"
               target="_blank"
               rel="noopener noreferrer"
-              className="rounded-full border border-foreground bg-foreground px-6 py-3.5 text-xs font-medium uppercase tracking-wide text-background transition-colors duration-200 hover:bg-foreground/85 sm:px-8 sm:py-4 sm:text-sm"
+              className="btn-pill-primary"
             >
               Get started free
             </a>
-            <a
-              href="mailto:hello@yetiql.dev"
-              className="rounded-full border border-line-soft bg-background/60 px-6 py-3.5 text-xs font-medium uppercase tracking-wide transition-all duration-200 hover:border-foreground/25 hover:bg-background sm:px-8 sm:py-4 sm:text-sm"
-            >
+            <a href="mailto:hello@yetiql.dev" className="btn-pill-secondary">
               Get in touch
             </a>
           </div>
@@ -56,10 +51,7 @@ export function Footer() {
 
         <div className="grid grid-cols-2 gap-3 sm:gap-4">
           {stats.map((stat) => (
-            <div
-              key={stat.label}
-              className="rounded-3xl border border-line-soft bg-surface-2 p-6 sm:p-8"
-            >
+            <div key={stat.label} className="stats-card">
               <div className="font-serif text-5xl tracking-tight mb-2">
                 {stat.value}
               </div>
@@ -98,11 +90,7 @@ export function Footer() {
         <div className="flex flex-wrap justify-center gap-6">
           {links.map((link) =>
             link.href.startsWith("#") ? (
-              <Link
-                key={link.name}
-                href={link.href}
-                className="hover:text-foreground transition-colors"
-              >
+              <Link key={link.name} href={link.href} className="link-subtle">
                 {link.name}
               </Link>
             ) : (
@@ -111,7 +99,7 @@ export function Footer() {
                 href={link.href}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="hover:text-foreground transition-colors"
+                className="link-subtle"
               >
                 {link.name}
               </a>

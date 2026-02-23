@@ -134,8 +134,8 @@ export function FeaturesSection() {
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            entry.target.classList.add("opacity-100", "translate-y-0");
-            entry.target.classList.remove("opacity-0", "translate-y-5");
+            entry.target.classList.add("reveal-up-visible");
+            entry.target.classList.remove("reveal-up-init");
             observer.unobserve(entry.target);
           }
         });
@@ -171,21 +171,16 @@ export function FeaturesSection() {
           </h2>
         </div>
 
-        <div className="grid grid-cols-1 gap-5 sm:gap-6 md:grid-cols-3 md:gap-8">
+        <div className="grid grid-cols-1 gap-5 sm:gap-6 md:grid-cols-3 md:gap-8 md:auto-rows-fr">
           {features.map((feature, index) => (
             <div
               key={feature.title}
               ref={setItemRef(index)}
-              className="opacity-0 translate-y-5 transition-all duration-700"
+              className="reveal-up-init h-full"
               style={{ transitionDelay: `${index * 80}ms` }}
             >
-              <div
-                tabIndex={0}
-                className="group flex flex-col items-start rounded-2xl border border-line-soft bg-background/55 p-5 text-left transition-all duration-300 hover:-translate-y-1 hover:border-foreground/20 hover:bg-background/80 hover:shadow-[0_18px_34px_-28px_rgba(22,22,22,0.35)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground/20 focus-visible:ring-offset-2 focus-visible:ring-offset-surface-2 sm:p-6 md:p-7"
-              >
-                <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-xl border border-line-soft bg-surface-1 text-ink-soft ring-1 ring-inset ring-line-soft/60 transition-all duration-300 group-hover:scale-[1.03] group-hover:border-foreground/25 group-hover:text-foreground sm:mb-6 sm:h-16 sm:w-16 md:h-20 md:w-20">
-                  {feature.icon}
-                </div>
+              <div tabIndex={0} className="feature-card group">
+                <div className="feature-icon-badge">{feature.icon}</div>
                 <h3 className="mb-3 font-serif text-xl text-foreground transition-colors duration-300 sm:text-2xl">
                   {feature.title}
                 </h3>
