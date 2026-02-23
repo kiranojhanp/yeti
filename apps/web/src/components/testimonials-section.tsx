@@ -113,7 +113,7 @@ export function TestimonialsSection() {
         }`}
       >
         <div className="overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_10%,black_90%,transparent)]">
-          <div className="animate-testimonial-scroll flex w-max gap-4 will-change-transform [transform:translate3d(0,0,0)] sm:gap-6">
+          <div className="animate-testimonial-scroll flex w-max gap-4 will-change-transform [transform:translate3d(0,0,0)] hover:[animation-play-state:paused] sm:gap-6">
             {allCards.map((testimonial, index) => (
               <TestimonialCard key={String(index)} {...testimonial} />
             ))}
