@@ -226,19 +226,21 @@ function ComparisonHelp({ className }: { className?: string }) {
 
         <div className="mt-3 space-y-1.5 rounded-lg border border-line-soft bg-surface-2/60 p-2.5 text-[11px] text-ink-soft">
           <p className="inline-flex items-center gap-2">
-            <span className="inline-flex h-4 w-4 items-center justify-center rounded-full bg-foreground text-[10px] text-background">
+            <span className="inline-flex h-6 w-6 items-center justify-center rounded-full border border-emerald-300/45 bg-emerald-300/15 text-xs font-semibold text-emerald-100">
               ✓
             </span>
             Native support
           </p>
           <p className="inline-flex items-center gap-2 ml-2">
-            <span className="inline-flex h-4 w-4 items-center justify-center rounded-full border border-foreground/55 bg-foreground/[0.04] text-[10px] text-foreground/75">
+            <span className="inline-flex h-6 w-6 items-center justify-center rounded-full border border-amber-300/45 bg-amber-300/15 text-xs font-semibold text-amber-100">
               ~
             </span>
             Partial support
           </p>
           <p className="inline-flex items-center gap-2">
-            <span className="text-foreground/60">—</span>
+            <span className="inline-flex h-6 w-6 items-center justify-center rounded-full border border-rose-300/45 bg-rose-300/15 text-rose-100 text-xs font-semibold">
+              ✕
+            </span>
             Not available
           </p>
         </div>
@@ -298,15 +300,17 @@ const CellContent = memo(function CellContent({
   const icon = (
     <span className="inline-flex items-center justify-center">
       {value === "yes" && (
-        <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-foreground text-background text-xs font-bold">
+        <span className="inline-flex items-center justify-center w-6 h-6 rounded-full border border-emerald-300/45 bg-emerald-300/15 text-emerald-100 text-xs font-bold">
           ✓
         </span>
       )}
       {value === "no" && (
-        <span className="text-foreground/60 font-medium">—</span>
+        <span className="inline-flex items-center justify-center w-6 h-6 rounded-full border border-rose-300/45 bg-rose-300/15 text-rose-100 text-xs font-semibold">
+          ✕
+        </span>
       )}
       {(value === "partial" || value === "note") && (
-        <span className="inline-flex items-center justify-center w-6 h-6 rounded-full border border-foreground/55 bg-foreground/[0.04] text-foreground/75 text-xs cursor-default">
+        <span className="inline-flex items-center justify-center w-6 h-6 rounded-full border border-amber-300/45 bg-amber-300/15 text-amber-100 text-xs cursor-default">
           ~
         </span>
       )}
