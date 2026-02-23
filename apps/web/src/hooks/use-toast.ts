@@ -7,10 +7,12 @@ import { toast as sonnerToast } from "sonner";
  * This wrapper maintains the 'useToast' pattern while using Sonner's engine.
  */
 
+const dismiss = (id?: string | number) => sonnerToast.dismiss(id);
+
 export function useToast() {
   return {
     toast: sonnerToast,
-    dismiss: (id?: string | number) => sonnerToast.dismiss(id),
+    dismiss,
   };
 }
 

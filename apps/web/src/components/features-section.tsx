@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef } from "react";
 
 const features = [
   {
@@ -122,6 +122,13 @@ const features = [
 export function FeaturesSection() {
   const itemRefs = useRef<(HTMLDivElement | null)[]>([]);
 
+  const setItemRef = useCallback(
+    (index: number) => (el: HTMLDivElement | null) => {
+      itemRefs.current[index] = el;
+    },
+    []
+  );
+
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
@@ -140,7 +147,10 @@ export function FeaturesSection() {
       if (el) observer.observe(el);
     });
 
-    return () => observer.disconnect();
+    return () => {
+      observer.disconnect();
+      itemRefs.current = [];
+    };
   }, []);
 
   return (
@@ -169,9 +179,7 @@ export function FeaturesSection() {
           {features.map((feature, index) => (
             <div
               key={feature.title}
-              ref={(el) => {
-                itemRefs.current[index] = el;
-              }}
+              ref={setItemRef(index)}
               className="opacity-0 translate-y-5 transition-all duration-700"
               style={{ transitionDelay: `${index * 80}ms` }}
             >

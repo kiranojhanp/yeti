@@ -73,7 +73,7 @@ export function DashboardMockup() {
                   Launch V2
                 </div>
                 <div className="flex items-center gap-2 px-2 py-1.5 text-foreground/70 text-xs hover:bg-card rounded-md transition cursor-pointer">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#B8A9C9]" />
+                  <span className="w-1.5 h-1.5 rounded-full bg-[var(--color-project-purple)]" />
                   Website Redesign
                 </div>
                 <div className="flex items-center gap-2 px-2 py-1.5 text-foreground/70 text-xs hover:bg-card rounded-md transition cursor-pointer">
@@ -137,7 +137,7 @@ export function DashboardMockup() {
                         detail="Edited 20m ago"
                       />
                       <FileRow
-                        icon={<LayoutGrid className="w-4 h-4 text-[#B8A9C9]" />}
+                        icon={<LayoutGrid className="w-4 h-4 text-[var(--color-project-purple)]" />}
                         name="October Sprint"
                         detail="Updated by Sarah"
                       />

@@ -67,10 +67,10 @@ export function PricingFAQ() {
       </div>
 
       <Accordion type="single" collapsible className="w-full">
-        {faqs.map((faq, index) => (
+        {faqs.map((faq) => (
           <AccordionItem
-            key={index}
-            value={`item-${index}`}
+            key={faq.question}
+            value={faq.question}
             className="border-background/15"
           >
             <AccordionTrigger className="text-left font-sans text-base hover:no-underline py-5 text-background hover:text-background/80">

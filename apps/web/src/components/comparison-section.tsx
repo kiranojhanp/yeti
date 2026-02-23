@@ -1,7 +1,12 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { memo, useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 const tools = [
   "Yeti",
@@ -177,9 +182,15 @@ const blurbs: Record<string, { headline: string; body: string }> = {
 
 type CellValue = "yes" | "no" | "partial" | "note";
 
-function CellContent({ value, note }: { value: CellValue; note?: string }) {
-  return (
-    <span className="relative group inline-flex items-center justify-center">
+const CellContent = memo(function CellContent({
+  value,
+  note,
+}: {
+  value: CellValue;
+  note?: string;
+}) {
+  const icon = (
+    <span className="inline-flex items-center justify-center">
       {value === "yes" && (
         <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-foreground text-background text-xs font-bold">
           ✓
@@ -193,12 +204,123 @@ function CellContent({ value, note }: { value: CellValue; note?: string }) {
           ~
         </span>
       )}
-      {note && (
-        <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-1.5 hidden group-hover:block z-10 whitespace-nowrap bg-foreground text-background text-xs px-2 py-1 rounded pointer-events-none">
-          {note}
-        </span>
-      )}
     </span>
+  );
+
+  if (note) {
+    return (
+      <Tooltip>
+        <TooltipTrigger asChild>{icon}</TooltipTrigger>
+        <TooltipContent>{note}</TooltipContent>
+      </Tooltip>
+    );
+  }
+
+  return icon;
+});
+
+/** Client sub-component that owns the blurb disclosure state. */
+function ComparisonBlurbPanel({
+  activeBlurb,
+  setActiveBlurb,
+}: {
+  activeBlurb: string | null;
+  setActiveBlurb: (tool: string | null) => void;
+}) {
+  return (
+    <>
+      {/* Blurb panel — outside the table, no layout shift */}
+      <div
+        className={cn(
+          "overflow-hidden transition-all duration-300 ease-in-out",
+          activeBlurb
+            ? "max-h-40 mb-6 opacity-100"
+            : "max-h-0 mb-0 opacity-0"
+        )}
+      >
+        {activeBlurb && blurbs[activeBlurb] && (
+          <div className="px-6 py-4 border border-foreground/10 rounded-lg bg-muted/40">
+            <span className="font-serif text-base mr-3">
+              {blurbs[activeBlurb].headline}
+            </span>
+            <span className="text-sm text-muted-foreground leading-relaxed">
+              {blurbs[activeBlurb].body}
+            </span>
+          </div>
+        )}
+      </div>
+
+      {/* Table */}
+      <div className="overflow-x-auto">
+        <table className="w-full text-sm border-collapse">
+          <thead>
+            <tr className="border-b border-foreground/10">
+              <th className="px-4 py-3 text-left w-48" />
+              {tools.map((tool) =>
+                tool === "Yeti" ? (
+                  <th
+                    key={tool}
+                    className="px-4 py-3 text-center font-serif text-base bg-foreground/5 border-x border-foreground/10 border-t rounded-t-md"
+                  >
+                    {tool}
+                    <span className="block text-xs font-sans font-normal text-muted-foreground">
+                      you are here
+                    </span>
+                  </th>
+                ) : (
+                  <th
+                    key={tool}
+                    className="px-4 py-3 text-center font-medium text-muted-foreground"
+                  >
+                    <button
+                      onClick={() =>
+                        setActiveBlurb(activeBlurb === tool ? null : tool)
+                      }
+                      className={cn(
+                        "underline decoration-dotted underline-offset-4 transition-colors",
+                        activeBlurb === tool
+                          ? "text-foreground"
+                          : "hover:text-foreground"
+                      )}
+                    >
+                      {tool}
+                    </button>
+                  </th>
+                )
+              )}
+            </tr>
+          </thead>
+          <tbody>
+            {rows.map((row, i) => (
+              <tr
+                key={row.label}
+                className={cn(
+                  "border-b border-foreground/5",
+                  i % 2 === 0 ? "bg-transparent" : "bg-muted/20"
+                )}
+              >
+                <td className="px-4 py-3 font-medium text-sm">{row.label}</td>
+                {tools.map((tool) => (
+                  <td
+                    key={tool}
+                    className={cn(
+                      "px-4 py-3 text-center text-sm",
+                      tool === "Yeti" &&
+                        "bg-foreground/5 border-x border-foreground/10"
+                    )}
+                  >
+                    <CellContent
+                      value={row.values[tool]}
+                      note={row.notes?.[tool]}
+                    />
+                  </td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </>
   );
 }
 
@@ -249,95 +371,10 @@ export function ComparisonSection() {
           </p>
         </div>
 
-        {/* Blurb panel — outside the table, no layout shift */}
-        <div
-          className={cn(
-            "overflow-hidden transition-all duration-300 ease-in-out",
-            activeBlurb ? "max-h-40 mb-6 opacity-100" : "max-h-0 mb-0 opacity-0"
-          )}
-        >
-          {activeBlurb && blurbs[activeBlurb] && (
-            <div className="px-6 py-4 border border-foreground/10 rounded-lg bg-muted/40">
-              <span className="font-serif text-base mr-3">
-                {blurbs[activeBlurb].headline}
-              </span>
-              <span className="text-sm text-muted-foreground leading-relaxed">
-                {blurbs[activeBlurb].body}
-              </span>
-            </div>
-          )}
-        </div>
-
-        {/* Table */}
-        <div className="overflow-x-auto">
-          <table className="w-full text-sm border-collapse">
-            <thead>
-              <tr className="border-b border-foreground/10">
-                <th className="px-4 py-3 text-left w-48" />
-                {tools.map((tool) =>
-                  tool === "Yeti" ? (
-                    <th
-                      key={tool}
-                      className="px-4 py-3 text-center font-serif text-base bg-foreground/5 border-x border-foreground/10 border-t rounded-t-md"
-                    >
-                      {tool}
-                      <span className="block text-xs font-sans font-normal text-muted-foreground">
-                        you are here
-                      </span>
-                    </th>
-                  ) : (
-                    <th
-                      key={tool}
-                      className="px-4 py-3 text-center font-medium text-muted-foreground"
-                    >
-                      <button
-                        onClick={() =>
-                          setActiveBlurb(activeBlurb === tool ? null : tool)
-                        }
-                        className={cn(
-                          "underline decoration-dotted underline-offset-4 transition-colors",
-                          activeBlurb === tool
-                            ? "text-foreground"
-                            : "hover:text-foreground"
-                        )}
-                      >
-                        {tool}
-                      </button>
-                    </th>
-                  )
-                )}
-              </tr>
-            </thead>
-            <tbody>
-              {rows.map((row, i) => (
-                <tr
-                  key={row.label}
-                  className={cn(
-                    "border-b border-foreground/5",
-                    i % 2 === 0 ? "bg-transparent" : "bg-muted/20"
-                  )}
-                >
-                  <td className="px-4 py-3 font-medium text-sm">{row.label}</td>
-                  {tools.map((tool) => (
-                    <td
-                      key={tool}
-                      className={cn(
-                        "px-4 py-3 text-center text-sm",
-                        tool === "Yeti" &&
-                          "bg-foreground/5 border-x border-foreground/10"
-                      )}
-                    >
-                      <CellContent
-                        value={row.values[tool]}
-                        note={row.notes?.[tool]}
-                      />
-                    </td>
-                  ))}
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+        <ComparisonBlurbPanel
+          activeBlurb={activeBlurb}
+          setActiveBlurb={setActiveBlurb}
+        />
 
         {/* Legend */}
         <div className="flex items-center justify-end gap-6 mt-4 text-xs text-muted-foreground">

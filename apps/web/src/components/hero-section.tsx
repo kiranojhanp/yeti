@@ -71,7 +71,7 @@ export function HeroSection() {
       {/* Dashboard Mockup */}
       <div
         className="mt-16 md:mt-24 max-w-6xl mx-auto relative w-full animate-fade-up"
-        style={{ animationDelay: "400ms", perspective: "1000px" }}
+        style={{ animationDelay: "400ms" }}
       >
         <DashboardMockup />
       </div>
