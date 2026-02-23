@@ -19,7 +19,7 @@ const spaceGrotesk = Space_Grotesk({
 });
 
 export const metadata: Metadata = {
-  title: "Yeti — Write your schema once. In plain text.",
+  title: "Yeti - Write your schema once. In plain text.",
   description:
     "Yeti is a schema definition language for databases. Describe what you want and it generates production-ready SQL. No ORM lock-in. No boilerplate.",
   icons: {

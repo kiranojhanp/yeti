@@ -334,6 +334,46 @@ export const testimonialsSectionContent = {
       title: "a common realization",
       avatarColors: "from-[#C5CFD6] to-[#E1E5AC]",
     },
+    {
+      quote:
+        "The migration took 200 milliseconds to run and three hours to write because no one remembered whether we'd already added that column in staging or just talked about adding it in staging.",
+      boldParts: ["just talked about adding it"],
+      name: "The gap",
+      title: "between conversations and commits",
+      avatarColors: "from-[#E1E5AC] to-[#DBE3E9]",
+    },
+    {
+      quote:
+        "We use the ORM schema as the source of truth, but we also have raw SQL in three migration files that the ORM doesn't know about, and a column we added directly to production six months ago that no one documented.",
+      boldParts: ["added directly to production", "no one documented"],
+      name: "The actual state",
+      title: "of most production databases",
+      avatarColors: "from-[#DBE3E9] to-[#C5CFD6]",
+    },
+    {
+      quote:
+        "I read the Flyway docs, then the Liquibase docs, then the Atlas docs. An hour later I was still configuring the configuration file for the configuration.",
+      boldParts: ["configuring the configuration file for the configuration"],
+      name: "The setup tax",
+      title: "on every migration tool",
+      avatarColors: "from-[#C5CFD6] to-[#DBE3E9]",
+    },
+    {
+      quote:
+        "The rollback strategy was 'write a down migration.' The down migration was untested. We found out it was wrong at 2am when we needed it.",
+      boldParts: ["untested", "we needed it"],
+      name: "How rollbacks go",
+      title: "in practice",
+      avatarColors: "from-[#E1E5AC] to-[#C5CFD6]",
+    },
+    {
+      quote:
+        "I wanted to see what the current schema looked like so I diffed the last fifteen migration files, ran them through my head in sequence, and then just looked at the database directly because that was faster.",
+      boldParts: ["just looked at the database directly"],
+      name: "Schema visibility",
+      title: "without a schema language",
+      avatarColors: "from-[#DBE3E9] to-[#E1E5AC]",
+    },
   ],
 } as const;
 
