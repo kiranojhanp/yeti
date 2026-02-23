@@ -1,7 +1,13 @@
 "use client";
 
 import { memo, useEffect, useRef, useState } from "react";
+import { CircleHelp } from "lucide-react";
 import { cn } from "@/lib/utils";
+import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from "@/components/ui/hover-card";
 import {
   Tooltip,
   TooltipContent,
@@ -182,11 +188,76 @@ const blurbs: Record<string, { headline: string; body: string }> = {
 
 type CellValue = "yes" | "no" | "partial" | "note";
 
+function ComparisonHelp({ className }: { className?: string }) {
+  return (
+    <HoverCard openDelay={120} closeDelay={80}>
+      <HoverCardTrigger asChild>
+        <button
+          type="button"
+          aria-label="Comparison legend and caveat help"
+          className={cn(
+            "inline-flex h-8 w-8 items-center justify-center rounded-md border border-line-soft bg-surface-1 text-ink-soft shadow-sm transition-all hover:border-foreground/30 hover:bg-surface-2 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
+            className
+          )}
+        >
+          <CircleHelp className="h-3.5 w-3.5" aria-hidden="true" />
+        </button>
+      </HoverCardTrigger>
+      <HoverCardContent
+        align="end"
+        side="bottom"
+        sideOffset={10}
+        className="w-[300px] rounded-xl border border-line-soft bg-surface-1 p-3 text-foreground shadow-[0_20px_45px_-30px_rgba(0,0,0,0.55)]"
+      >
+        <div>
+          <p className="text-[10px] uppercase tracking-[0.12em] text-ink-soft">
+            Quick guide
+          </p>
+          <p className="mt-1 text-[11px] leading-relaxed text-ink-soft">
+            Open any tool header for notes. In cells,
+            <span className="mx-1 inline-flex h-4 w-4 items-center justify-center rounded-full border border-foreground/55 bg-foreground/[0.04] text-[10px] text-foreground/75">
+              ~
+            </span>
+            means partial support or caveats.
+          </p>
+        </div>
+
+        <div className="mt-3 space-y-1.5 rounded-lg border border-line-soft bg-surface-2/60 p-2.5 text-[11px] text-ink-soft">
+          <p className="inline-flex items-center gap-2">
+            <span className="inline-flex h-4 w-4 items-center justify-center rounded-full bg-foreground text-[10px] text-background">
+              ✓
+            </span>
+            Native support
+          </p>
+          <p className="inline-flex items-center gap-2 ml-2">
+            <span className="inline-flex h-4 w-4 items-center justify-center rounded-full border border-foreground/55 bg-foreground/[0.04] text-[10px] text-foreground/75">
+              ~
+            </span>
+            Partial support
+          </p>
+          <p className="inline-flex items-center gap-2">
+            <span className="text-foreground/60">—</span>
+            Not available
+          </p>
+        </div>
+
+        <p className="mt-2 text-[10px] leading-relaxed text-ink-soft">
+          Snapshot from public docs (Feb 2026).
+        </p>
+      </HoverCardContent>
+    </HoverCard>
+  );
+}
+
 const CellContent = memo(function CellContent({
   value,
+  label,
+  tool,
   note,
 }: {
   value: CellValue;
+  label: string;
+  tool: string;
   note?: string;
 }) {
   const icon = (
@@ -197,10 +268,10 @@ const CellContent = memo(function CellContent({
         </span>
       )}
       {value === "no" && (
-        <span className="text-muted-foreground/40 font-light">—</span>
+        <span className="text-foreground/60 font-medium">—</span>
       )}
       {(value === "partial" || value === "note") && (
-        <span className="inline-flex items-center justify-center w-6 h-6 rounded-full border border-foreground/30 text-foreground/50 text-xs cursor-default">
+        <span className="inline-flex items-center justify-center w-6 h-6 rounded-full border border-foreground/55 bg-foreground/[0.04] text-foreground/75 text-xs cursor-default">
           ~
         </span>
       )}
@@ -210,7 +281,15 @@ const CellContent = memo(function CellContent({
   if (note) {
     return (
       <Tooltip>
-        <TooltipTrigger asChild>{icon}</TooltipTrigger>
+        <TooltipTrigger asChild>
+          <button
+            type="button"
+            aria-label={`${tool} caveat for ${label}: ${note}`}
+            className="inline-flex items-center justify-center"
+          >
+            {icon}
+          </button>
+        </TooltipTrigger>
         <TooltipContent>{note}</TooltipContent>
       </Tooltip>
     );
@@ -240,6 +319,15 @@ function ComparisonBlurbPanel({
       >
         {activeBlurb && blurbs[activeBlurb] && (
           <div className="rounded-xl border border-line-soft bg-surface-1 px-4 py-4 sm:px-6">
+            <div className="mb-2 flex items-center justify-end gap-4">
+              <button
+                type="button"
+                onClick={() => setActiveBlurb(null)}
+                className="text-[10px] text-ink-soft underline decoration-dotted underline-offset-4 hover:text-foreground"
+              >
+                Close
+              </button>
+            </div>
             <span className="mr-2 font-serif text-base sm:mr-3">
               {blurbs[activeBlurb].headline}
             </span>
@@ -251,76 +339,102 @@ function ComparisonBlurbPanel({
       </div>
 
       {/* Table */}
-      <div className="overflow-x-auto">
-        <table className="w-full text-sm border-collapse">
-          <thead>
-            <tr className="border-b border-line-soft">
-              <th className="w-40 px-3 py-3 text-left sm:w-44 md:w-48 md:px-4" />
-              {tools.map((tool) =>
-                tool === "Yeti" ? (
-                  <th
-                    key={tool}
-                    className="rounded-t-md border-x border-line-soft border-t bg-surface-2 px-3 py-3 text-center font-serif text-sm sm:text-base md:px-4"
-                  >
-                    {tool}
-                    <span className="block text-xs font-normal text-ink-soft">
-                      you are here
-                    </span>
-                  </th>
-                ) : (
-                  <th
-                    key={tool}
-                    className="px-3 py-3 text-center text-xs font-medium text-ink-soft sm:text-sm md:px-4"
-                  >
-                    <button
-                      onClick={() =>
-                        setActiveBlurb(activeBlurb === tool ? null : tool)
-                      }
-                      className={cn(
-                        "underline decoration-dotted underline-offset-4 transition-colors",
-                        activeBlurb === tool
-                          ? "text-foreground"
-                          : "hover:text-foreground"
-                      )}
+      <div className="rounded-xl border border-line-soft bg-surface-1 shadow-[0_14px_40px_-30px_rgba(0,0,0,0.35)]">
+        <div className="flex items-center justify-end border-b border-line-soft/80 px-3 py-2">
+          <ComparisonHelp />
+        </div>
+        <div className="overflow-x-auto">
+          <table className="min-w-[760px] w-full border-collapse text-sm">
+            <thead>
+              <tr className="border-b border-line-soft">
+                <th
+                  scope="col"
+                  className="sticky left-0 z-20 w-44 bg-surface-1 px-3 py-3 text-left sm:w-48 md:px-4"
+                >
+                  <span className="sr-only">Capability</span>
+                </th>
+                {tools.map((tool) =>
+                  tool === "Yeti" ? (
+                    <th
+                      key={tool}
+                      scope="col"
+                      className="border-x border-line-soft bg-surface-2 px-3 py-3 text-center font-serif text-sm sm:text-base md:px-4"
                     >
                       {tool}
-                    </button>
-                  </th>
-                )
-              )}
-            </tr>
-          </thead>
-          <tbody>
-            {rows.map((row, i) => (
-              <tr
-                key={row.label}
-                className={cn(
-                  "border-b border-line-soft",
-                  i % 2 === 0 ? "bg-transparent" : "bg-surface-2/60"
+                      <span className="block text-xs font-normal text-ink-soft">
+                        you are here
+                      </span>
+                    </th>
+                  ) : (
+                    <th
+                      key={tool}
+                      scope="col"
+                      className="px-3 py-3 text-center text-xs font-medium text-ink-soft sm:text-sm md:px-4"
+                    >
+                      <button
+                        type="button"
+                        onClick={() =>
+                          setActiveBlurb(activeBlurb === tool ? null : tool)
+                        }
+                        aria-expanded={activeBlurb === tool}
+                        className={cn(
+                          "underline decoration-dotted underline-offset-4 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
+                          activeBlurb === tool
+                            ? "text-foreground"
+                            : "hover:text-foreground"
+                        )}
+                      >
+                        {tool}
+                      </button>
+                    </th>
+                  )
                 )}
-              >
-                <td className="px-3 py-2.5 text-xs font-medium sm:text-sm md:px-4 md:py-3">
-                  {row.label}
-                </td>
-                {tools.map((tool) => (
-                  <td
-                    key={tool}
-                    className={cn(
-                      "px-3 py-2.5 text-center text-xs sm:text-sm md:px-4 md:py-3",
-                      tool === "Yeti" &&
-                        "border-x border-line-soft bg-surface-2"
-                    )}
-                  >
-                    <CellContent
-                      value={row.values[tool]}
-                      note={row.notes?.[tool]}
-                    />
-                  </td>
-                ))}
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {rows.map((row, i) => {
+                const rowShade =
+                  i % 2 === 0 ? "bg-transparent" : "bg-surface-2/60";
+                const stickyShade =
+                  i % 2 === 0 ? "bg-surface-1" : "bg-surface-2/85";
+
+                return (
+                  <tr
+                    key={row.label}
+                    className={cn("border-b border-line-soft", rowShade)}
+                  >
+                    <th
+                      scope="row"
+                      className={cn(
+                        "sticky left-0 z-10 px-3 py-2.5 text-left text-xs font-medium sm:text-sm md:px-4 md:py-3",
+                        stickyShade
+                      )}
+                    >
+                      {row.label}
+                    </th>
+                    {tools.map((tool) => (
+                      <td
+                        key={tool}
+                        className={cn(
+                          "px-3 py-2.5 text-center text-xs sm:text-sm md:px-4 md:py-3",
+                          tool === "Yeti" &&
+                            "border-x border-line-soft bg-surface-2"
+                        )}
+                      >
+                        <CellContent
+                          value={row.values[tool]}
+                          label={row.label}
+                          tool={tool}
+                          note={row.notes?.[tool]}
+                        />
+                      </td>
+                    ))}
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
       </div>
     </>
   );
@@ -363,38 +477,12 @@ export function ComparisonSection() {
               the alternatives
             </em>
           </h2>
-          <p className="mx-auto max-w-xl text-sm text-ink-soft">
-            Click any tool header to see the honest take. Hover{" "}
-            <span className="inline-flex items-center justify-center w-4 h-4 rounded-full border border-foreground/30 text-foreground/50 text-[10px] mx-0.5">
-              ~
-            </span>{" "}
-            for caveats.
-          </p>
         </div>
 
         <ComparisonBlurbPanel
           activeBlurb={activeBlurb}
           setActiveBlurb={setActiveBlurb}
         />
-
-        <div className="mt-5 flex flex-wrap items-center justify-start gap-4 text-[11px] text-ink-soft sm:text-xs md:justify-end">
-          <span className="flex items-center gap-1.5">
-            <span className="inline-flex items-center justify-center w-4 h-4 rounded-full bg-foreground text-background text-[10px]">
-              ✓
-            </span>
-            Yes
-          </span>
-          <span className="flex items-center gap-1.5">
-            <span className="inline-flex items-center justify-center w-4 h-4 rounded-full border border-foreground/30 text-[10px]">
-              ~
-            </span>
-            Partial / other — hover for detail
-          </span>
-          <span className="flex items-center gap-1.5">
-            <span className="text-muted-foreground/40">—</span>
-            No
-          </span>
-        </div>
       </div>
     </section>
   );
