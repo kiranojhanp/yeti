@@ -63,7 +63,18 @@ function TestimonialCard({
 
 export function TestimonialsSection() {
   const sectionRef = useRef<HTMLElement>(null);
+  const trackRef = useRef<HTMLDivElement>(null);
+  const loopWidthRef = useRef(0);
+  const animationFrameRef = useRef<number | null>(null);
+  const lastFrameTimeRef = useRef<number | null>(null);
+  const offsetRef = useRef(0);
+  const currentSpeedRef = useRef(90);
+  const targetSpeedRef = useRef(90);
   const [isVisible, setIsVisible] = useState(false);
+
+  const setPaused = (paused: boolean) => {
+    targetSpeedRef.current = paused ? 0 : 90;
+  };
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -77,6 +88,70 @@ export function TestimonialsSection() {
     );
     if (sectionRef.current) observer.observe(sectionRef.current);
     return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    const track = trackRef.current;
+    if (!track) {
+      return;
+    }
+
+    const updateLoopWidth = () => {
+      loopWidthRef.current = track.scrollWidth / 2;
+      if (loopWidthRef.current > 0) {
+        while (offsetRef.current <= -loopWidthRef.current) {
+          offsetRef.current += loopWidthRef.current;
+        }
+        while (offsetRef.current > 0) {
+          offsetRef.current -= loopWidthRef.current;
+        }
+        track.style.transform = `translate3d(${offsetRef.current}px, 0, 0)`;
+      }
+    };
+
+    const step = (time: number) => {
+      if (lastFrameTimeRef.current == null) {
+        lastFrameTimeRef.current = time;
+      }
+
+      const elapsedMs = time - lastFrameTimeRef.current;
+      lastFrameTimeRef.current = time;
+      const deltaSeconds = Math.min(elapsedMs / 1000, 0.05);
+      const speedDelta = targetSpeedRef.current - currentSpeedRef.current;
+      const maxSpeedStep = 320 * deltaSeconds;
+
+      if (Math.abs(speedDelta) <= maxSpeedStep) {
+        currentSpeedRef.current = targetSpeedRef.current;
+      } else {
+        currentSpeedRef.current += Math.sign(speedDelta) * maxSpeedStep;
+      }
+
+      offsetRef.current -= currentSpeedRef.current * deltaSeconds;
+
+      if (loopWidthRef.current > 0) {
+        while (offsetRef.current <= -loopWidthRef.current) {
+          offsetRef.current += loopWidthRef.current;
+        }
+      }
+
+      track.style.transform = `translate3d(${offsetRef.current}px, 0, 0)`;
+      animationFrameRef.current = window.requestAnimationFrame(step);
+    };
+
+    updateLoopWidth();
+    animationFrameRef.current = window.requestAnimationFrame(step);
+
+    const resizeObserver = new ResizeObserver(updateLoopWidth);
+    resizeObserver.observe(track);
+
+    return () => {
+      resizeObserver.disconnect();
+      if (animationFrameRef.current != null) {
+        window.cancelAnimationFrame(animationFrameRef.current);
+      }
+      animationFrameRef.current = null;
+      lastFrameTimeRef.current = null;
+    };
   }, []);
 
   return (
@@ -112,8 +187,17 @@ export function TestimonialsSection() {
           isVisible ? "reveal-up-visible" : "reveal-up-soft-init"
         }`}
       >
-        <div className="overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_10%,black_90%,transparent)]">
-          <div className="animate-testimonial-scroll flex w-max gap-4 will-change-transform [transform:translate3d(0,0,0)] hover:[animation-play-state:paused] sm:gap-6">
+        <div
+          className="testimonial-scroll-region overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_10%,black_90%,transparent)]"
+          onMouseEnter={() => setPaused(true)}
+          onMouseLeave={() => setPaused(false)}
+          onFocusCapture={() => setPaused(true)}
+          onBlurCapture={() => setPaused(false)}
+        >
+          <div
+            ref={trackRef}
+            className="testimonial-scroll-track flex w-max gap-4 will-change-transform [transform:translate3d(0,0,0)] sm:gap-6"
+          >
             {allCards.map((testimonial, index) => (
               <TestimonialCard key={String(index)} {...testimonial} />
             ))}

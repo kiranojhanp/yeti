@@ -710,9 +710,10 @@
 .animate-fade-down {
   animation: var(--animate-fade-down);
 }
-.animate-testimonial-scroll {
-  animation: var(--animate-testimonial-scroll);
+.testimonial-scroll-track {
+  transform: translate3d(0, 0, 0);
 }
+
 .animate-shimmer {
   animation: shimmer 2s infinite linear;
   background-size: 200% auto;
