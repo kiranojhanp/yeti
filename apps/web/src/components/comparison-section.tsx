@@ -1,6 +1,6 @@
 "use client";
 
-import { memo, useEffect, useRef, useState } from "react";
+import { memo, useEffect, useRef } from "react";
 import { CircleHelp } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
@@ -186,6 +186,8 @@ const blurbs: Record<string, { headline: string; body: string }> = {
   },
 };
 
+type ToolBlurbKey = Exclude<(typeof tools)[number], "Yeti">;
+
 type CellValue = "yes" | "no" | "partial" | "note";
 
 function ComparisonHelp({ className }: { className?: string }) {
@@ -249,6 +251,39 @@ function ComparisonHelp({ className }: { className?: string }) {
   );
 }
 
+function ToolHeaderBlurb({ tool }: { tool: ToolBlurbKey }) {
+  const blurb = blurbs[tool];
+
+  return (
+    <HoverCard openDelay={120} closeDelay={80}>
+      <HoverCardTrigger asChild>
+        <button
+          type="button"
+          className="underline decoration-dotted underline-offset-4 transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+        >
+          {tool}
+        </button>
+      </HoverCardTrigger>
+      <HoverCardContent
+        align="center"
+        side="bottom"
+        sideOffset={10}
+        className="w-[320px] rounded-xl border border-line-soft bg-surface-1 p-3 text-left text-foreground shadow-[0_20px_45px_-30px_rgba(0,0,0,0.55)]"
+      >
+        <p className="text-[10px] uppercase tracking-[0.12em] text-ink-soft">
+          {tool}
+        </p>
+        <p className="mt-1.5 font-serif text-[15px] leading-snug text-foreground">
+          {blurb.headline}
+        </p>
+        <p className="mt-1.5 text-[12px] leading-relaxed text-ink-soft">
+          {blurb.body}
+        </p>
+      </HoverCardContent>
+    </HoverCard>
+  );
+}
+
 const CellContent = memo(function CellContent({
   value,
   label,
@@ -298,46 +333,9 @@ const CellContent = memo(function CellContent({
   return icon;
 });
 
-/** Client sub-component that owns the blurb disclosure state. */
-function ComparisonBlurbPanel({
-  activeBlurb,
-  setActiveBlurb,
-}: {
-  activeBlurb: string | null;
-  setActiveBlurb: (tool: string | null) => void;
-}) {
+function ComparisonBlurbPanel() {
   return (
     <>
-      {/* Blurb panel — outside the table, no layout shift */}
-      <div
-        className={cn(
-          "overflow-hidden transition-all duration-300 ease-in-out",
-          activeBlurb
-            ? "mb-6 max-h-72 opacity-100 md:max-h-40"
-            : "mb-0 max-h-0 opacity-0"
-        )}
-      >
-        {activeBlurb && blurbs[activeBlurb] && (
-          <div className="rounded-xl border border-line-soft bg-surface-1 px-4 py-4 sm:px-6">
-            <div className="mb-2 flex items-center justify-end gap-4">
-              <button
-                type="button"
-                onClick={() => setActiveBlurb(null)}
-                className="text-[10px] text-ink-soft underline decoration-dotted underline-offset-4 hover:text-foreground"
-              >
-                Close
-              </button>
-            </div>
-            <span className="mr-2 font-serif text-base sm:mr-3">
-              {blurbs[activeBlurb].headline}
-            </span>
-            <span className="text-sm leading-relaxed text-ink-soft">
-              {blurbs[activeBlurb].body}
-            </span>
-          </div>
-        )}
-      </div>
-
       {/* Table */}
       <div className="rounded-xl border border-line-soft bg-surface-1 shadow-[0_14px_40px_-30px_rgba(0,0,0,0.35)]">
         <div className="flex items-center justify-end border-b border-line-soft/80 px-3 py-2">
@@ -371,21 +369,7 @@ function ComparisonBlurbPanel({
                       scope="col"
                       className="px-3 py-3 text-center text-xs font-medium text-ink-soft sm:text-sm md:px-4"
                     >
-                      <button
-                        type="button"
-                        onClick={() =>
-                          setActiveBlurb(activeBlurb === tool ? null : tool)
-                        }
-                        aria-expanded={activeBlurb === tool}
-                        className={cn(
-                          "underline decoration-dotted underline-offset-4 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
-                          activeBlurb === tool
-                            ? "text-foreground"
-                            : "hover:text-foreground"
-                        )}
-                      >
-                        {tool}
-                      </button>
+                      <ToolHeaderBlurb tool={tool as ToolBlurbKey} />
                     </th>
                   )
                 )}
@@ -441,7 +425,6 @@ function ComparisonBlurbPanel({
 }
 
 export function ComparisonSection() {
-  const [activeBlurb, setActiveBlurb] = useState<string | null>(null);
   const sectionRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -479,10 +462,7 @@ export function ComparisonSection() {
           </h2>
         </div>
 
-        <ComparisonBlurbPanel
-          activeBlurb={activeBlurb}
-          setActiveBlurb={setActiveBlurb}
-        />
+        <ComparisonBlurbPanel />
       </div>
     </section>
   );
