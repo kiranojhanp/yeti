@@ -9,39 +9,27 @@ import { Footer } from "@/components/footer";
 
 export default function Page() {
   return (
-    <main className="min-h-screen bg-background text-foreground font-sans">
-      {/* Navigation */}
+    <main className="min-h-screen bg-surface-1 text-foreground font-sans">
       <Navbar />
 
-      {/* Hero Section */}
       <section id="hero">
         <HeroSection />
       </section>
 
-      {/* Features Section */}
       <FeaturesSection />
 
-      {/* Comparison Section */}
       <ComparisonSection />
 
-      {/* Testimonials Section */}
       <TestimonialsSection />
 
-      {/* Pricing Section */}
-      <section
-        id="pricing"
-        className="py-16 md:py-24 px-6 md:px-12 bg-muted/30"
-      >
-        <div className="max-w-4xl mx-auto">
+      <section id="pricing" className="section-shell bg-surface-2">
+        <div className="mx-auto w-full max-w-4xl">
           <div className="text-center mb-10">
-            <div className="inline-block px-4 py-2 border-b border-dashed border-foreground mb-4">
-              <span className="text-sm uppercase tracking-widest font-medium">
-                Pricing
-              </span>
+            <div className="section-label">
+              <span className="section-label-text">Pricing</span>
             </div>
           </div>
 
-          {/* Single free card — centered, capped width */}
           <div className="max-w-md mx-auto">
             <PricingCard
               features={[
@@ -58,16 +46,15 @@ export default function Page() {
             />
           </div>
 
-          {/* Buy me a coffee */}
           <div className="mt-12 text-center">
-            <p className="text-sm text-muted-foreground mb-4">
+            <p className="mb-4 text-sm text-ink-soft">
               Yeti is built by one person, in the open, for free.
             </p>
             <a
               href="https://buymeacoffee.com"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-6 py-3 rounded-full border border-foreground/20 text-sm font-medium hover:bg-foreground hover:text-background transition-all duration-300"
+              className="inline-flex items-center gap-2 rounded-full border border-line-soft bg-background/70 px-6 py-3 text-sm font-medium transition-all duration-300 hover:border-foreground/20 hover:bg-background"
             >
               ☕ Buy me a coffee
             </a>
@@ -75,17 +62,12 @@ export default function Page() {
         </div>
       </section>
 
-      {/* FAQ Section */}
-      <section
-        id="faq"
-        className="py-16 md:py-24 px-6 md:px-12 bg-foreground text-background"
-      >
-        <div className="max-w-4xl mx-auto">
+      <section id="faq" className="section-shell bg-surface-3 text-foreground">
+        <div className="mx-auto w-full max-w-4xl">
           <PricingFAQ />
         </div>
       </section>
 
-      {/* Footer */}
       <Footer />
     </main>
   );

@@ -234,16 +234,16 @@ function ComparisonBlurbPanel({
         className={cn(
           "overflow-hidden transition-all duration-300 ease-in-out",
           activeBlurb
-            ? "max-h-40 mb-6 opacity-100"
-            : "max-h-0 mb-0 opacity-0"
+            ? "mb-6 max-h-72 opacity-100 md:max-h-40"
+            : "mb-0 max-h-0 opacity-0"
         )}
       >
         {activeBlurb && blurbs[activeBlurb] && (
-          <div className="px-6 py-4 border border-foreground/10 rounded-lg bg-muted/40">
-            <span className="font-serif text-base mr-3">
+          <div className="rounded-xl border border-line-soft bg-surface-1 px-4 py-4 sm:px-6">
+            <span className="mr-2 font-serif text-base sm:mr-3">
               {blurbs[activeBlurb].headline}
             </span>
-            <span className="text-sm text-muted-foreground leading-relaxed">
+            <span className="text-sm leading-relaxed text-ink-soft">
               {blurbs[activeBlurb].body}
             </span>
           </div>
@@ -254,23 +254,23 @@ function ComparisonBlurbPanel({
       <div className="overflow-x-auto">
         <table className="w-full text-sm border-collapse">
           <thead>
-            <tr className="border-b border-foreground/10">
-              <th className="px-4 py-3 text-left w-48" />
+            <tr className="border-b border-line-soft">
+              <th className="w-40 px-3 py-3 text-left sm:w-44 md:w-48 md:px-4" />
               {tools.map((tool) =>
                 tool === "Yeti" ? (
                   <th
                     key={tool}
-                    className="px-4 py-3 text-center font-serif text-base bg-foreground/5 border-x border-foreground/10 border-t rounded-t-md"
+                    className="rounded-t-md border-x border-line-soft border-t bg-surface-2 px-3 py-3 text-center font-serif text-sm sm:text-base md:px-4"
                   >
                     {tool}
-                    <span className="block text-xs font-sans font-normal text-muted-foreground">
+                    <span className="block text-xs font-normal text-ink-soft">
                       you are here
                     </span>
                   </th>
                 ) : (
                   <th
                     key={tool}
-                    className="px-4 py-3 text-center font-medium text-muted-foreground"
+                    className="px-3 py-3 text-center text-xs font-medium text-ink-soft sm:text-sm md:px-4"
                   >
                     <button
                       onClick={() =>
@@ -295,18 +295,20 @@ function ComparisonBlurbPanel({
               <tr
                 key={row.label}
                 className={cn(
-                  "border-b border-foreground/5",
-                  i % 2 === 0 ? "bg-transparent" : "bg-muted/20"
+                  "border-b border-line-soft",
+                  i % 2 === 0 ? "bg-transparent" : "bg-surface-2/60"
                 )}
               >
-                <td className="px-4 py-3 font-medium text-sm">{row.label}</td>
+                <td className="px-3 py-2.5 text-xs font-medium sm:text-sm md:px-4 md:py-3">
+                  {row.label}
+                </td>
                 {tools.map((tool) => (
                   <td
                     key={tool}
                     className={cn(
-                      "px-4 py-3 text-center text-sm",
+                      "px-3 py-2.5 text-center text-xs sm:text-sm md:px-4 md:py-3",
                       tool === "Yeti" &&
-                        "bg-foreground/5 border-x border-foreground/10"
+                        "border-x border-line-soft bg-surface-2"
                     )}
                   >
                     <CellContent
@@ -346,23 +348,22 @@ export function ComparisonSection() {
   }, []);
 
   return (
-    <section id="comparison" className="py-16 md:py-24 px-6 md:px-12">
-      <div className="max-w-7xl mx-auto">
-        {/* Header */}
+    <section id="comparison" className="section-shell">
+      <div className="section-inner">
         <div
           ref={sectionRef}
-          className="text-center mb-16 opacity-0 translate-y-5 transition-all duration-700"
+          className="section-header opacity-0 translate-y-5 transition-all duration-700"
         >
-          <div className="inline-block px-4 py-2 border-b border-dashed border-foreground mb-4">
-            <span className="text-sm uppercase tracking-widest font-medium">
-              Comparison
-            </span>
+          <div className="section-label">
+            <span className="section-label-text">Comparison</span>
           </div>
-          <h2 className="font-serif text-4xl md:text-5xl tracking-tight mb-4">
+          <h2 className="mb-4 font-serif text-3xl tracking-tight sm:text-4xl md:text-5xl">
             How Yeti stacks up against{" "}
-            <em className="italic text-muted-foreground">the alternatives</em>
+            <em className="premium-gradient-comparison italic">
+              the alternatives
+            </em>
           </h2>
-          <p className="text-muted-foreground text-sm max-w-xl mx-auto">
+          <p className="mx-auto max-w-xl text-sm text-ink-soft">
             Click any tool header to see the honest take. Hover{" "}
             <span className="inline-flex items-center justify-center w-4 h-4 rounded-full border border-foreground/30 text-foreground/50 text-[10px] mx-0.5">
               ~
@@ -376,8 +377,7 @@ export function ComparisonSection() {
           setActiveBlurb={setActiveBlurb}
         />
 
-        {/* Legend */}
-        <div className="flex items-center justify-end gap-6 mt-4 text-xs text-muted-foreground">
+        <div className="mt-5 flex flex-wrap items-center justify-start gap-4 text-[11px] text-ink-soft sm:text-xs md:justify-end">
           <span className="flex items-center gap-1.5">
             <span className="inline-flex items-center justify-center w-4 h-4 rounded-full bg-foreground text-background text-[10px]">
               ✓

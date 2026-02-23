@@ -52,16 +52,14 @@ const faqs = [
 export function PricingFAQ() {
   return (
     <div className="max-w-2xl mx-auto mt-0">
-      <div className="text-center mb-12">
-        <div className="inline-block px-4 py-2 border-b border-dashed border-background/40 mb-4">
-          <span className="text-sm uppercase tracking-widest font-medium text-background/60">
-            FAQ
-          </span>
+      <div className="section-header mb-12">
+        <div className="section-label">
+          <span className="section-label-text">FAQ</span>
         </div>
-        <h3 className="font-serif text-3xl md:text-4xl tracking-tight mb-3 text-background">
+        <h3 className="mb-3 font-serif text-2xl tracking-tight text-foreground sm:text-3xl md:text-4xl">
           Frequently Asked Questions
         </h3>
-        <p className="text-background/50 text-sm">
+        <p className="text-sm text-ink-soft">
           Everything you need to know about Yeti.
         </p>
       </div>
@@ -71,12 +69,12 @@ export function PricingFAQ() {
           <AccordionItem
             key={faq.question}
             value={faq.question}
-            className="border-background/15"
+            className="border-line-soft"
           >
-            <AccordionTrigger className="text-left font-sans text-base hover:no-underline py-5 text-background hover:text-background/80">
+            <AccordionTrigger className="py-4 text-left text-[15px] text-foreground hover:no-underline hover:text-foreground/80 sm:py-5 sm:text-base">
               {faq.question}
             </AccordionTrigger>
-            <AccordionContent className="text-background/55 leading-relaxed pb-5">
+            <AccordionContent className="pb-4 text-sm leading-relaxed text-ink-soft sm:pb-5 sm:text-base">
               {faq.answer}
             </AccordionContent>
           </AccordionItem>

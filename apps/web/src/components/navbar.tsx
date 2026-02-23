@@ -40,19 +40,19 @@ export function Navbar() {
   return (
     <nav
       ref={navRef}
-      className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-lg border-b border-foreground/5"
+      className="fixed left-0 right-0 top-0 z-50 border-b border-line-soft bg-surface-1/80 backdrop-blur-lg"
     >
-      <div className="flex items-center justify-between px-6 md:px-12 py-5">
+      <div className="flex items-center justify-between px-5 py-3.5 sm:px-6 md:px-10 lg:px-12">
         <Link
           href="/"
           onClick={handleLogoClick}
-          className="font-serif text-2xl"
+          className="font-serif text-xl sm:text-2xl"
         >
           yeti.
         </Link>
 
         {/* Desktop links */}
-        <div className="hidden md:flex items-center gap-8">
+        <div className="hidden items-center gap-7 md:flex">
           {navLinks.map(({ label, href, id }) => {
             const isActive = activeSection === id;
             return (
@@ -62,8 +62,8 @@ export function Navbar() {
                 className={cn(
                   "text-sm transition-colors",
                   isActive
-                    ? "text-foreground font-medium"
-                    : "text-muted-foreground hover:text-foreground"
+                    ? "font-medium text-foreground"
+                    : "text-ink-soft hover:text-foreground"
                 )}
               >
                 {label}
@@ -77,14 +77,14 @@ export function Navbar() {
             href="https://github.com/kiranojhanp/yeti"
             target="_blank"
             rel="noopener noreferrer"
-            className="bg-foreground text-background text-sm font-medium px-5 py-2.5 rounded-full hover:bg-muted-foreground transition-colors"
+            className="rounded-full border border-foreground bg-foreground px-4 py-2 text-xs font-medium text-background transition-colors hover:bg-foreground/85 sm:px-5 sm:py-2.5 sm:text-sm"
           >
             View on GitHub
           </a>
 
           {/* Mobile hamburger */}
           <button
-            className="md:hidden flex flex-col gap-1.5 p-1"
+            className="flex flex-col gap-1.5 p-1 md:hidden"
             onClick={() => setMenuOpen((o) => !o)}
             aria-label="Toggle menu"
             aria-expanded={menuOpen}
@@ -114,11 +114,11 @@ export function Navbar() {
       {/* Mobile menu */}
       <div
         className={cn(
-          "md:hidden overflow-hidden transition-all duration-300 ease-in-out border-t border-foreground/5",
+          "md:hidden overflow-hidden border-t border-line-soft transition-all duration-300 ease-in-out",
           menuOpen ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
         )}
       >
-        <div className="flex flex-col px-6 py-4 gap-5">
+        <div className="flex flex-col gap-4 px-5 py-4 sm:px-6">
           {navLinks.map(({ label, href, id }) => {
             const isActive = activeSection === id;
             return (
@@ -131,8 +131,8 @@ export function Navbar() {
                 className={cn(
                   "text-sm transition-colors",
                   isActive
-                    ? "text-foreground font-medium"
-                    : "text-muted-foreground hover:text-foreground"
+                    ? "font-medium text-foreground"
+                    : "text-ink-soft hover:text-foreground"
                 )}
               >
                 {label}

@@ -86,17 +86,17 @@ function TestimonialCard({
   avatarColors,
 }: Omit<(typeof processedTestimonials)[0], "quote" | "boldParts">) {
   return (
-    <div className="flex-none w-[340px] bg-background text-foreground rounded-2xl border border-foreground/10 p-7 flex flex-col justify-between h-[340px]">
-      <p className="font-serif text-xl leading-snug tracking-tight">
+    <div className="flex h-[312px] w-[286px] flex-none flex-col justify-between rounded-2xl border border-line-soft bg-background/75 p-6 text-foreground shadow-[0_20px_38px_-36px_rgba(22,22,22,0.45)] sm:h-[332px] sm:w-[320px] sm:p-7">
+      <p className="font-serif text-lg leading-snug tracking-tight sm:text-xl">
         {highlightedQuote}
       </p>
-      <div className="flex items-center gap-3 mt-6">
+      <div className="mt-5 flex items-center gap-3 sm:mt-6">
         <div
           className={`w-10 h-10 bg-gradient-to-br ${avatarColors} rounded-full flex-shrink-0`}
         />
         <div>
-          <div className="font-sans font-bold text-xs">{name}</div>
-          <div className="text-xs text-muted-foreground">{title}</div>
+          <div className="text-xs font-bold">{name}</div>
+          <div className="text-xs text-ink-soft">{title}</div>
         </div>
       </div>
     </div>
@@ -125,22 +125,21 @@ export function TestimonialsSection() {
     <section
       ref={sectionRef}
       id="testimonials"
-      className="py-16 md:py-28 bg-foreground text-background overflow-hidden"
+      className="section-shell overflow-hidden bg-surface-2 text-foreground"
     >
-      <div className="max-w-7xl mx-auto px-6 md:px-12">
-        {/* Header */}
+      <div className="section-inner">
         <div
-          className={`text-center mb-14 md:mb-20 transition-all duration-700 ${
+          className={`mb-14 text-center transition-all duration-700 md:mb-20 ${
             isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
           }`}
         >
-          <div className="inline-block px-3 py-1.5 bg-background/10 rounded-full text-xs font-sans font-medium uppercase tracking-widest mb-5">
-            What developers say
+          <div className="section-label mb-5">
+            <span className="section-label-text">What developers say</span>
           </div>
-          <p className="font-serif text-3xl md:text-5xl lg:text-6xl leading-tight max-w-3xl mx-auto text-balance">
+          <p className="mx-auto max-w-3xl text-balance font-serif text-2xl leading-tight sm:text-3xl md:text-5xl lg:text-6xl">
             The conversations that happen{" "}
-            <em className="italic text-accent">every week</em> in every
-            engineering team.
+            <em className="premium-gradient-testimonials italic">every week</em>{" "}
+            in every engineering team.
           </p>
         </div>
       </div>
@@ -151,16 +150,8 @@ export function TestimonialsSection() {
           isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
         }`}
       >
-        {/* Edge fades */}
-        <div className="absolute left-0 top-0 bottom-0 w-40 md:w-64 bg-gradient-to-r from-white/55 via-white/20 to-transparent blur-[2px] z-10 pointer-events-none" />
-        <div className="absolute right-0 top-0 bottom-0 w-40 md:w-64 bg-gradient-to-l from-white/55 via-white/20 to-transparent blur-[2px] z-10 pointer-events-none" />
-
-        {/* Scrolling container */}
-        <div className="overflow-hidden">
-          <div
-            className="flex gap-6 animate-testimonial-scroll"
-            style={{ width: "fit-content" }}
-          >
+        <div className="overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_10%,black_90%,transparent)]">
+          <div className="animate-testimonial-scroll flex w-max gap-4 will-change-transform [transform:translate3d(0,0,0)] sm:gap-6">
             {allCards.map((testimonial, index) => (
               <TestimonialCard key={String(index)} {...testimonial} />
             ))}

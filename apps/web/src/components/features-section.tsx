@@ -156,26 +156,22 @@ export function FeaturesSection() {
   return (
     <section
       id="features"
-      className="py-16 md:py-24 px-6 md:px-12 bg-foreground text-background"
+      className="section-shell bg-surface-2 text-foreground"
     >
-      <div className="max-w-7xl mx-auto">
-        {/* Header */}
-        <div className="text-center mb-16">
-          <div className="inline-block px-4 py-2 border-b border-dashed border-background/40 mb-4">
-            <span className="text-sm uppercase tracking-widest font-medium text-background/60">
-              Features
-            </span>
+      <div className="section-inner">
+        <div className="section-header">
+          <div className="section-label">
+            <span className="section-label-text">Features</span>
           </div>
-          <h2 className="font-serif text-4xl md:text-5xl tracking-tight text-background">
+          <h2 className="font-serif text-3xl tracking-tight text-foreground sm:text-4xl md:text-5xl">
             Everything in the toolchain,{" "}
-            <em className="italic text-background/50">
+            <em className="premium-gradient-features italic">
               nothing you don&apos;t need
             </em>
           </h2>
         </div>
 
-        {/* Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12">
+        <div className="grid grid-cols-1 gap-5 sm:gap-6 md:grid-cols-3 md:gap-8">
           {features.map((feature, index) => (
             <div
               key={feature.title}
@@ -185,15 +181,15 @@ export function FeaturesSection() {
             >
               <div
                 tabIndex={0}
-                className="group flex flex-col items-start text-left rounded-xl border border-background/10 bg-gradient-to-b from-background/10 to-background/0 p-6 md:p-7 transition-all duration-300 hover:-translate-y-1 hover:border-background/20 hover:bg-background/10 hover:shadow-[0_12px_32px_-22px_rgba(255,255,255,0.5)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-background/30 focus-visible:ring-offset-2 focus-visible:ring-offset-foreground"
+                className="group flex flex-col items-start rounded-2xl border border-line-soft bg-background/55 p-5 text-left transition-all duration-300 hover:-translate-y-1 hover:border-foreground/20 hover:bg-background/80 hover:shadow-[0_18px_34px_-28px_rgba(22,22,22,0.35)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground/20 focus-visible:ring-offset-2 focus-visible:ring-offset-surface-2 sm:p-6 md:p-7"
               >
-                <div className="w-16 h-16 md:w-20 md:h-20 bg-background/10 border border-background/15 rounded-lg flex items-center justify-center mb-6 text-background/70 ring-1 ring-inset ring-background/10 transition-all duration-300 group-hover:bg-background/20 group-hover:scale-[1.03] group-hover:text-background">
+                <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-xl border border-line-soft bg-surface-1 text-ink-soft ring-1 ring-inset ring-line-soft/60 transition-all duration-300 group-hover:scale-[1.03] group-hover:border-foreground/25 group-hover:text-foreground sm:mb-6 sm:h-16 sm:w-16 md:h-20 md:w-20">
                   {feature.icon}
                 </div>
-                <h3 className="font-serif text-2xl mb-3 text-background/90 transition-colors duration-300 group-hover:text-background">
+                <h3 className="mb-3 font-serif text-xl text-foreground transition-colors duration-300 sm:text-2xl">
                   {feature.title}
                 </h3>
-                <p className="text-background/55 text-sm leading-relaxed transition-colors duration-300 group-hover:text-background/70">
+                <p className="text-sm leading-relaxed text-ink-soft transition-colors duration-300 group-hover:text-muted-foreground">
                   {feature.description}
                 </p>
               </div>

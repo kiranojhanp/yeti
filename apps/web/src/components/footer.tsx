@@ -20,16 +20,15 @@ const links = [
 
 export function Footer() {
   return (
-    <footer className="bg-background text-foreground py-20 px-6 border-t border-foreground/10">
-      <div className="max-w-7xl mx-auto grid md:grid-cols-2 gap-12 items-center">
-        {/* Left — headline + CTAs */}
+    <footer className="section-shell border-t border-line-soft bg-surface-1 pb-10 text-foreground">
+      <div className="section-inner grid items-center gap-10 md:grid-cols-2 md:gap-12">
         <div>
-          <h2 className="font-serif text-6xl md:text-8xl tracking-tight leading-[0.95] mb-6">
+          <h2 className="mb-6 font-serif text-5xl leading-[0.95] tracking-tight sm:text-6xl md:text-8xl">
             Write it
             <br />
-            <em className="italic text-muted-foreground">once.</em>
+            <em className="premium-gradient-footer italic">once.</em>
           </h2>
-          <p className="text-muted-foreground max-w-md mb-8 leading-relaxed">
+          <p className="mb-8 max-w-md leading-relaxed text-ink-soft">
             Yeti is open source, MIT licensed, and built by one person. No
             accounts, no tiers, no lock-in — just a{" "}
             <code className="font-mono text-foreground bg-foreground/5 px-1.5 py-0.5 rounded text-sm">
@@ -42,41 +41,39 @@ export function Footer() {
               href="https://github.com/kiranojhanp/yeti"
               target="_blank"
               rel="noopener noreferrer"
-              className="bg-foreground text-background px-8 py-4 rounded-full text-sm font-medium uppercase tracking-wide hover:bg-muted-foreground transition-colors duration-200"
+              className="rounded-full border border-foreground bg-foreground px-6 py-3.5 text-xs font-medium uppercase tracking-wide text-background transition-colors duration-200 hover:bg-foreground/85 sm:px-8 sm:py-4 sm:text-sm"
             >
               Get started free
             </a>
             <a
               href="mailto:hello@yetiql.dev"
-              className="border border-foreground/20 px-8 py-4 rounded-full text-sm font-medium uppercase tracking-wide hover:bg-foreground hover:text-background transition-all duration-200"
+              className="rounded-full border border-line-soft bg-background/60 px-6 py-3.5 text-xs font-medium uppercase tracking-wide transition-all duration-200 hover:border-foreground/25 hover:bg-background sm:px-8 sm:py-4 sm:text-sm"
             >
               Get in touch
             </a>
           </div>
         </div>
 
-        {/* Right — stats grid */}
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-2 gap-3 sm:gap-4">
           {stats.map((stat) => (
             <div
               key={stat.label}
-              className="bg-muted/40 border border-foreground/8 p-8 rounded-3xl"
+              className="rounded-3xl border border-line-soft bg-surface-2 p-6 sm:p-8"
             >
               <div className="font-serif text-5xl tracking-tight mb-2">
                 {stat.value}
               </div>
-              <div className="text-xs font-medium uppercase tracking-widest text-muted-foreground">
+              <div className="text-xs font-medium uppercase tracking-widest text-ink-soft">
                 {stat.label}
               </div>
             </div>
           ))}
 
-          {/* Arrow CTA tile */}
           <a
             href="https://github.com/kiranojhanp/yeti"
             target="_blank"
             rel="noopener noreferrer"
-            className="bg-foreground text-background p-8 rounded-3xl flex items-center justify-center group hover:bg-muted-foreground transition-colors duration-200"
+            className="group flex items-center justify-center rounded-3xl border border-foreground/25 bg-foreground p-6 text-background transition-colors duration-200 hover:bg-foreground/85 sm:p-8"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -96,8 +93,7 @@ export function Footer() {
         </div>
       </div>
 
-      {/* Bottom bar */}
-      <div className="max-w-7xl mx-auto mt-20 pt-8 border-t border-foreground/10 flex flex-col md:flex-row justify-between items-center gap-4 text-xs uppercase tracking-widest text-muted-foreground">
+      <div className="section-inner mt-16 flex flex-col items-center justify-between gap-4 border-t border-line-soft pt-8 text-[11px] uppercase tracking-[0.2em] text-ink-soft sm:text-xs sm:tracking-widest md:mt-20 md:flex-row">
         <span>© 2026 Yeti. MIT licensed.</span>
         <div className="flex flex-wrap justify-center gap-6">
           {links.map((link) =>

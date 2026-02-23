@@ -47,7 +47,12 @@
   --animate-fade-up: fade-up 0.6s ease-out both;
   --animate-fade-down: fade-down 0.6s ease-out both;
   --animate-testimonial-scroll: testimonial-scroll 40s linear infinite;
-  --color-project-purple: #B8A9C9;
+  --color-project-purple: #b8a9c9;
+  --color-surface-1: var(--surface-1);
+  --color-surface-2: var(--surface-2);
+  --color-surface-3: var(--surface-3);
+  --color-line-soft: var(--line-soft);
+  --color-ink-soft: var(--ink-soft);
 }
 
 :root {
@@ -83,6 +88,11 @@
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
+  --surface-1: oklch(0.978 0.004 95);
+  --surface-2: oklch(0.955 0.006 95);
+  --surface-3: oklch(0.925 0.009 95);
+  --line-soft: oklch(0.84 0.008 95);
+  --ink-soft: oklch(0.4 0.01 255);
 }
 
 .dark {
@@ -117,6 +127,11 @@
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.556 0 0);
+  --surface-1: oklch(0.205 0.01 255);
+  --surface-2: oklch(0.24 0.012 255);
+  --surface-3: oklch(0.3 0.014 255);
+  --line-soft: oklch(0.38 0.016 255);
+  --ink-soft: oklch(0.74 0.01 255);
 }
 
 @layer base {
@@ -130,6 +145,115 @@
 
   body {
     @apply bg-background text-foreground;
+  }
+}
+
+@layer components {
+  .section-shell {
+    @apply px-5 py-16 sm:px-6 md:px-10 md:py-24 lg:px-12;
+  }
+
+  .section-inner {
+    @apply mx-auto w-full max-w-7xl;
+  }
+
+  .section-header {
+    @apply mb-12 text-center md:mb-16;
+  }
+
+  .section-label {
+    @apply mb-4 inline-block border-b border-dashed border-line-soft px-3 py-1.5 md:px-4 md:py-2;
+  }
+
+  .section-label-text {
+    @apply text-xs font-medium uppercase tracking-[0.22em] text-ink-soft;
+  }
+
+  .premium-gradient-text,
+  .premium-gradient-hero,
+  .premium-gradient-features,
+  .premium-gradient-comparison,
+  .premium-gradient-testimonials,
+  .premium-gradient-footer {
+    background-size: 200% 100%;
+    background-repeat: repeat;
+    background-position: 0% 50%;
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+    will-change: background-position;
+    animation: shimmer 8s linear infinite;
+  }
+
+  .premium-gradient-text {
+    background-image: linear-gradient(
+      100deg,
+      oklch(0.72 0.12 42) 10%,
+      oklch(0.8 0.15 88) 35%,
+      oklch(0.74 0.14 190) 65%,
+      oklch(0.76 0.13 42) 90%
+    );
+  }
+
+  .premium-gradient-hero {
+    background-image: linear-gradient(
+      100deg,
+      oklch(0.73 0.11 42) 0%,
+      oklch(0.79 0.14 88) 23%,
+      oklch(0.75 0.13 145) 48%,
+      oklch(0.72 0.14 210) 72%,
+      oklch(0.78 0.12 42) 92%,
+      oklch(0.73 0.11 42) 100%
+    );
+  }
+
+  .premium-gradient-features {
+    background-image: linear-gradient(
+      100deg,
+      oklch(0.76 0.12 52) 0%,
+      oklch(0.82 0.12 98) 24%,
+      oklch(0.75 0.12 132) 49%,
+      oklch(0.72 0.12 176) 74%,
+      oklch(0.8 0.1 52) 92%,
+      oklch(0.76 0.12 52) 100%
+    );
+  }
+
+  .premium-gradient-comparison {
+    background-image: linear-gradient(
+      100deg,
+      oklch(0.72 0.1 26) 0%,
+      oklch(0.79 0.14 86) 25%,
+      oklch(0.75 0.12 170) 50%,
+      oklch(0.69 0.13 250) 74%,
+      oklch(0.75 0.1 26) 92%,
+      oklch(0.72 0.1 26) 100%
+    );
+  }
+
+  .premium-gradient-testimonials {
+    background-image: linear-gradient(
+      100deg,
+      oklch(0.75 0.12 40) 0%,
+      oklch(0.82 0.14 96) 24%,
+      oklch(0.77 0.13 172) 49%,
+      oklch(0.77 0.14 230) 73%,
+      oklch(0.83 0.12 330) 92%,
+      oklch(0.75 0.12 40) 100%
+    );
+  }
+
+  .premium-gradient-footer {
+    background-image: linear-gradient(
+      100deg,
+      oklch(0.7 0.11 36) 0%,
+      oklch(0.79 0.13 92) 24%,
+      oklch(0.74 0.12 162) 50%,
+      oklch(0.72 0.12 215) 74%,
+      oklch(0.78 0.11 18) 92%,
+      oklch(0.7 0.11 36) 100%
+    );
   }
 }
 
@@ -175,8 +299,12 @@
 }
 
 @keyframes shimmer {
-  0% { background-position: -200% center; }
-  100% { background-position: 200% center; }
+  0% {
+    background-position: 0% 50%;
+  }
+  100% {
+    background-position: 200% 50%;
+  }
 }
 
 .animate-float {
