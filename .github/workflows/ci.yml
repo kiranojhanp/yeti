@@ -36,13 +36,13 @@ jobs:
         run: bun install
 
       - name: Lint
-        run: bun run lint
+        run: bunx turbo run lint --filter=web
 
       - name: Test
-        run: bun run test
+        run: bunx turbo run test --filter=web
 
       - name: Build
-        run: bun run build
+        run: bunx turbo run build --filter=web
 
       - name: Setup Pages
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
