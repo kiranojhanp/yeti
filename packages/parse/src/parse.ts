@@ -313,9 +313,12 @@ class YetiAstVisitor extends BaseYetiVisitor {
       return priorityA - priorityB;
     });
 
+    const fieldName = ctx.Identifier?.[0]?.image ?? "";
+    const fieldType = ctx.Identifier?.[1]?.image ?? "";
+
     return {
-      name: ctx.Identifier[0].image,
-      type: ctx.Identifier[1].image,
+      name: fieldName,
+      type: fieldType,
       attributes,
     };
   }

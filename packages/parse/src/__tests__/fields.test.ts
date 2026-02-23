@@ -52,7 +52,7 @@ namespace  myns :
     expect(result[0].entities[0].name).toBe("MyEntity");
   });
 
-  test("empty field name throws", () => {
+  test("empty field name reports parse error", () => {
     const input = `
 namespace app:
   entity Bad:
@@ -60,10 +60,12 @@ namespace app:
 `.trim();
 
     const parser = new YetiParser(input);
-    expect(() => parser.parse()).toThrow();
+    const result = parser.parse();
+
+    expect(result.errors.length).toBeGreaterThan(0);
   });
 
-  test("empty field type throws", () => {
+  test("empty field type reports parse error", () => {
     const input = `
 namespace app:
   entity Bad:
@@ -71,7 +73,9 @@ namespace app:
 `.trim();
 
     const parser = new YetiParser(input);
-    expect(() => parser.parse()).toThrow();
+    const result = parser.parse();
+
+    expect(result.errors.length).toBeGreaterThan(0);
   });
 
   test("@pk() empty parens produces empty params array", () => {
