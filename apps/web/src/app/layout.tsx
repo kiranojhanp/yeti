@@ -41,13 +41,14 @@ export default function RootLayout({
     <html
       lang="en"
       suppressHydrationWarning
-      className={`${instrumentSerif.variable} ${spaceGrotesk.variable}`}
+      className={`${instrumentSerif.variable} ${spaceGrotesk.variable} dark`}
     >
       <body className="font-sans antialiased selection:bg-foreground/12 selection:text-foreground">
         <ThemeProvider
           attribute="class"
-          defaultTheme="system"
-          enableSystem
+          defaultTheme="dark"
+          forcedTheme="dark"
+          enableSystem={false}
           disableTransitionOnChange
         >
           <TooltipProvider>{children}</TooltipProvider>

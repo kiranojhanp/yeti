@@ -211,7 +211,7 @@ export function DashboardMockup() {
             </div>
             <div className="ml-1 inline-flex items-center gap-1.5 rounded-md border border-foreground/10 bg-background px-2 py-1 text-[10px] font-medium text-foreground sm:hidden">
               <Image
-                src="/icon.png"
+                src="/yeti/icon.png"
                 alt="Yeti"
                 width={14}
                 height={14}
@@ -221,7 +221,7 @@ export function DashboardMockup() {
             </div>
             <div className="ml-2 hidden items-center gap-2 rounded-md border border-foreground/10 bg-background px-2.5 py-1 text-[10px] font-mono text-muted-foreground sm:flex">
               <Image
-                src="/icon.png"
+                src="/yeti/icon.png"
                 alt="Yeti"
                 width={14}
                 height={14}
@@ -276,7 +276,7 @@ export function DashboardMockup() {
             <section className="relative min-h-[300px] overflow-hidden bg-slate-100 lg:min-h-[420px]">
               <div className="absolute inset-0">
                 <Image
-                  src="/diagram.png"
+                  src="/yeti/diagram.png"
                   alt="Generated schema diagram"
                   fill
                   className="object-contain"

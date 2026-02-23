@@ -43,7 +43,7 @@ export function Navbar() {
           className="inline-flex items-center gap-2 font-serif text-xl sm:text-2xl"
         >
           <Image
-            src="/icon.png"
+            src="/yeti/icon.png"
             alt="Yeti"
             width={24}
             height={24}
