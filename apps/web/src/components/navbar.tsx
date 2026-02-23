@@ -1,8 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
+import { useActiveSection } from "@/hooks/use-active-section";
 
 const navLinks = [
   { label: "Features", href: "#features" },
@@ -13,16 +14,31 @@ const navLinks = [
 ];
 
 export function Navbar() {
-  const [active, setActive] = useState<string | null>(null);
+  const navRef = useRef<HTMLElement>(null);
+  const [navbarHeight, setNavbarHeight] = useState(0);
+  const activeSection = useActiveSection(navbarHeight);
   const [menuOpen, setMenuOpen] = useState(false);
 
+  useEffect(() => {
+    const nav = navRef.current;
+    if (!nav) return;
+
+    const ro = new ResizeObserver(([entry]) => {
+      setNavbarHeight(entry.contentRect.height);
+    });
+    ro.observe(nav);
+    return () => ro.disconnect();
+  }, []);
+
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-lg border-b border-foreground/5">
+    <nav
+      ref={navRef}
+      className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-lg border-b border-foreground/5"
+    >
       <div className="flex items-center justify-between px-6 md:px-12 py-5">
         <Link
           href="/"
           onClick={(e) => {
-            setActive(null);
             if (window.location.pathname === "/") {
               e.preventDefault();
               window.scrollTo({ top: 0, behavior: "smooth" });
@@ -37,12 +53,11 @@ export function Navbar() {
         <div className="hidden md:flex items-center gap-8">
           {navLinks.map(({ label, href }) => {
             const id = href.replace("#", "");
-            const isActive = active === id;
+            const isActive = activeSection === id;
             return (
               <a
                 key={href}
                 href={href}
-                onClick={() => setActive(id)}
                 className={cn(
                   "text-sm transition-colors",
                   isActive
@@ -104,13 +119,12 @@ export function Navbar() {
         <div className="flex flex-col px-6 py-4 gap-5">
           {navLinks.map(({ label, href }) => {
             const id = href.replace("#", "");
-            const isActive = active === id;
+            const isActive = activeSection === id;
             return (
               <a
                 key={href}
                 href={href}
                 onClick={() => {
-                  setActive(id);
                   setMenuOpen(false);
                 }}
                 className={cn(

@@ -31,9 +31,9 @@ export default function Page() {
       <Navbar />
 
       {/* Hero Section */}
-      <div id="hero">
+      <section id="hero">
         <HeroSection />
-      </div>
+      </section>
 
       {/* Features Section */}
       <FeaturesSection />
